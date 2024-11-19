@@ -12,31 +12,32 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
     const [canvasState, setCanvasState] = useState(
         {
-            lines: [{ id: 0, selected: true, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
-            { id: 1, selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 }
+            elements: [{ id: 0, type: "line", selected: true, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
+            { id: 1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
+            { id: 2, type: "angle", selected: false, x1: 400, y1: 400, x2: 400, y2: 600, color: "black", width: 2 }
             ]
         }
     );
+
+    const [dragHandleType, setDragHandleType] = useState("");
+    const [dragEndDiff, setDragEndDiff] = useState({ x: 0, y: 0 });
+
 
 
     useEffect(() => {
         videoRef.current.playbackRate = playbackRate;
     }, [playbackRate]);
 
-    useEffect(() => {
-        
-    }, [canvasState]);
 
     function handleLineClick(event) {
         let canvasStateTemp = { ...canvasState };
-        canvasStateTemp.lines.forEach((element, index) => {
+        canvasStateTemp.elements.forEach((element, index) => {
             //clear all the line.selected = false
             element.selected = false;
         });
 
         //set the one line that is clicke to selected = true
-        //canvasStateTemp.lines[event.currentTarget.getAttribute("lineId")].selected = true;
-        canvasStateTemp.lines.find(element =>
+        canvasStateTemp.elements.find(element =>
             element.id == event.currentTarget.getAttribute("lineId")
         ).selected = true;
 
@@ -59,21 +60,16 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
     }
 
 
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragHandleType, setDragHandleType] = useState("");
-    const [dragEndDiff, setDragEndDiff] = useState({ x: 0, y: 0 });
-
+    
     const handlePointerDown = (e) => {
         setDragHandleType(e.currentTarget.getAttribute("dragHandleType"));
-        setIsDragging(true);
-        setDragHandleType(e.currentTarget.getAttribute("dragHandleType"));
 
-        const selectedLine = canvasState.lines.find(element =>
+        const selectedLine = canvasState.elements.find(element =>
             element.selected == true
         )
 
-        let middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));// - 5;
-        let middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));// - 5;
+        let middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
+        let middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
 
         let startXDiff = selectedLine.x1 - middleXBox;
         let startYDiff = selectedLine.y1 - middleYBox;
@@ -82,55 +78,34 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
     };
 
     const handlePointerMove = (e) => {
-
-        if (isDragging) {
+        if (dragHandleType != "") {
             const mousePosition = getMousePosition(e);
-
-
-
-
 
             let canvasStateTemp = { ...canvasState };
 
-            const selectedLine = canvasStateTemp.lines.find(element =>
+            const selectedLine = canvasStateTemp.elements.find(element =>
                 element.selected == true
             )
 
-
-
             if (dragHandleType == "start") {
-
-
                 selectedLine.x1 = mousePosition.x;
                 selectedLine.y1 = mousePosition.y;
             } else if (dragHandleType == "end") {
-
                 selectedLine.x2 = mousePosition.x;
                 selectedLine.y2 = mousePosition.y;
             } else if (dragHandleType == "middle") {
-
-
-
                 selectedLine.x1 = mousePosition.x + dragEndDiff.x;
                 selectedLine.y1 = mousePosition.y + dragEndDiff.y;
-
-
                 selectedLine.x2 = mousePosition.x - dragEndDiff.x;
                 selectedLine.y2 = mousePosition.y - dragEndDiff.y;
-
-
-
             }
 
-
             setCanvasState(canvasStateTemp);
-
         }
 
     };
 
     const handlePointerUp = () => {
-        setIsDragging(false);
         setDragHandleType("");
     };
 
@@ -142,8 +117,15 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
         };
     }
 
-
-
+    function handleDrawLineClick(event){
+        let canvasStateTemp = { ...canvasState };
+        canvasStateTemp.elements.forEach((element, index) => {
+            //clear all the line.selected = false
+            element.selected = false;
+        });
+        canvasStateTemp.elements.push({ id: 2, type: "line", selected: true, x1: 10, y1: 10, x2: 10, y2: 50, color: "black", width: 2 });
+        setCanvasState(canvasStateTemp);
+    }
 
     const myStyles = {
         paddingTop: aspectRatioPadding,
@@ -186,7 +168,8 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
                         </defs>
                         {
-                            canvasState.lines.map((element, index) => {
+                            canvasState.elements.filter((element) => element.type == "line")                            
+                            .map((element, index) => {
                                 return (
                                     <g lineId={element.id}>
                                         <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick}  />
@@ -204,12 +187,34 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                                         }
                                     </g>
                                 )
+                            })
+                        }
+                        {
+                            canvasState.elements.filter((element) => element.type == "angle")                            
+                            .map((element, index) => {
+                                return (
+                                    <g lineId={element.id}>
+                                        <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick}  />
+                                        <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+                                        {
+                                            element.selected ?
+                                                (
+                                                    <>
+                                                        <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
+                                                        <rect lineId={element.id} dragHandleType="end" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                        <rect lineId={element.id} dragHandleType="middle" x={(element.x1 + ((element.x2 - element.x1) / 2)) - 5} y={(element.y1 + ((element.y2 - element.y1) / 2)) - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
 
+                                                    </>
+                                                ) : ("")
+                                        }
+                                    </g>
+                                )
                             })
                         }
                     </svg>
                 </div>
             </div>
+            <button onClick={handleDrawLineClick}>Draw Line</button>
         </>
     )
 }
