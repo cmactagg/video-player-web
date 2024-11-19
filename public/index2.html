@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player Controls with Bookmarks</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <div class="container">
+        <div class="video-player">
+            <video id="video1" width="320" height="240" controls>
+                <source src="video1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="controls">
+                <button onclick="playPause('video1')">Play/Pause</button>
+                <button onclick="stopVideo('video1')">Stop</button>
+                <button onclick="rewind('video1')">Rewind</button>
+                <button onclick="fastForward('video1')">Fast Forward</button>
+                <button onclick="muteUnmute('video1')">Mute/Unmute</button>
+                <button onclick="fullscreen('video1')">Fullscreen</button>
+                <button onclick="reset('video1')">Reset</button>
+                <input type="range" id="volume1" min="0" max="1" step="0.1" oninput="setVolume('video1', this.value)">
+            </div>
+            <div class="bookmarks">
+                <h3>Bookmarks</h3>
+                <ul id="bookmarksList1"></ul>
+                <input type="text" id="bookmarkName1" placeholder="Bookmark name">
+                <button onclick="addBookmark('video1', 'bookmarksList1', 'bookmarkName1')">Add Bookmark</button>
+            </div>
+        </div>
+        <div class="video-player">
+            <video id="video2" width="320" height="240" controls>
+                <source src="video2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="controls">
+                <button onclick="playPause('video2')">Play/Pause</button>
+                <button onclick="stopVideo('video2')">Stop</button>
+                <button onclick="rewind('video2')">Rewind</button>
+                <button onclick="fastForward('video2')">Fast Forward</button>
+                <button onclick="muteUnmute('video2')">Mute/Unmute</button>
+                <button onclick="fullscreen('video2')">Fullscreen</button>
+                <button onclick="reset('video2')">Reset</button>
+                <input type="range" id="volume2" min="0" max="1" step="0.1" oninput="setVolume('video2', this.value)">
+            </div>
+            <div class="bookmarks">
+                <h3>Bookmarks</h3>
+                <ul id="bookmarksList2"></ul>
+                <input type="text" id="bookmarkName2" placeholder="Bookmark name">
+                <button onclick="addBookmark('video2', 'bookmarksList2', 'bookmarkName2')">Add Bookmark</button>
+            </div>
+        </div>
+        <div class="controls global">
+            <button onclick="playPauseBoth()">Play/Pause Both</button>
+            <button onclick="stopBoth()">Stop Both</button>
+            <button onclick="rewindBoth()">Rewind Both</button>
+            <button onclick="fastForwardBoth()">Fast Forward Both</button>
+            <button onclick="muteUnmuteBoth()">Mute/Unmute Both</button>
+            <button onclick="fullscreenBoth()">Fullscreen Both</button>
+            <button onclick="resetBoth()">Reset Both</button>
+            <input type="range" id="volumeBoth" min="0" max="1" step="0.1" oninput="setVolumeBoth(this.value)">
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
