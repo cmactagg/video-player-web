@@ -12,14 +12,15 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
     const [canvasState, setCanvasState] = useState(
         {
-            elements: [{ id: 0, type: "line", selected: true, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
+            elements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
             { id: 1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
-            { id: 2, type: "angle", selected: false, x1: 400, y1: 400, x2: 400, y2: 600, color: "black", width: 2 }
+            { id: 2, type: "angle", selected: true, x1: 400, y1: 400, x2: 400, y2: 500, x3: 500, y3: 500, color: "black", width: 2, degrees: 0 }
             ]
         }
     );
 
     const [dragHandleType, setDragHandleType] = useState("");
+    
     const [dragEndDiff, setDragEndDiff] = useState({ x: 0, y: 0 });
 
 
@@ -68,8 +69,19 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
             element.selected == true
         )
 
-        let middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
-        let middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
+        let middleXBox = 0;
+        let middleYBox = 0;
+
+        if(dragHandleType == "start" || dragHandleType == "end"){
+
+            middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
+            middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
+        } 
+        // else if (dragHandleType == "middle"){
+        //     middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
+        //     middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
+        // }
+
 
         let startXDiff = selectedLine.x1 - middleXBox;
         let startYDiff = selectedLine.y1 - middleYBox;
@@ -91,13 +103,41 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                 selectedLine.x1 = mousePosition.x;
                 selectedLine.y1 = mousePosition.y;
             } else if (dragHandleType == "end") {
-                selectedLine.x2 = mousePosition.x;
-                selectedLine.y2 = mousePosition.y;
+
+                if(selectedLine.type == "line"){
+                    selectedLine.x2 = mousePosition.x;
+                    selectedLine.y2 = mousePosition.y;
+                } else if (selectedLine.type == "angle"){
+                    selectedLine.x3 = mousePosition.x;
+                    selectedLine.y3 = mousePosition.y;
+                }
             } else if (dragHandleType == "middle") {
-                selectedLine.x1 = mousePosition.x + dragEndDiff.x;
-                selectedLine.y1 = mousePosition.y + dragEndDiff.y;
-                selectedLine.x2 = mousePosition.x - dragEndDiff.x;
-                selectedLine.y2 = mousePosition.y - dragEndDiff.y;
+
+                if(selectedLine.type == "line"){
+                    selectedLine.x1 = mousePosition.x + dragEndDiff.x;
+                    selectedLine.y1 = mousePosition.y + dragEndDiff.y;
+                    selectedLine.x2 = mousePosition.x - dragEndDiff.x;
+                    selectedLine.y2 = mousePosition.y - dragEndDiff.y;
+                } else if (selectedLine.type == "angle"){
+                    selectedLine.x2 = mousePosition.x;
+                    selectedLine.y2 = mousePosition.y;
+                }
+            }
+
+            if (selectedLine.type == "angle"){
+                let degreesLine1 = calculateAngle(selectedLine.x1, selectedLine.y1, selectedLine.x2, selectedLine.y2);
+                let degreesLine2 = calculateAngle(selectedLine.x3, selectedLine.y3, selectedLine.x2, selectedLine.y2);
+
+                degreesLine1 = Math.abs(degreesLine1);// > 180 ? 180 - Math.abs(degreesLine1): Math.abs(degreesLine1);
+                degreesLine2 = Math.abs(degreesLine2);// > 180 ? 180 - Math.abs(degreesLine2): Math.abs(degreesLine2);
+                //selectedLine.degrees = degrees;
+
+                let totalDegrees = Math.abs(degreesLine2 - degreesLine1) > 180 ? 180 - (Math.abs(degreesLine2 - degreesLine1) - 180) :  Math.abs(degreesLine2 - degreesLine1);
+
+
+                selectedLine.degrees = totalDegrees.toFixed(1);
+                //console.log(degreesLine1 + " " + degreesLine2);
+                console.log(totalDegrees);
             }
 
             setCanvasState(canvasStateTemp);
@@ -126,6 +166,60 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
         canvasStateTemp.elements.push({ id: 2, type: "line", selected: true, x1: 10, y1: 10, x2: 10, y2: 50, color: "black", width: 2 });
         setCanvasState(canvasStateTemp);
     }
+
+    function handleDrawAngleClick(event){
+        let canvasStateTemp = { ...canvasState };
+        canvasStateTemp.elements.forEach((element, index) => {
+            //clear all the line.selected = false
+            element.selected = false;
+        });
+        canvasStateTemp.elements.push({ id: 3, type: "angle", selected: true, x1: 400, y1: 100, x2: 400, y2: 150, x3: 450, y3: 150, color: "green", width: 4, degrees: 90 });
+        setCanvasState(canvasStateTemp);
+    }
+
+    function handleDeleteElementClick(event){
+        let canvasStateTemp = { ...canvasState };
+        let result = canvasStateTemp.elements.filter((element) => element.selected == false);
+
+        canvasStateTemp.elements = result;
+        setCanvasState(canvasStateTemp);
+    }
+
+    function calculateAngle(x1, y1, x2, y2) {
+        // Calculate the differences in coordinates
+        const deltaX = x2 - x1;
+        const deltaY = y2 - y1;
+        
+        // Calculate the angle in radians
+        const angleRadians = Math.atan2(deltaY, deltaX);
+        
+        // Convert the angle from radians to degrees
+        const angleDegrees = angleRadians * (180 / Math.PI);
+        
+        // Ensure the angle is positive
+        const positiveAngleDegrees = (angleDegrees + 360) % 360;
+        
+        return positiveAngleDegrees;
+    }
+    
+    // function calculateAngle(x1, y1, x2, y2, x3, y3) { 
+    //     // Vector 1 (from point 1 to point 2) 
+    //     const vector1 = { x: x2 - x1, y: y2 - y1 }; 
+    //     // Vector 2 (from point 2 to point 3) 
+    //     const vector2 = { x: x3 - x2, y: y3 - y2 }; 
+    //     // Dot product of vector1 and vector2 
+    //     const dotProduct = vector1.x * vector2.x + vector1.y * vector2.y; 
+    //     // Magnitude of vector1 and vector2 
+    //     const magnitude1 = Math.sqrt(vector1.x * vector1.y + vector1.y * vector1.y); 
+    //     const magnitude2 = Math.sqrt(vector2.x * vector2.x + vector2.y * vector2.y); 
+    //     // Cosine of the angle 
+    //     const cosTheta = dotProduct / (magnitude1 * magnitude2); 
+    //     // Angle in radians 
+    //     const angleRadians = Math.acos(cosTheta); 
+    //     // Convert angle to degrees 
+    //     const angleDegrees = angleRadians * (180 / Math.PI); 
+    //     return angleDegrees;
+    // }
 
     const myStyles = {
         paddingTop: aspectRatioPadding,
@@ -196,13 +290,17 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                                     <g lineId={element.id}>
                                         <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick}  />
                                         <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+
+                                        <line lineId={element.id} x1={element.x2} y1={element.y2} x2={element.x3} y2={element.y3} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick}  />
+                                        <line lineId={element.id} x1={element.x2} y1={element.y2} x2={element.x3} y2={element.y3} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+                                        <text x={element.x2 + 20} y={element.y2 - 20} fill={element.color}>{element.degrees}</text>
                                         {
                                             element.selected ?
                                                 (
                                                     <>
                                                         <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
-                                                        <rect lineId={element.id} dragHandleType="end" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
-                                                        <rect lineId={element.id} dragHandleType="middle" x={(element.x1 + ((element.x2 - element.x1) / 2)) - 5} y={(element.y1 + ((element.y2 - element.y1) / 2)) - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                        <rect lineId={element.id} dragHandleType="end" x={element.x3 - 5} y={element.y3 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                        <rect lineId={element.id} dragHandleType="middle" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
 
                                                     </>
                                                 ) : ("")
@@ -215,6 +313,8 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                 </div>
             </div>
             <button onClick={handleDrawLineClick}>Draw Line</button>
+            <button onClick={handleDrawAngleClick}>Draw Angle</button>
+            <button onClick={handleDeleteElementClick}>Delete</button>
         </>
     )
 }
