@@ -63,7 +63,9 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
     
     const handlePointerDown = (e) => {
-        setDragHandleType(e.currentTarget.getAttribute("dragHandleType"));
+
+        let dragHandleType = e.currentTarget.getAttribute("dragHandleType");
+        setDragHandleType(dragHandleType);
 
         const selectedLine = canvasState.elements.find(element =>
             element.selected == true
@@ -77,10 +79,10 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
             middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
             middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
         } 
-        // else if (dragHandleType == "middle"){
-        //     middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
-        //     middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
-        // }
+        else if (dragHandleType == "middle"){
+            middleXBox = (selectedLine.x1 + ((selectedLine.x2 - selectedLine.x1) / 2));
+            middleYBox = (selectedLine.y1 + ((selectedLine.y2 - selectedLine.y1) / 2));
+        }
 
 
         let startXDiff = selectedLine.x1 - middleXBox;
