@@ -8,8 +8,13 @@ function VideoCompareContainer() {
 
 
     const [playerStates, setPlayerStates] = useState([
-        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }] },
-        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }] }
+        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], 
+        drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
+            { id: 1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
+            { id: 2, type: "angle", selected: true, x1: 400, y1: 400, x2: 400, y2: 500, x3: 500, y3: 500, color: "black", width: 2, degrees: 0 }
+            ]
+    },
+        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements:[] }
     ]);
 
 
@@ -151,7 +156,66 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
-    
+    function setDrawCanvasElementAsSelected(playerIndex, elementId){
+        let playerStatesTemp = [...playerStates];
+        let elements = playerStatesTemp[playerIndex].drawCanvasElements;
+
+        elements.forEach((element, index) => {
+            //clear all the line.selected = false
+            element.selected = false;
+        });
+
+        //set the one line that is clicke to selected = true
+        elements.find(element =>
+            element.id == elementId
+        ).selected = true;
+
+        playerStatesTemp[playerIndex].drawCanvasElements = elements;
+
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function getDrawCanvasSelectedElement(playerIndex){
+        let playerStatesTemp = [...playerStates];
+        let elements = playerStatesTemp[playerIndex].drawCanvasElements;
+
+        let selectedElement = elements.find(element =>
+            element.selected == true
+        );
+
+        return selectedElement;
+    }
+
+    function setDrawCanvasSelectedElement(playerIndex, selectedElement){
+        let playerStatesTemp = [...playerStates];
+        let elements = playerStatesTemp[playerIndex].drawCanvasElements;
+
+        const i = elements.findIndex(element => element.selected == true);
+
+        elements[i] = selectedElement;
+
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function addDrawCanvasElement(playerIndex, element){
+        let playerStatesTemp = [...playerStates];
+        let elements = playerStatesTemp[playerIndex].drawCanvasElements;
+
+        elements.push(element);
+
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function deleteSelectedDrawCanvasElement(playerIndex){
+        let playerStatesTemp = [...playerStates];
+        let elements = playerStatesTemp[playerIndex].drawCanvasElements;
+
+        const i = elements.findIndex(element => element.selected == true);
+
+        elements.splice(i, 1);
+
+        setPlayerStates(playerStatesTemp);
+    }
 
 
 
@@ -188,6 +252,12 @@ function VideoCompareContainer() {
                         playbackRate={playerStates[0].playbackRate}
                         onDoMirror={(rateAmount) => handleDoMirror([0])}
                         doMirror={playerStates[0].doMirror}
+                        drawCanvasElements={playerStates[0].drawCanvasElements}
+                        setDrawCanvasElementAsSelected={(elementId) => setDrawCanvasElementAsSelected(0, elementId)}
+                        getDrawCanvasSelectedElement={() => getDrawCanvasSelectedElement(0)}
+                        setDrawCanvasSelectedElement={(selectedElement) => setDrawCanvasSelectedElement(0, selectedElement)}
+                        addDrawCanvasElement={(element) => addDrawCanvasElement(0, element)}
+                        deleteSelectedDrawCanvasElement={() => deleteSelectedDrawCanvasElement(0)}
                     />
                 </div>
                 <div className="video-player">
@@ -206,6 +276,7 @@ function VideoCompareContainer() {
                         onBookmarkClick={(bookmarkTime) => handleBookmarkClick([1], bookmarkTime)}
                         onBookmarkDelete={(bookmarkIndex) => handleBookmarkDelete([1], bookmarkIndex)}
                         playbackRate={playerStates[1].playbackRate}
+                        drawCanvasElements={playerStates[1].drawCanvasElements} 
                     />
                 </div>
             </div>

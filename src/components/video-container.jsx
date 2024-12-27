@@ -11,7 +11,13 @@ function VideoContainer({doPlay, onPlayChange, onDoLoopChange, onTimeUpdate, onD
     onPan, xPan, yPan,
     onRotate, rotate,
     onPlaybackRateUpdate, playbackRate,
-    onDoMirror, doMirror
+    onDoMirror, doMirror,
+    drawCanvasElements,
+    setDrawCanvasElementAsSelected,
+    getDrawCanvasSelectedElement,
+    setDrawCanvasSelectedElement,
+    addDrawCanvasElement,
+    deleteSelectedDrawCanvasElement
 }) {
     const [videoSource, setVideoSource] = useState(videoUrl);
 
@@ -60,7 +66,11 @@ function VideoContainer({doPlay, onPlayChange, onDoLoopChange, onTimeUpdate, onD
                 rotate={rotate}
                 playbackRate={playbackRate}
                 doMirror={doMirror}
-                // clockState={clockState} resetClockState={resetClockState}
+                drawCanvasElements={drawCanvasElements}
+                setDrawCanvasElementAsSelected={setDrawCanvasElementAsSelected}
+                getDrawCanvasSelectedElement={getDrawCanvasSelectedElement}
+                setDrawCanvasSelectedElement={setDrawCanvasSelectedElement}
+                
                 />
                 <VideoBookmarks bookmarks={bookmarks} onBookmarkAdd={onBookmarkAdd} onBookmarkDelete={onBookmarkDelete} onBookmarkClick={onBookmarkClick}/>
                 <VideoControls 
@@ -76,6 +86,10 @@ function VideoContainer({doPlay, onPlayChange, onDoLoopChange, onTimeUpdate, onD
                 onRotate={onRotate}
                 onPlaybackRateUpdate={onPlaybackRateUpdate}
                 onDoMirror={onDoMirror}
+                drawCanvasElements={drawCanvasElements} 
+                addDrawCanvasElement={addDrawCanvasElement}
+                deleteSelectedDrawCanvasElement={deleteSelectedDrawCanvasElement}
+                
                 // doPlayPauseChange={doPlayPause} 
                     // doSkip={handleSkip} 
                     />
