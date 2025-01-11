@@ -6,20 +6,10 @@ import VideoClock from './video-clock';
 import VideoBookmarks from './video-bookmarks';
 
 
-function VideoContainer({doPlay, onPlayChange, onDoLoopChange, onTimeUpdate, onDurationChange, clockTime, onPostSeek, doSeek, onSeek, duration, onSliderChange, onBookmarkAdd, onBookmarkDelete, bookmarks, onBookmarkClick, 
-    onScale, scale,
-    onPan, xPan, yPan,
-    onRotate, rotate,
-    onPlaybackRateUpdate, playbackRate,
-    onDoMirror, doMirror,
-    drawCanvasElements,
-    setDrawCanvasElementAsSelected,
-    getDrawCanvasSelectedElement,
-    setDrawCanvasSelectedElement,
-    addDrawCanvasElement,
-    deleteSelectedDrawCanvasElement
-}) {
+function VideoContainer({}) {
     const [videoSource, setVideoSource] = useState(videoUrl);
+
+    const [clockTime, setClockTime] = useState(0);
 
     function handleTimeUpdate(event){
         setClockTime(event.target.currentTime);
@@ -54,41 +44,17 @@ function VideoContainer({doPlay, onPlayChange, onDoLoopChange, onTimeUpdate, onD
     return (
         <>
             <div>
-                <VideoPlayer videoSource={videoSource} doPlay={doPlay} 
-                onTimeUpdate={onTimeUpdate} 
-                onDurationChange={onDurationChange}
-                doSeek={doSeek}
-                onPostSeek={onPostSeek}
-                clockTimeUpdate={clockTime}
-                scale={scale}
-                xPan={xPan}
-                yPan={yPan}
-                rotate={rotate}
-                playbackRate={playbackRate}
-                doMirror={doMirror}
-                drawCanvasElements={drawCanvasElements}
-                setDrawCanvasElementAsSelected={setDrawCanvasElementAsSelected}
-                getDrawCanvasSelectedElement={getDrawCanvasSelectedElement}
-                setDrawCanvasSelectedElement={setDrawCanvasSelectedElement}
+                <VideoPlayer videoSource={videoSource} 
+                
+                
                 
                 />
-                <VideoBookmarks bookmarks={bookmarks} onBookmarkAdd={onBookmarkAdd} onBookmarkDelete={onBookmarkDelete} onBookmarkClick={onBookmarkClick}/>
+                <VideoBookmarks />
                 <VideoControls 
                 // onFileChange={fileChange} 
-                onPlayChange={onPlayChange} 
-                onDoLoopChange={onDoLoopChange}
-                onSeek={onSeek}
-                duration={duration}
-                clockTime={clockTime}
-                onSliderChange={onSliderChange}
-                onScale={onScale}
-                onPan={onPan}
-                onRotate={onRotate}
-                onPlaybackRateUpdate={onPlaybackRateUpdate}
-                onDoMirror={onDoMirror}
-                drawCanvasElements={drawCanvasElements} 
-                addDrawCanvasElement={addDrawCanvasElement}
-                deleteSelectedDrawCanvasElement={deleteSelectedDrawCanvasElement}
+                //onPlayChange={onPlayChange} 
+                
+                
                 
                 // doPlayPauseChange={doPlayPause} 
                     // doSkip={handleSkip} 

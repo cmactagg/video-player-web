@@ -1,15 +1,12 @@
-import { useState, useRef, useEffect, componentDidUpdate, CSSProperties } from 'react'
+import { useState, useRef, useEffect, useContext, componentDidUpdate, CSSProperties } from 'react'
 
+import VideoContext from './video-context';
 
-function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSeek, onPostSeek, clockTimeUpdate, scale, xPan, yPan, rotate, playbackRate, doMirror,
-    drawCanvasElements,
-    setDrawCanvasElementAsSelected,
-    getDrawCanvasSelectedElement,
-    setDrawCanvasSelectedElement,
-    
-}) {
+function VideoPlayer({ videoSource}) {
     const videoRef = useRef(null);
     const svgRef = useRef(null);
+
+    const videoContext = useContext(VideoContext);
 
     const [aspectRatioPadding, setAspectRatioPadding] = useState("0%");
 
@@ -21,25 +18,25 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
 
     useEffect(() => {
-        videoRef.current.playbackRate = playbackRate;
-    }, [playbackRate]);
+        videoRef.current.playbackRate = videoContext.playbackRate ?? 1;
+    }, [videoContext.playbackRate]);
 
 
     function handleLineClick(event) {
-        setDrawCanvasElementAsSelected(event.currentTarget.getAttribute("lineId"));
+        videoContext.setDrawCanvasElementAsSelected(event.currentTarget.getAttribute("lineId"));
     }
 
 
     if (videoRef.current != null) {
-        if (doPlay) {
+        if (videoContext.doPlay) {
             videoRef.current.play();
         } else {
             videoRef.current.pause();
         }
 
-        if (doSeek) {
-            videoRef.current.currentTime = clockTimeUpdate;
-            onPostSeek();
+        if (videoContext.doSeek) {
+            videoRef.current.currentTime = videoContext.clockTime;
+            videoContext.onPostSeek();
         }
     }
 
@@ -50,7 +47,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
         let dragHandleType = e.currentTarget.getAttribute("dragHandleType");
         setDragHandleType(dragHandleType);
 
-        const selectedLine = getDrawCanvasSelectedElement();
+        const selectedLine = videoContext.getDrawCanvasSelectedElement();
 
         let middleXBox = 0;
         let middleYBox = 0;
@@ -77,7 +74,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
         if (dragHandleType != "") {
             const mousePosition = getMousePosition(e);
 
-            const selectedLine = getDrawCanvasSelectedElement();
+            const selectedLine = videoContext.getDrawCanvasSelectedElement();
 
             if (dragHandleType == "start") {
                 selectedLine.x1 = mousePosition.x;
@@ -115,7 +112,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                 selectedLine.degrees = totalDegrees.toFixed(1);
             }
 
-            setDrawCanvasSelectedElement(selectedLine);
+            videoContext.setDrawCanvasSelectedElement(selectedLine);
          }
 
     };
@@ -152,7 +149,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
     const myStyles = {
         paddingTop: aspectRatioPadding,
         border: '1px solid rgba(0, 0, 0, 1)',
-        transform: 'scaleX(' + (doMirror ? -1 : 1) + ') scaleY(1) rotate(' + rotate + 'deg) scale(' + scale + ', ' + scale + ') translate(' + xPan + 'px, ' + yPan + 'px )'
+        transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
 
     };
 
@@ -161,9 +158,8 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
             <div style={{ width: '100%', overflow: 'hidden', position: 'relative' }}>
                 <div style={myStyles}>
                     <video ref={videoRef} id="video"
-                        onDurationChange={onDurationChange}
-                        onTimeUpdate={onTimeUpdate}
-                        //playbackrate={playbackRate}
+                        onDurationChange={videoContext.onDurationChange}
+                        onTimeUpdate={videoContext.onTimeUpdate}
                         src={videoSource} muted="{true}"
                         width="100%"
                         //height="40%"
@@ -188,7 +184,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
 
                         </defs>
                         {
-                            drawCanvasElements.filter((element) => element.type == "line")                            
+                            videoContext.drawCanvasElements?.filter((element) => element.type == "line")                            
                             .map((element, index) => {
                                 return (
                                     <g lineId={element.id}>
@@ -210,7 +206,7 @@ function VideoPlayer({ videoSource, doPlay, onTimeUpdate, onDurationChange, doSe
                             })
                         }
                         {
-                            drawCanvasElements.filter((element) => element.type == "angle")                            
+                            videoContext.drawCanvasElements?.filter((element) => element.type == "angle")                            
                             .map((element, index) => {
                                 return (
                                     <g lineId={element.id}>

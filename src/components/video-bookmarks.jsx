@@ -1,9 +1,13 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+
+import VideoContext from './video-context';
 
 
-function VideoBookmarks({ bookmarks, onBookmarkAdd, onBookmarkDelete, onBookmarkClick }) {
+function VideoBookmarks() {
 
     const [bookmarkName, setBookmarkName] = useState("");
+
+    const videoContext = useContext(VideoContext);
 
     return (
 
@@ -14,16 +18,16 @@ function VideoBookmarks({ bookmarks, onBookmarkAdd, onBookmarkDelete, onBookmark
                 <ul >
 
                     {
-                        bookmarks.map((element, index) => {
+                        videoContext.bookmarks?.map((element, index) => {
                             return (
-                                <li onClick={() => onBookmarkClick(index)}>{element.name} ({element.time})<button onClick={() => onBookmarkDelete(index)}>X</button></li>
+                                <li onClick={() => videoContext.onBookmarkClick(index)}>{element.name} ({element.time})<button onClick={() => videoContext.onBookmarkDelete(index)}>X</button></li>
                             )
                         })
                     }
                 </ul>
 
                 <input type="text" id="bookmarkName1" placeholder="Bookmark name" value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
-                <button onClick={() => {onBookmarkAdd(bookmarkName); setBookmarkName("")}} >Add Bookmark</button>
+                <button onClick={() => {videoContext.onBookmarkAdd(bookmarkName); setBookmarkName("")}} >Add Bookmark</button>
             </div>
         </>
     )

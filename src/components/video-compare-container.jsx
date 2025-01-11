@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useState, createContext } from 'react'
 import VideoPlayer from './video-player'
 import VideoControls from './video-controls'
 import VideoContainer from './video-container';
+import VideoContext from './video-context';
+
 
 
 function VideoCompareContainer() {
+
+
 
 
     const [playerStates, setPlayerStates] = useState([
@@ -226,58 +230,45 @@ function VideoCompareContainer() {
 
 
                 <div className="video-player">
-                    <VideoContainer doPlay={playerStates[0].doPlay}
-                        onPlayChange={() => handlePlayChange([0])}
-                        onDoLoopChange={() => handleDoLoopChange([0])}
-                        onTimeUpdate={(currentTime) => handleTimeUpdate([0], currentTime)}
-                        doSeek={playerStates[0].doSeek}
-                        onPostSeek={() => handlePostSeek([0])}
-                        clockTime={playerStates[0].currentTime}
-                        onSeek={(seekInterval) => handleSeek([0], seekInterval)}
-                        onDurationChange={(duration) => handleDurationChange([0], duration)}
-                        duration={playerStates[0].duration}
-                        onSliderChange={(sliderValue) => handleSliderChange([0], sliderValue)}
-                        bookmarks={playerStates[0].bookmarks}
-                        onBookmarkAdd={(bookmarkName) => handleBookmarkAdd([0], bookmarkName)}
-                        onBookmarkClick={(bookmarkTime) => handleBookmarkClick([0], bookmarkTime)}
-                        onBookmarkDelete={(bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex)}
-                        onScale={(scaleAmount) => handleScale([0], scaleAmount)}
-                        scale={playerStates[0].scale}
-                        onPan={(xAmount, yAmount) => handlePan([0], xAmount, yAmount)}
-                        xPan={playerStates[0].xPan}
-                        yPan={playerStates[0].yPan}
-                        onRotate={(rotateAmount) => handleRotate([0], rotateAmount)}
-                        rotate={playerStates[0].rotate}
-                        onPlaybackRateUpdate={(rateAmount) => handlePlaybackRateUpdate([0], rateAmount)}
-                        playbackRate={playerStates[0].playbackRate}
-                        onDoMirror={(rateAmount) => handleDoMirror([0])}
-                        doMirror={playerStates[0].doMirror}
-                        drawCanvasElements={playerStates[0].drawCanvasElements}
-                        setDrawCanvasElementAsSelected={(elementId) => setDrawCanvasElementAsSelected(0, elementId)}
-                        getDrawCanvasSelectedElement={() => getDrawCanvasSelectedElement(0)}
-                        setDrawCanvasSelectedElement={(selectedElement) => setDrawCanvasSelectedElement(0, selectedElement)}
-                        addDrawCanvasElement={(element) => addDrawCanvasElement(0, element)}
-                        deleteSelectedDrawCanvasElement={() => deleteSelectedDrawCanvasElement(0)}
-                    />
+                    <VideoContext.Provider value={{
+                        doPlay: playerStates[0].doPlay, 
+                        onPlayChange: () => handlePlayChange([0]),
+                        doSeek:  playerStates[0].doSeek,
+                        onSeek: (seekInterval) => handleSeek([0], seekInterval),
+                        onPostSeek: () => handlePostSeek([0]),
+                        onTimeUpdate: (currentTime) => handleTimeUpdate([0], currentTime),
+                        clockTime: playerStates[0].currentTime,
+                        onDurationChange: (duration) => handleDurationChange([0], duration),
+                        duration: playerStates[0].duration,
+                        bookmarks: playerStates[0].bookmarks,
+                        onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([0], bookmarkName),
+                        onBookmarkClick: (bookmarkTime) => handleBookmarkClick([0], bookmarkTime),
+                        onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex),
+                        onDoLoopChange:() => handleDoLoopChange([0]),
+                        onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
+                        onScale: (scaleAmount) => handleScale([0], scaleAmount),
+                        scale: playerStates[0].scale,
+                        onPan: (xAmount, yAmount) => handlePan([0], xAmount, yAmount),
+                        xPan: playerStates[0].xPan,
+                        yPan: playerStates[0].yPan,
+                        onRotate: (rotateAmount) => handleRotate([0], rotateAmount),
+                        rotate: playerStates[0].rotate,
+                        onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([0], rateAmount),
+                        playbackRate: playerStates[0].playbackRate,
+                        onDoMirror: (rateAmount) => handleDoMirror([0]),
+                        doMirror: playerStates[0].doMirror,
+                        drawCanvasElements: playerStates[0].drawCanvasElements,
+                        setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(0, elementId),
+                        getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(0),
+                        setDrawCanvasSelectedElement: (selectedElement) => setDrawCanvasSelectedElement(0, selectedElement),
+                        addDrawCanvasElement: (element) => addDrawCanvasElement(0, element),
+                        deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(0)
+                        }}>
+                    <VideoContainer/>
+                    </VideoContext.Provider>
                 </div>
                 <div className="video-player">
-                    <VideoContainer doPlay={playerStates[1].doPlay}
-                        onPlayChange={() => handlePlayChange([1])}
-                        onTimeUpdate={(currentTime) => handleTimeUpdate([1], currentTime)}
-                        doSeek={playerStates[1].doSeek}
-                        onPostSeek={() => handlePostSeek([1])}
-                        clockTime={playerStates[1].currentTime}
-                        onSeek={(seekInterval) => handleSeek([1], seekInterval)}
-                        onDurationChange={(duration) => handleDurationChange([1], duration)}
-                        duration={playerStates[1].duration}
-                        onSliderChange={(sliderValue) => handleSliderChange([1], sliderValue)}
-                        bookmarks={playerStates[1].bookmarks}
-                        onBookmarkAdd={(bookmarkName) => handleBookmarkAdd([1], bookmarkName)}
-                        onBookmarkClick={(bookmarkTime) => handleBookmarkClick([1], bookmarkTime)}
-                        onBookmarkDelete={(bookmarkIndex) => handleBookmarkDelete([1], bookmarkIndex)}
-                        playbackRate={playerStates[1].playbackRate}
-                        drawCanvasElements={playerStates[1].drawCanvasElements} 
-                    />
+                    
                 </div>
             </div>
             <div className="controls global">
