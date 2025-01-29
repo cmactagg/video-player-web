@@ -1,19 +1,17 @@
 import { useState, useRef } from 'react'
 import VideoPlayer from './video-player'
-import VideoControls from './video-controls'
 import videoUrl from '../assets/mov_bbb.mp4'
 import VideoClock from './video-clock';
+import VideoControlTabs from './video-control-tabs';
+import VideoControlsBasic from './video-controls-basic';
+import VideoControls from './video-controls';
+//import VideoControlsDraw from './video-controls-draw';
 import VideoBookmarks from './video-bookmarks';
 
 
-function VideoContainer({}) {
+function VideoContainer({ }) {
     const [videoSource, setVideoSource] = useState(videoUrl);
-
     const [clockTime, setClockTime] = useState(0);
-
-    function handleTimeUpdate(event){
-        setClockTime(event.target.currentTime);
-    }
 
     function fileChange(event) {
 
@@ -35,34 +33,26 @@ function VideoContainer({}) {
         setVideoSource(fileURL);
     }
 
-    function handleDoDrawLine(){
-        let playerStatesTemp = [...playerStates];
-        playerStatesTemp[playerIndex].doMirror = !playerStatesTemp[playerIndex].doMirror;
-        setPlayerStates(playerStatesTemp);
-    }
-
     return (
         <>
-            <div>
-                <VideoPlayer videoSource={videoSource} 
-                
-                
-                
-                />
-                <VideoBookmarks />
-                <VideoControls 
-                // onFileChange={fileChange} 
-                //onPlayChange={onPlayChange} 
-                
-                
-                
-                // doPlayPauseChange={doPlayPause} 
-                    // doSkip={handleSkip} 
-                    />
-<VideoClock clockTime={clockTime}/>
+            <div id="vpc01" class="video-player-container">
+                <div class="video-player-container-row">
+                    <div className="video-container">
+
+                        <VideoPlayer videoSource={videoSource} />
+
+                        <VideoControls />
+                        {/* <VideoControlsDraw /> */}
+                        <VideoBookmarks />
+                        
+                        
+                        <VideoClock clockTime={clockTime} />
+
+                    </div>
+                    <VideoControlTabs />
+                </div>
+                <VideoControlsBasic onFileChange={fileChange} />
             </div>
-
-
         </>
     )
 }

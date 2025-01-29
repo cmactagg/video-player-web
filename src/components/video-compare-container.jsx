@@ -12,14 +12,27 @@ function VideoCompareContainer() {
 
 
     const [playerStates, setPlayerStates] = useState([
-        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], 
-        drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
+        {
+            videoPlayerOverlayMenuDisplay: "none", doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
+            drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
             { id: 1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
             { id: 2, type: "angle", selected: true, x1: 400, y1: 400, x2: 400, y2: 500, x3: 500, y3: 500, color: "black", width: 2, degrees: 0 }
             ]
-    },
-        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements:[] }
+        },
+        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
     ]);
+
+    function handleVideoPlayerOverlayMenuDisplayChange(playerIndex, display) {
+        let playerStatesTemp = [...playerStates];
+        if(playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay == display){
+            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
+        } else {
+            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = display;
+        } 
+        setPlayerStates(playerStatesTemp);
+    }
+
+
 
 
     function handlePlayChange(playerIndexes) {
@@ -43,8 +56,8 @@ function VideoCompareContainer() {
             let playerStatesTemp = [...playerStates];
             playerStatesTemp[playerIndex].currentTime = event.target.currentTime;
 
-            if(playerStatesTemp[playerIndex].doLoop && playerStatesTemp[playerIndex].doPlay == true){
-                if(playerStatesTemp[playerIndex].currentTime >= playerStatesTemp[playerIndex].loopEnd){
+            if (playerStatesTemp[playerIndex].doLoop && playerStatesTemp[playerIndex].doPlay == true) {
+                if (playerStatesTemp[playerIndex].currentTime >= playerStatesTemp[playerIndex].loopEnd) {
                     playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
                     playerStatesTemp[playerIndex].doSeek = true;
                 }
@@ -110,11 +123,11 @@ function VideoCompareContainer() {
     }
 
     function handleBookmarkClick(playerIndex, bookmarkIndex) {
-            let playerStatesTemp = [...playerStates];
-            const newTime = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time;
-            playerStatesTemp[playerIndex].currentTime = newTime;
-            playerStatesTemp[playerIndex].doSeek = true;
-            setPlayerStates(playerStatesTemp);
+        let playerStatesTemp = [...playerStates];
+        const newTime = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time;
+        playerStatesTemp[playerIndex].currentTime = newTime;
+        playerStatesTemp[playerIndex].doSeek = true;
+        setPlayerStates(playerStatesTemp);
     }
 
     function handleBookmarkAdd(playerIndex, bookmarkName) {
@@ -129,38 +142,38 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
-    function handleScale(playerIndex, scaleAmount){
+    function handleScale(playerIndex, scaleAmount) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].scale = playerStatesTemp[playerIndex].scale * scaleAmount;
         setPlayerStates(playerStatesTemp);
     }
 
-    function handlePan(playerIndex, xAmount, yAmount){
+    function handlePan(playerIndex, xAmount, yAmount) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].xPan = playerStatesTemp[playerIndex].xPan + xAmount;
         playerStatesTemp[playerIndex].yPan = playerStatesTemp[playerIndex].yPan + yAmount;
         setPlayerStates(playerStatesTemp);
     }
 
-    function handleRotate(playerIndex, rotateAmount){
+    function handleRotate(playerIndex, rotateAmount) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].rotate = playerStatesTemp[playerIndex].rotate + rotateAmount;
         setPlayerStates(playerStatesTemp);
     }
 
-    function handlePlaybackRateUpdate(playerIndex, rateAmount){
+    function handlePlaybackRateUpdate(playerIndex, rateAmount) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].playbackRate = playerStatesTemp[playerIndex].playbackRate + rateAmount;
         setPlayerStates(playerStatesTemp);
     }
 
-    function handleDoMirror(playerIndex){
+    function handleDoMirror(playerIndex) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].doMirror = !playerStatesTemp[playerIndex].doMirror;
         setPlayerStates(playerStatesTemp);
     }
 
-    function setDrawCanvasElementAsSelected(playerIndex, elementId){
+    function setDrawCanvasElementAsSelected(playerIndex, elementId) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 
@@ -179,7 +192,7 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
-    function getDrawCanvasSelectedElement(playerIndex){
+    function getDrawCanvasSelectedElement(playerIndex) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 
@@ -190,7 +203,7 @@ function VideoCompareContainer() {
         return selectedElement;
     }
 
-    function setDrawCanvasSelectedElement(playerIndex, selectedElement){
+    function setDrawCanvasSelectedElement(playerIndex, selectedElement) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 
@@ -201,7 +214,7 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
-    function addDrawCanvasElement(playerIndex, element){
+    function addDrawCanvasElement(playerIndex, element) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 
@@ -210,7 +223,7 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
-    function deleteSelectedDrawCanvasElement(playerIndex){
+    function deleteSelectedDrawCanvasElement(playerIndex) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 
@@ -228,73 +241,75 @@ function VideoCompareContainer() {
         <>
             <div className="container">
 
+                <VideoContext.Provider value={{
+                    videoPlayerOverlayMenuDisplay: playerStates[0].videoPlayerOverlayMenuDisplay,
+                    onVideoPlayerOverlayMenuDisplayChange: (display) => handleVideoPlayerOverlayMenuDisplayChange(0, display),
+                    doPlay: playerStates[0].doPlay,
+                    onPlayChange: () => handlePlayChange([0]),
+                    doSeek: playerStates[0].doSeek,
+                    onSeek: (seekInterval) => handleSeek([0], seekInterval),
+                    onPostSeek: () => handlePostSeek([0]),
+                    onTimeUpdate: (currentTime) => handleTimeUpdate([0], currentTime),
+                    clockTime: playerStates[0].currentTime,
+                    onDurationChange: (duration) => handleDurationChange([0], duration),
+                    duration: playerStates[0].duration,
+                    bookmarks: playerStates[0].bookmarks,
+                    onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([0], bookmarkName),
+                    onBookmarkClick: (bookmarkTime) => handleBookmarkClick([0], bookmarkTime),
+                    onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex),
+                    onDoLoopChange: () => handleDoLoopChange([0]),
+                    onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
+                    onScale: (scaleAmount) => handleScale([0], scaleAmount),
+                    scale: playerStates[0].scale,
+                    onPan: (xAmount, yAmount) => handlePan([0], xAmount, yAmount),
+                    xPan: playerStates[0].xPan,
+                    yPan: playerStates[0].yPan,
+                    onRotate: (rotateAmount) => handleRotate([0], rotateAmount),
+                    rotate: playerStates[0].rotate,
+                    onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([0], rateAmount),
+                    playbackRate: playerStates[0].playbackRate,
+                    onDoMirror: (rateAmount) => handleDoMirror([0]),
+                    doMirror: playerStates[0].doMirror,
+                    drawCanvasElements: playerStates[0].drawCanvasElements,
+                    setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(0, elementId),
+                    getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(0),
+                    setDrawCanvasSelectedElement: (selectedElement) => setDrawCanvasSelectedElement(0, selectedElement),
+                    addDrawCanvasElement: (element) => addDrawCanvasElement(0, element),
+                    deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(0)
+                }}>
+                
+                    <VideoContainer />
+                
+                </VideoContext.Provider>
 
-                <div className="video-player">
-                    <VideoContext.Provider value={{
-                        doPlay: playerStates[0].doPlay, 
-                        onPlayChange: () => handlePlayChange([0]),
-                        doSeek:  playerStates[0].doSeek,
-                        onSeek: (seekInterval) => handleSeek([0], seekInterval),
-                        onPostSeek: () => handlePostSeek([0]),
-                        onTimeUpdate: (currentTime) => handleTimeUpdate([0], currentTime),
-                        clockTime: playerStates[0].currentTime,
-                        onDurationChange: (duration) => handleDurationChange([0], duration),
-                        duration: playerStates[0].duration,
-                        bookmarks: playerStates[0].bookmarks,
-                        onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([0], bookmarkName),
-                        onBookmarkClick: (bookmarkTime) => handleBookmarkClick([0], bookmarkTime),
-                        onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex),
-                        onDoLoopChange:() => handleDoLoopChange([0]),
-                        onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
-                        onScale: (scaleAmount) => handleScale([0], scaleAmount),
-                        scale: playerStates[0].scale,
-                        onPan: (xAmount, yAmount) => handlePan([0], xAmount, yAmount),
-                        xPan: playerStates[0].xPan,
-                        yPan: playerStates[0].yPan,
-                        onRotate: (rotateAmount) => handleRotate([0], rotateAmount),
-                        rotate: playerStates[0].rotate,
-                        onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([0], rateAmount),
-                        playbackRate: playerStates[0].playbackRate,
-                        onDoMirror: (rateAmount) => handleDoMirror([0]),
-                        doMirror: playerStates[0].doMirror,
-                        drawCanvasElements: playerStates[0].drawCanvasElements,
-                        setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(0, elementId),
-                        getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(0),
-                        setDrawCanvasSelectedElement: (selectedElement) => setDrawCanvasSelectedElement(0, selectedElement),
-                        addDrawCanvasElement: (element) => addDrawCanvasElement(0, element),
-                        deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(0)
-                        }}>
-                    <VideoContainer/>
-                    </VideoContext.Provider>
-                </div>
-                <div className="video-player">
-                    
-                </div>
-            </div>
-            <div className="controls global">
-                <button onClick={() => handlePlayChange([0, 1])}>
-                    play/pause
-                </button>
-                <button onClick={() => handleSeek([0, 1], -15)}>
-                    Prev 15 Sec
-                </button>
-                <button onClick={() => handleSeek([0, 1], -1)}>
-                    Prev 1 Sec
-                </button>
-                <button onClick={() => handleSeek([0, 1], -0.033)}>
-                    Prev 1 Frame
-                </button>
-                <button onClick={() => handleSeek([0, 1], 0.033)}>
-                    Next 1 Frame
-                </button>
-                <button onClick={() => handleSeek([0, 1], 1)}>
-                    Next 1 Sec
-                </button>
-                <button onClick={() => handleSeek([0, 1], 15)}>
-                    Next 15 Sec
-                </button>
+                {/* <div className="controls global">
+                    <button onClick={() => handlePlayChange([0, 1])}>
+                        play/pause
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], -15)}>
+                        Prev 15 Sec
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], -1)}>
+                        Prev 1 Sec
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], -0.033)}>
+                        Prev 1 Frame
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], 0.033)}>
+                        Next 1 Frame
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], 1)}>
+                        Next 1 Sec
+                    </button>
+                    <button onClick={() => handleSeek([0, 1], 15)}>
+                        Next 15 Sec
+                    </button>
+
+                </div> */}
+
 
             </div>
+
 
         </>
     )

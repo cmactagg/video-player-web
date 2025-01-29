@@ -1,107 +1,131 @@
 import { useContext, useState } from 'react'
 import VideoContext from './video-context';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
 
-function VideoControls({onFileChange}) {
-        const [sliderValue, setSliderValue] = useState(0);
+function VideoControls() {
+    const videoContext = useContext(VideoContext);
 
-        const [doPlayPauseChange, setDoPlayPauseChange] = useState(false);
-
-        const videoContext = useContext(VideoContext);
-
-        
-    function handleDrawLineClick(event){
-        
+    function handleDrawLineClick(event) {
         videoContext.addDrawCanvasElement({ id: 7, type: "line", selected: false, x1: 10, y1: 10, x2: 10, y2: 50, color: "black", width: 2 });
         videoContext.setDrawCanvasElementAsSelected(7);
     }
 
-    function handleDrawAngleClick(event){
-        
+    function handleDrawAngleClick(event) {
         videoContext.addDrawCanvasElement({ id: 8, type: "angle", selected: false, x1: 400, y1: 100, x2: 400, y2: 150, x3: 450, y3: 150, color: "green", width: 4, degrees: 90 });
         videoContext.setDrawCanvasElementAsSelected(8);
     }
 
-    function handleDeleteElementClick(event){
+    function handleDeleteElementClick(event) {
         videoContext.deleteSelectedDrawCanvasElement();
     }
 
 
+    const VideoControlsOverlayMenuClass = "flyout " + (videoContext.videoPlayerOverlayMenuDisplay === "VideoControl" ? "active" : "");
+    const drawControlsOverlayMenutClass = "flyout " + (videoContext.videoPlayerOverlayMenuDisplay === "DrawingTools" ? "active" : "");
+
     return (
         <>
-            <div className="controls">
-                <input type="file" accept="video/*" onChange={onFileChange} />
+            <div className={VideoControlsOverlayMenuClass} id="overlayButtonsVideoControl">
+                <button title="Scale Up" onClick={() => { videoContext.onScale(1.2) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
+                </button>
+                <button title="Scale Down" onClick={() => { videoContext.onScale(0.8) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
+                </button>
+                <button title="Rotate CW" onClick={() => { videoContext.onRotate(1) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
+                </button>
+                <button title="Rotate CCW" onClick={() => { videoContext.onRotate(-1) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
+                </button>
 
-                {/* <button onClick={onPlayChange}> */}
-                <button onClick={videoContext.onPlayChange}>
-                    {doPlayPauseChange ? "Pause" : "Play"}
+                <hr style={{ border: '1px solid white', width: '100%' }} />
+
+                <button title="Pan left" onClick={() => { videoContext.onPan(-10, 0) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={videoContext.onDoLoopChange}>
-                    {true ? "Dont Loop" : "Loop"}
+
+                <button title="Pan right" onClick={() => { videoContext.onPan(10, 0) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(-15)}}>
-                    Prev 15 Sec
+
+                <button title="Pan up" onClick={() => { videoContext.onPan(0, -10) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(-1)}}>
-                    Prev 1 Sec
+
+                <button title="Pan down" onClick={() => { videoContext.onPan(0, 10) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(-0.033)}}>
-                    Prev 1 Frame
+
+                <button title="Do loop" onClick={videoContext.onDoLoopChange}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(0.033)}}>
-                    Next 1 Frame
+
+                <button title="Slow Playback Rate" onClick={() => { videoContext.onPlaybackRateUpdate(-0.25) }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(1)}}>
-                    Next 1 Sec
+
+                <button title="Mirror" onClick={() => { videoContext.onDoMirror() }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onSeek(15)}}>
-                    Next 15 Sec
+            </div>
+
+            <div className={drawControlsOverlayMenutClass} id="overlayButtonsDraw">
+                <button title="Draw Line" onClick={handleDrawLineClick}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="4" y1="20" x2="20" y2="4" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onScale(1.2)}}>
-                    Scale Up
+
+                <button title="Draw Angle" onClick={handleDrawAngleClick}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="4" y1="20" x2="20" y2="4" stroke="white" stroke-width="2" />
+                        <line x1="4" y1="20" x2="30" y2="20" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
-                <button onClick={() => {videoContext.onScale(0.8)}}>
-                    Scale Down
-                </button>
-                <button onClick={() => {videoContext.onPan(-10, 0)}}>
-                    Pan left
-                </button>
-                <button onClick={() => {videoContext.onPan(10, 0)}}>
-                    Pan right
-                </button>
-                <button onClick={() => {videoContext.onPan(0, -10)}}>
-                    Pan up
-                </button>
-                <button onClick={() => {videoContext.onPan(0, 10)}}>
-                    Pan down
-                </button>
-                <button onClick={() => {videoContext.onRotate(1)}}>
-                    Rotate CW
-                </button>
-                <button onClick={() => {videoContext.onRotate(-1)}}>
-                    Rotate CCW
-                </button>
-                <button onClick={() => {videoContext.onPlaybackRateUpdate(-0.25)}}>
-                    Slow Playback Rate
-                </button>
-                <button onClick={() => {videoContext.onDoMirror()}}>
-                    Mirror
-                </button>
-                <button onClick={handleDrawLineClick}>Draw Line</button>
-            <button onClick={handleDrawAngleClick}>Draw Angle</button>
-            <button onClick={handleDeleteElementClick}>Delete</button>
-                <Slider 
-                    //value={}
-                    //onChange={}
-                    max={VideoContext.duration * 100}
-                    min={0}
-                    value={videoContext.clockTime * 100}
-                    //value={sliderValue * 100}
-                    onChange={videoContext.onSliderChange}
-                />
-                <button onClick={() => {onDoDrawLine()}}>
-                    Draw Line
+
+                <button title="Delete" onClick={handleDeleteElementClick}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6L5 6 21 6" stroke="white" stroke-width="2" />
+                        <path d="M19 6L17.3333 21H6.66667L5 6" stroke="white" stroke-width="2" />
+                        <path d="M10 11V17" stroke="white" stroke-width="2" />
+                        <path d="M14 11V17" stroke="white" stroke-width="2" />
+                    </svg>
                 </button>
             </div>
         </>
