@@ -92,7 +92,9 @@ video {
   border: none;
   color: white;
   padding: 10px;
+  margin: 2.5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .flyout.active {
@@ -223,4 +225,29 @@ video {
 .bookmark-overlay li button:hover {
   background-color: #555;
   transform: scale(1.05);
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.playback-rate,
+.clock-time {
+  color: #ffffff;
+  padding: 0 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: row;
+  /* gap: 10px; */
 }

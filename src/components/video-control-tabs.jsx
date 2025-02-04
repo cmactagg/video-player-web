@@ -30,21 +30,14 @@ const VideoControlTabs = () => {
             <div class="button-container">
                 <div class="top-buttons">
                     <button title="Video Control" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("VideoControl")}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 3H21V7H3V3Z" fill="white" />
-                            <path d="M3 7H21V21H3V7Z" fill="white" />
-                            <path d="M3 3L7 7" stroke="black" stroke-width="2" />
-                            <path d="M7 3L11 7" stroke="black" stroke-width="2" />
-                            <path d="M11 3L15 7" stroke="black" stroke-width="2" />
-                            <path d="M15 3L19 7" stroke="black" stroke-width="2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
                         </svg>
                     </button>
                     <button title="Drawing Tools" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("DrawingTools")}>
 
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 22L12 12L14 14L4 24L2 22Z" fill="white" />
-                            <path d="M14 14L20 8L16 4L10 10L14 14Z" fill="white" />
-                            <path d="M16 4L20 0L24 4L20 8L16 4Z" fill="white" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
                         </svg>
                     </button>
                     <button title="Bookmarks" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("Bookmarks")}>

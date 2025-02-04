@@ -46,7 +46,7 @@ function VideoContainer({ }) {
                         <VideoBookmarks />
                         
                         
-                        <VideoClock clockTime={clockTime} />
+                        
 
                     </div>
                     <VideoControlTabs />
