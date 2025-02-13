@@ -1,0 +1,170 @@
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .parent {
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            /* Ensure nothing overflows */
+            margin: 10px;
+            background-color: red;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .child {
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            margin: 10px;
+            background-color: blue;
+            /* Ensure nothing overflows */
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .responsive-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .responsive-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .button-row button {
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .button-row button:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .button-column button {
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .button-column button:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+    </style>
+
+</head>
+
+
+<body>
+    <div class="row">
+        <div class="parent">
+            <div class="child">
+                <div style="border: 1px solid rgb(0, 0, 0); transform: scaleX(1) scaleY(1) rotate(0deg) scale(1, 1) translate(0px, 0px);">
+                    <!-- <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg"
+                    alt="Sample Image" class="responsive-image"> -->
+
+                    <video src="D:\code\video-player-web\src\assets/nacho-mortality.mp4" class="responsive-video">
+                    </video>
+                </div>
+            </div>
+            <div class="button-row">
+                <button>Button 1</button>
+                <button>Button 2</button>
+                <button>Button 3</button>
+            </div>
+            <div class="button-column">
+                <button>Button A</button>
+                <button>Button B</button>
+                <button>Button C</button>
+            </div>
+        </div>
+
+        <div class="parent">
+            <div class="child">
+                <img src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg"
+                    alt="Sample Image" class="responsive-image">
+            </div>
+            <div class="button-row">
+                <button>Button 1</button>
+                <button>Button 2</button>
+                <button>Button 3</button>
+            </div>
+            <div class="button-column">
+                <button>Button A</button>
+                <button>Button B</button>
+                <button>Button C</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resizeChildDivs() {
+            const childDivs = document.querySelectorAll('.child');
+            childDivs.forEach(child => {
+                const parent = child.parentElement;
+                child.style.width = `${parent.clientWidth - 20}px`;
+                child.style.height = `${parent.clientHeight - 20}px`;
+            });
+        }
+
+        
+
+        // window.addEventListener('resize', resizeChildDivs);
+        // window.addEventListener('load', resizeChildDivs);
+    </script>
+</body>
+
+</html>
