@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import VideoPlayer from './video-player'
-import videoUrl from '../assets/mov_bbb.mp4'
+// import videoUrl from '../assets/mov_bbb.mp4'
+import videoUrl from '../assets/nacho-mortality.mp4'
 import VideoClock from './video-clock';
 import VideoControlTabs from './video-control-tabs';
 import VideoControlsBasic from './video-controls-basic';
@@ -35,15 +36,15 @@ function VideoContainer({ }) {
 
     return (
         <>
-            <div id="vpc01" class="video-player-container">
-                <div class="video-player-container-row">
+            <div id="vpc01" className="video-player-container">
+                <div className="video-player-container-row">
                     <div className="video-container">
 
                         <VideoPlayer videoSource={videoSource} />
 
-                        <VideoControls />
+                        {/* <VideoControls /> */}
                         {/* <VideoControlsDraw /> */}
-                        <VideoBookmarks />
+                        {/* <VideoBookmarks /> */}
                         
                         
                         

@@ -1,48 +1,117 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
+  padding: 0;
 }
 
-.root-container {
-  box-sizing: border-box;
-  background-color: #1e1e1e;
-  padding: 10px;
-  width: 100vw;
-  height: 100vh;
+.root {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-player-container {
   box-sizing: border-box;
-  padding: 20px;
+  width: 97vw;
+  height: 97vh;
+  position: relative;
+  overflow: hidden;
+  /* Ensure nothing overflows */
+  margin: 10px;
   background-color: #2a2a2a;
   display: flex;
   flex-direction: column;
-  max-height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  padding: 50px;
 }
 
-/* Unused style */
 .video-player-container-row {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
+
+  width: 100%;
+  height: 100%;
 }
+
+
+
 
 .video-container {
   box-sizing: border-box;
-  padding: 10px;
-  background-color: #333;
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+  background-color: blue;
+  /* Ensure nothing overflows */
   flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 video {
-  width: 100% !important;
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-#vpc01 {
+.controls-basic-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  flex-direction: column;
+
 }
+
+.controls-basic-container button {
+  background-color: #444;
+  border: none;
+  color: white;
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.controls-basic-container button:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+.controls-basic-container .progress-bar {
+  width: 100%;
+  height: 5px;
+  outline: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  border-radius: 5px;
+  accent-color: #ffffff;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.playback-rate,
+.clock-time {
+  color: #ffffff;
+  padding: 0 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .button-container {
   background-color: #2a2a2a;
@@ -100,56 +169,6 @@ video {
 .flyout.active {
   display: flex;
   transform: translateX(0);
-}
-
-.top-buttons,
-.bottom-buttons {
-  display: flex;
-  flex-direction: column;
-}
-
-.controls-basic-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  background-color: #333;
-  border-top: 1px solid #444;
-  margin-top: 10px;
-}
-
-/* Unused style */
-.controls-basic-container-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.controls-basic-container button {
-  background-color: #444;
-  border: none;
-  color: white;
-  padding: 10px;
-  margin: 0 5px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.controls-basic-container button:hover {
-  background-color: #555;
-  transform: scale(1.05);
-}
-
-.controls-basic-container .progress-bar {
-  width: 100%;
-  height: 5px;
-  outline: none;
-  opacity: 0.9;
-  transition: opacity 0.2s;
-  border-radius: 5px;
-  accent-color: #ffffff;
 }
 
 .bookmark-overlay {
@@ -225,29 +244,4 @@ video {
 .bookmark-overlay li button:hover {
   background-color: #555;
   transform: scale(1.05);
-}
-
-.button-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.playback-rate,
-.clock-time {
-  color: #ffffff;
-  padding: 0 10px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.button-column {
-  display: flex;
-  flex-direction: row;
-  /* gap: 10px; */
 }

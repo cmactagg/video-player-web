@@ -156,11 +156,19 @@ function VideoPlayer({ videoSource }) {
 
     }
 
-    const myStyles = {
-        //paddingTop: aspectRatioPadding,
-        border: '1px solid rgba(0, 0, 0, 1)',
-        transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
+    // const myStyles = {
+    //     //paddingTop: aspectRatioPadding,
+    //     border: '1px solid rgba(0, 0, 0, 1)',
+    //     transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
 
+    // };
+
+    const myStyles = {
+        width: '100%',
+        height: '100%',
+        objectFit: "contain",
+        // border: '1px solid rgba(0, 0, 0, 1)',
+        transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
     };
 
     const svgStyle = {
@@ -173,7 +181,7 @@ function VideoPlayer({ videoSource }) {
 
     };
 
-//code for getting the mouse position in svg
+    //code for getting the mouse position in svg
     //const svgOverlay = document.getElementById('svgOverlay');
     //const coordinatesDisplay = document.getElementById('coordinates');
 
@@ -187,7 +195,7 @@ function VideoPlayer({ videoSource }) {
 
         //console.log(`Mouse Position: (${svgPoint.x.toFixed(2)}, ${svgPoint.y.toFixed(2)})`);
 
-        return {x: svgPoint.x, y: svgPoint.y};
+        return { x: svgPoint.x, y: svgPoint.y };
     };
 
 
@@ -203,8 +211,7 @@ function VideoPlayer({ videoSource }) {
 
     return (
         <>
-            <div style={{ width: '100%', overflow: 'hidden', position: 'relative' }}>
-                <div style={myStyles}>
+                <div style={myStyles}> {/* style={myStyles}> THIS IS THE DIV THAT IS CAUSING MY SCALING PROBLEMS*/}
                     <video ref={videoRef} id="video"
                         onPlay={onPlay}
                         onLoadedMetadata={onLoadedMetadata}
@@ -287,9 +294,160 @@ function VideoPlayer({ videoSource }) {
                                 })
                         }
                     </svg>
+                    </div>{/*  END OF THIS IS THE DIV THAT IS CAUSING MY SCALING PROBLEMS */}
+                <div className="flyout " id="overlayButtonsVideoControl">
+                    <div className="button-column">
+                        <button title="Scale Up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0">
+                                </path>
+                                <path
+                                    d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z">
+                                </path>
+                                <path fillRule="evenodd"
+                                    d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5">
+                                </path>
+                            </svg>
+                        </button>
+                        <button title="Scale Down">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0">
+                                </path>
+                                <path
+                                    d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z">
+                                </path>
+                                <path fillRule="evenodd"
+                                    d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="button-column">
+                        <button title="Rotate CW">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"></path>
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466">
+                                </path>
+                            </svg>
+                        </button>
+                        <button title="Rotate CCW">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"></path>
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="button-column">
+                        <button title="Pan left">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8">
+                                </path>
+                            </svg>
+                        </button>
+                        <button title="Pan right">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="button-column">
+                        <button title="Pan up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5">
+                                </path>
+                            </svg>
+                        </button>
+                        <button title="Pan down">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fillRule="evenodd"
+                                    d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="button-column">
+                        <button title="Mirror">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M7 2.5a.5.5 0 0 0-.939-.24l-6 11A.5.5 0 0 0 .5 14h6a.5.5 0 0 0 .5-.5zm2.376-.484a.5.5 0 0 1 .563.245l6 11A.5.5 0 0 1 15.5 14h-6a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .376-.484M10 4.46V13h4.658z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-
-            </div>
+                <div className="flyout " id="overlayButtonsDraw">
+                    <button title="Draw Line">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
+                        </svg>
+                    </button>
+                    <button title="Draw Angle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
+                            <line x1="4" y1="20" x2="30" y2="20" stroke="white" strokeWidth="2"></line>
+                        </svg>
+                    </button>
+                    <button title="Delete">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 6L5 6 21 6" stroke="white" strokeWidth="2"></path>
+                            <path d="M19 6L17.3333 21H6.66667L5 6" stroke="white" strokeWidth="2"></path>
+                            <path d="M10 11V17" stroke="white" strokeWidth="2"></path>
+                            <path d="M14 11V17" stroke="white" strokeWidth="2"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div className="bookmark-overlay " id="bookmarkOverlay">
+                    <input type="text" id="bookmarkName" placeholder="Bookmark name" defaultValue="bookmark name"/>
+                    <button>Add Bookmark</button>
+                    <ul id="bookmarkList">
+                        <li>start of flow (6.5)<button>X</button><span>Bookmark 1 - 10s</span>
+                            <div><button title="Set Time"><svg width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button><button title="Loop"><svg width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button><button title="Delete"><svg width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button></div>
+                        </li>
+                        <li>end of flow (7.7)<button>X</button><span>Bookmark 1 - 10s</span>
+                            <div><button title="Set Time"><svg width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button><button title="Loop"><svg width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button><button title="Delete"><svg width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                            </svg></button></div>
+                        </li>
+                    </ul>
+                </div>
 
         </>
     )

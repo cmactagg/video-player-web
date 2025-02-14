@@ -27,44 +27,46 @@ const VideoControlTabs = () => {
 
     return (
         <>
-            <div class="button-container">
-                <div class="top-buttons">
-                    <button title="Video Control" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("VideoControl")}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
+            <div className="button-container">
+                <div className="top-buttons">
+                    <button title="Video Control">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path fillRule="evenodd"
+                                d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z">
+                            </path>
                         </svg>
                     </button>
-                    <button title="Drawing Tools" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("DrawingTools")}>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                    <button title="Drawing Tools">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325">
+                            </path>
                         </svg>
                     </button>
-                    <button title="Bookmarks" onClick={() => videoContext.onVideoPlayerOverlayMenuDisplayChange("Bookmarks")}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 2H18C19.1 2 20 2.9 20 4V20L12 16L4 20V4C4 2.9 4.9 2 6 2Z" fill="white" />
+                    <button title="Bookmarks">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 2H18C19.1 2 20 2.9 20 4V20L12 16L4 20V4C4 2.9 4.9 2 6 2Z" fill="white">
+                            </path>
                         </svg>
                     </button>
                 </div>
-                <div class="bottom-buttons">
-
+                <div className="bottom-buttons">
                     <button title="TBD Button 1">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
+                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
                         </svg>
                     </button>
-                    <button title="TBD Button 2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" stroke-width="2" />
-                        </svg>
+                    <button title="TBD Button 2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
+                    </svg>
                     </button>
                 </div>
             </div>
-
-
-
         </>
     );
 };
