@@ -295,9 +295,9 @@ function VideoPlayer({ videoSource }) {
                         }
                     </svg>
                     </div>{/*  END OF THIS IS THE DIV THAT IS CAUSING MY SCALING PROBLEMS */}
-                <div className="flyout " id="overlayButtonsVideoControl">
+                <div className="flyout tab-content" id="overlayButtonsVideoControl">
                     <div className="button-column">
-                        <button title="Scale Up">
+                        <button title="Scale Up" onClick={() => videoContext.onScale(1.1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -311,7 +311,7 @@ function VideoPlayer({ videoSource }) {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Scale Down">
+                        <button title="Scale Down" onClick={() => videoContext.onScale(0.9)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -326,7 +326,7 @@ function VideoPlayer({ videoSource }) {
                         </button>
                     </div>
                     <div className="button-column">
-                        <button title="Rotate CW">
+                        <button title="Rotate CW" onClick={() => videoContext.onRotate(1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -336,7 +336,7 @@ function VideoPlayer({ videoSource }) {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Rotate CCW">
+                        <button title="Rotate CCW" onClick={() => videoContext.onRotate(-1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -348,7 +348,7 @@ function VideoPlayer({ videoSource }) {
                         </button>
                     </div>
                     <div className="button-column">
-                        <button title="Pan left">
+                        <button title="Pan left" onClick={() => videoContext.onPan(-10, 0)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -356,7 +356,7 @@ function VideoPlayer({ videoSource }) {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Pan right">
+                        <button title="Pan right" onClick={() => videoContext.onPan(10, 0)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -366,7 +366,7 @@ function VideoPlayer({ videoSource }) {
                         </button>
                     </div>
                     <div className="button-column">
-                        <button title="Pan up">
+                        <button title="Pan up" onClick={() => videoContext.onPan(0, 10)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -374,7 +374,7 @@ function VideoPlayer({ videoSource }) {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Pan down">
+                        <button title="Pan down" onClick={() => videoContext.onPan(0, -10)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path fillRule="evenodd"
@@ -384,7 +384,7 @@ function VideoPlayer({ videoSource }) {
                         </button>
                     </div>
                     <div className="button-column">
-                        <button title="Mirror">
+                        <button title="Mirror" onClick={() => videoContext.onDoMirror()}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path
@@ -394,7 +394,7 @@ function VideoPlayer({ videoSource }) {
                         </button>
                     </div>
                 </div>
-                <div className="flyout " id="overlayButtonsDraw">
+                <div className="flyout tab-content" id="overlayButtonsDraw">
                     <button title="Draw Line">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -418,7 +418,7 @@ function VideoPlayer({ videoSource }) {
                         </svg>
                     </button>
                 </div>
-                <div className="bookmark-overlay " id="bookmarkOverlay">
+                <div className="bookmark-overlay tab-content" id="overlayBookmarks">
                     <input type="text" id="bookmarkName" placeholder="Bookmark name" defaultValue="bookmark name"/>
                     <button>Add Bookmark</button>
                     <ul id="bookmarkList">

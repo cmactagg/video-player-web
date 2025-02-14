@@ -13,15 +13,25 @@ const VideoControlTabs = () => {
 
     function openTab(evt, tabName) {
         var i, tabcontent, tabbuttons;
+
+        let activeTabName = "";
+
         tabcontent = document.getElementsByClassName("tab-content");
         for (i = 0; i < tabcontent.length; i++) {
+            if (tabcontent[i].style.display == "block") {
+                activeTabName = tabcontent[i].id;
+            }
             tabcontent[i].style.display = "none";
         }
+
         tabbuttons = document.getElementsByClassName("tab-button");
         for (i = 0; i < tabbuttons.length; i++) {
             tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
         }
-        document.getElementById(tabName).style.display = "block";
+
+        if (activeTabName != tabName) {
+            document.getElementById(tabName).style.display = "block";
+        }
         evt.currentTarget.className += " active";
     }
 
@@ -29,7 +39,7 @@ const VideoControlTabs = () => {
         <>
             <div className="button-container">
                 <div className="top-buttons">
-                    <button title="Video Control">
+                    <button title="Video Control" className="tab-button" onClick={(e) => openTab(e, "overlayButtonsVideoControl")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path fillRule="evenodd"
@@ -37,7 +47,7 @@ const VideoControlTabs = () => {
                             </path>
                         </svg>
                     </button>
-                    <button title="Drawing Tools">
+                    <button title="Drawing Tools" onClick={(e) => openTab(e, "overlayButtonsDraw")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path
@@ -45,7 +55,7 @@ const VideoControlTabs = () => {
                             </path>
                         </svg>
                     </button>
-                    <button title="Bookmarks">
+                    <button title="Bookmarks" onClick={(e) => openTab(e, "overlayBookmarks")}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 2H18C19.1 2 20 2.9 20 4V20L12 16L4 20V4C4 2.9 4.9 2 6 2Z" fill="white">
