@@ -21,13 +21,31 @@ function VideoControlsDraw() {
 
     return (
         <>
-            <div className="controls-section controls-section-draw">
-                <div className='controls-row'>
-                    <button onClick={handleDrawLineClick}>Draw Line</button>
-                    <button onClick={handleDrawAngleClick}>Draw Angle</button>
-                    <button onClick={handleDeleteElementClick}>Delete</button>
+
+            <div className="flyout tab-content" id="overlayButtonsDraw">
+                    <button title="Draw Line" onClick={handleDrawLineClick}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
+                        </svg>
+                    </button>
+                    <button title="Draw Angle" onClick={handleDrawAngleClick}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
+                            <line x1="4" y1="20" x2="30" y2="20" stroke="white" strokeWidth="2"></line>
+                        </svg>
+                    </button>
+                    <button title="Delete" onClick={handleDeleteElementClick}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 6L5 6 21 6" stroke="white" strokeWidth="2"></path>
+                            <path d="M19 6L17.3333 21H6.66667L5 6" stroke="white" strokeWidth="2"></path>
+                            <path d="M10 11V17" stroke="white" strokeWidth="2"></path>
+                            <path d="M14 11V17" stroke="white" strokeWidth="2"></path>
+                        </svg>
+                    </button>
                 </div>
-            </div>
         </>
     )
 }

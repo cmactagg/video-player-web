@@ -9,13 +9,13 @@ function VideoBookmarks() {
 
     const videoContext = useContext(VideoContext);
 
-    const videoControlsOverlayMenuClass = "bookmark-overlay " + (videoContext.videoPlayerOverlayMenuDisplay === "Bookmarks" ? "active" : "");
+    // const videoControlsOverlayMenuClass = "bookmark-overlay " + (videoContext.videoPlayerOverlayMenuDisplay === "Bookmarks" ? "active" : "");
 
     return (
 
         <>
 
-            <div className={videoControlsOverlayMenuClass} id="bookmarkOverlay">
+            <div className="bookmark-overlay tab-content" id="overlayBookmarks">
                 <input type="text" id="bookmarkName" placeholder="Bookmark name" value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
                 <button onClick={() => { videoContext.onBookmarkAdd(bookmarkName); setBookmarkName("") }} >Add Bookmark</button>
                 <ul id="bookmarkList">
