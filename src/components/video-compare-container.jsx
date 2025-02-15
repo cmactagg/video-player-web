@@ -182,6 +182,16 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
+    function handleDoReset(playerIndex) {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].scale = 1;
+        playerStatesTemp[playerIndex].xPan = 0;
+        playerStatesTemp[playerIndex].yPan = 0;
+        playerStatesTemp[playerIndex].rotate = 0;
+        playerStatesTemp[playerIndex].doMirror = false;
+        setPlayerStates(playerStatesTemp);
+    }
+
     function setDrawCanvasElementAsSelected(playerIndex, elementId) {
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
@@ -286,6 +296,7 @@ function VideoCompareContainer() {
                     playbackRate: playerStates[0].playbackRate,
                     onDoMirror: (rateAmount) => handleDoMirror([0]),
                     doMirror: playerStates[0].doMirror,
+                    onDoReset: () => handleDoReset([0]),
                     drawCanvasElements: playerStates[0].drawCanvasElements,
                     setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(0, elementId),
                     getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(0),
