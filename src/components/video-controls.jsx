@@ -82,7 +82,7 @@ function VideoControls() {
                     </button>
                 </div>
                 <div className="button-column">
-                    <button title="Pan up" onClick={() => videoContext.onPan(0, 10)}>
+                    <button title="Pan up" onClick={() => videoContext.onPan(0, -10)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path fillRule="evenodd"
@@ -90,7 +90,7 @@ function VideoControls() {
                             </path>
                         </svg>
                     </button>
-                    <button title="Pan down" onClick={() => videoContext.onPan(0, -10)}>
+                    <button title="Pan down" onClick={() => videoContext.onPan(0, 10)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path fillRule="evenodd"
