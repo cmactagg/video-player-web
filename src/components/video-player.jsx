@@ -11,12 +11,18 @@ function VideoPlayer({ videoSource }) {
 
     const videoContext = useContext(VideoContext);
 
-    const [aspectRatioPadding, setAspectRatioPadding] = useState("0%");
-
 
     const [dragHandleType, setDragHandleType] = useState("");
 
     const [dragEndDiff, setDragEndDiff] = useState({ x: 0, y: 0 });
+
+    const [svgViewBoxDimensions, setSVGViewBoxDimensions] = useState({ w: 640, h: 320 });
+
+    const [svgPadding, setSvgPadding] = useState({ top: 0, right: 0, bottom: 0, left: 0 });
+
+    const [aspectRatio, setAspectRatio] = useState(0);
+
+    const [canDrawSVG, setCanDrawSVG] = useState(false);
 
 
 
@@ -153,7 +159,6 @@ function VideoPlayer({ videoSource }) {
 
     function onPlay(event) {
         const aspectRatio = videoRef.current.videoWidth / videoRef.current.videoHeight;
-        setAspectRatioPadding((1 / aspectRatio) * 100 + "%");
 
         // videoRef.width = videoRef.current.videoWidth * 2;
 
@@ -174,14 +179,19 @@ function VideoPlayer({ videoSource }) {
         transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
     };
 
+
     const svgStyle = {
         position: 'absolute',
         top: 0,
         left: 0,
-        width: '100%', //videoContext.videoDimensions?.width,
-        height: '100%', //videoContext.videoDimensions?.height
+        boxSizing: 'border-box',
+        padding: `${svgPadding.top}px ${svgPadding.right}px ${svgPadding.bottom}px ${svgPadding.left}px`,//try using this to adjust for the size of the video - top right bottom left
+        // padding: 0 + "px",
+        objectFit: "contain",
+        width: "100%", //videoContext.videoDimensions?.width + "px",
+        height: "100%", //videoContext.videoDimensions?.height + "px",
         // viewBox: "0 0 " + videoContext.videoDimensions?.width + " " + videoContext.videoDimensions?.height
-
+        zIndex: 100
     };
 
     //code for getting the mouse position in svg
@@ -201,20 +211,85 @@ function VideoPlayer({ videoSource }) {
         return { x: svgPoint.x, y: svgPoint.y };
     };
 
-
-
-
-
+    function getVideoElementPosition() {
+        const videoElement = videoRef.current;
+        const rect = videoElement.getBoundingClientRect();
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+    }
 
     function onLoadedMetadata(event) {
-        console.log(event.currentTarget.videoWidth + " " + event.currentTarget.videoHeight);
-
+        const idealWidth = 640;//640;
         videoContext.setVideoDimensions(event.currentTarget.videoWidth, event.currentTarget.videoHeight);
+        const aspectRatio = event.currentTarget.videoWidth / event.currentTarget.videoHeight;
+        setSVGViewBoxDimensions({ w: idealWidth, h: idealWidth / aspectRatio });
+
+        setAspectRatio(aspectRatio);
+
+
+setCanDrawSVG(true);
+
+        console.log(aspectRatio);
     }
+
+
+    const svgPaddingWrapperRef = useRef(null);
+
+    useEffect(() => {
+        const divElement = svgPaddingWrapperRef.current;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                console.log(`Width: ${width}px, Height: ${height}px`);
+
+                const wrapperAspectRatio = width / height;
+
+                console.log(wrapperAspectRatio + " " + aspectRatio);
+
+
+
+                if (aspectRatio > wrapperAspectRatio) {
+
+
+                    const padding = (height - (width / aspectRatio)) / 2;
+
+                    console.log('pad top and bottom ' + padding);
+
+                    //setSvgPadding({ top: padding, right: 0, bottom: padding, left: 0 });
+                }
+                else {
+
+
+                    const padding = (width - (height * aspectRatio)) / 2;
+
+                    console.log('pad left and right ' + padding);
+
+                    //setSvgPadding({ top: 0, right: padding, bottom: 0, left: padding });
+                }
+
+
+            }
+        });
+
+        if (divElement) {
+            resizeObserver.observe(divElement);
+        }
+
+        return () => {
+            if (divElement) {
+                resizeObserver.unobserve(divElement);
+            }
+        };
+    }, []);
+
+
+
 
     return (
         <>
-            <div style={myStyles}> {/* style={myStyles}> THIS IS THE DIV THAT IS CAUSING MY SCALING PROBLEMS*/}
+            <div ref={svgPaddingWrapperRef} style={myStyles}>
                 <video ref={videoRef} id="video"
                     onPlay={onPlay}
                     onLoadedMetadata={onLoadedMetadata}
@@ -222,33 +297,18 @@ function VideoPlayer({ videoSource }) {
                     onDurationChange={videoContext.onDurationChange}
                     onTimeUpdate={videoContext.onTimeUpdate}
                     src={videoSource} muted="{true}"
-                    //width="100%"
-                    //height="40%"
-                    //width="2200"
-                    //height="768"
-                    style={{
-                        // position: 'absolute',
-                        //  top: 0, left: 0,
-                        //top: -500, left: -1000,
-                        //position: 'relative'
-                    }}
                 >
-                    {/* <source type="video/mp4" src={videoSource}/>  */}
                     Your browser does not support the video tag.
                 </video>
+                
                 <svg ref={svgRef}
                     onPointerMove={handlePointerMove}
-                    // width={videoContext.setVideoDimensions?.width}
-                    // height={videoContext.setVideoDimensions?.height}    
-                    //</div>style={{ position: 'absolute', top: 0, left: 0, width: {{videoContext.videoDimensions?.width}}, height: {videoContext.videoDimensions?.height} }}>
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                    viewBox={'0 0 ' + videoContext.videoDimensions?.width * 2 + " " + videoContext.videoDimensions?.height * 2}
+                    style={svgStyle}
+                    viewBox={'0 0 ' + svgViewBoxDimensions.w + " " + svgViewBoxDimensions.h}
                 >
-
-                    <defs>
-
-                    </defs>
+                    <defs></defs>
                     {
+                        
                         videoContext.drawCanvasElements?.filter((element) => element.type == "line")
                             .map((element, index) => {
                                 return (
@@ -269,6 +329,7 @@ function VideoPlayer({ videoSource }) {
                                     </g>
                                 )
                             })
+                        
                     }
                     {
                         videoContext.drawCanvasElements?.filter((element) => element.type == "angle")
@@ -295,42 +356,13 @@ function VideoPlayer({ videoSource }) {
                                     </g>
                                 )
                             })
-                    }
+                        }
                 </svg>
             </div>
             <VideoControls />
             <VideoControlsDraw />
             <VideoBookmarks />
-            {/* <div className="bookmark-overlay tab-content" id="overlayBookmarks">
-                <input type="text" id="bookmarkName" placeholder="Bookmark name" defaultValue="bookmark name" />
-                <button>Add Bookmark</button>
-                <ul id="bookmarkList">
-                    <li>start of flow (6.5)<button>X</button><span>Bookmark 1 - 10s</span>
-                        <div><button title="Set Time"><svg width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button><button title="Loop"><svg width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button><button title="Delete"><svg width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button></div>
-                    </li>
-                    <li>end of flow (7.7)<button>X</button><span>Bookmark 1 - 10s</span>
-                        <div><button title="Set Time"><svg width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button><button title="Loop"><svg width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button><button title="Delete"><svg width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2V22M2 12H22" stroke="white" strokeWidth="2"></path>
-                        </svg></button></div>
-                    </li>
-                </ul>
-            </div> */}
+
 
         </>
     )

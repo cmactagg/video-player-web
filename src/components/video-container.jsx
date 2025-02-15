@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import VideoPlayer from './video-player'
-// import videoUrl from '../assets/mov_bbb.mp4'
-import videoUrl from '../assets/nacho-mortality.mp4'
+import videoUrl from '../assets/mov_bbb.mp4'
+// import videoUrl from '../assets/nacho-mortality.mp4'
 import VideoClock from './video-clock';
 import VideoControlTabs from './video-control-tabs';
 import VideoControlsBasic from './video-controls-basic';
