@@ -15,12 +15,20 @@ function VideoCompareContainer() {
         {
             videoPlayerOverlayMenuDisplay: "none", doPlay: false, videoDimensions: {width: 0, height: 0}, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
             drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
-            { id: 1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
-            { id: 2, type: "angle", selected: true, x1: 50, y1: 50, x2: 50, y2: 80, x3: 80, y3: 80, color: "black", width: 2, degrees: 90 }
+            { id: -1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
+            { id: -2, type: "angle", selected: true, x1: 50, y1: 50, x2: 50, y2: 80, x3: 80, y3: 80, color: "black", width: 2, degrees: 90 }
             ]
         },
         { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
     ]);
+
+    const [nextDrawElementId, setNextDrawElementId] = useState(1);
+
+    function getNextDrawElementId() {
+        setNextDrawElementId(nextDrawElementId + 1);
+        return nextDrawElementId;
+    }
+
 
     function handleVideoPlayerOverlayMenuDisplayChange(playerIndex, display) {
         let playerStatesTemp = [...playerStates];
@@ -234,6 +242,7 @@ function VideoCompareContainer() {
     }
 
     function addDrawCanvasElement(playerIndex, element) {
+        element.id = getNextDrawElementId();
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
 

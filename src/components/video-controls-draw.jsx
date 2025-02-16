@@ -6,12 +6,17 @@ function VideoControlsDraw() {
     const videoContext = useContext(VideoContext);
 
     function handleDrawLineClick(event) {
-        videoContext.addDrawCanvasElement({ id: 7, type: "line", selected: false, x1: 10, y1: 10, x2: 10, y2: 50, color: "black", width: 2 });
+        videoContext.addDrawCanvasElement({ id: 7, type: "line", selected: false, x1: 20, y1: 20, x2: 40, y2: 40, color: "red", width: 2 });
         videoContext.setDrawCanvasElementAsSelected(7);
     }
 
     function handleDrawAngleClick(event) {
-        videoContext.addDrawCanvasElement({ id: 8, type: "angle", selected: false, x1: 400, y1: 100, x2: 400, y2: 150, x3: 450, y3: 150, color: "green", width: 4, degrees: 90 });
+        videoContext.addDrawCanvasElement({ id: 8, type: "angle", selected: false, x1: 20, y1: 20, x2: 20, y2: 40, x3: 40, y3: 40, color: "red", width: 4, degrees: 90 });
+        videoContext.setDrawCanvasElementAsSelected(8);
+    }
+
+    function handleDrawDotClick(event) {
+        videoContext.addDrawCanvasElement({ id: 9, type: "dot", selected: false, x1: 20, y1: 20, color: "red" });
         videoContext.setDrawCanvasElementAsSelected(8);
     }
 
@@ -23,12 +28,15 @@ function VideoControlsDraw() {
         <>
 
             <div className="flyout tab-content" id="overlayButtonsDraw">
+                <div className="button-column">
                     <button title="Draw Line" onClick={handleDrawLineClick}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
                         </svg>
                     </button>
+                </div>
+                <div className="button-column">
                     <button title="Draw Angle" onClick={handleDrawAngleClick}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -36,6 +44,15 @@ function VideoControlsDraw() {
                             <line x1="4" y1="20" x2="30" y2="20" stroke="white" strokeWidth="2"></line>
                         </svg>
                     </button>
+                </div>
+                <div className="button-column">
+                    <button title="Draw Dot" onClick={handleDrawDotClick}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="2" fill="white" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="button-column">
                     <button title="Delete" onClick={handleDeleteElementClick}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -46,6 +63,7 @@ function VideoControlsDraw() {
                         </svg>
                     </button>
                 </div>
+            </div>
         </>
     )
 }

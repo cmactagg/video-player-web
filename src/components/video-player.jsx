@@ -176,8 +176,8 @@ function VideoPlayer({ videoSource }) {
         height: '100%',
         objectFit: "contain",
         // border: '1px solid rgba(0, 0, 0, 1)',
-        transform: videoContext.doMirror ? 
-            'scaleX(-1) scaleY(1) rotate(' + videoContext.rotate * -1 + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan * -1 + 'px, ' + videoContext.yPan + 'px )' : 
+        transform: videoContext.doMirror ?
+            'scaleX(-1) scaleY(1) rotate(' + videoContext.rotate * -1 + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan * -1 + 'px, ' + videoContext.yPan + 'px )' :
             'scaleX(1) scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
 
     };
@@ -206,7 +206,7 @@ function VideoPlayer({ videoSource }) {
         width: "100%", //videoContext.videoDimensions?.width + "px",
         height: "100%", //videoContext.videoDimensions?.height + "px",
         // viewBox: "0 0 " + videoContext.videoDimensions?.width + " " + videoContext.videoDimensions?.height
-        
+
     };
 
     //code for getting the mouse position in svg
@@ -304,8 +304,8 @@ function VideoPlayer({ videoSource }) {
 
     return (
         <>
-            <div ref={svgPaddingWrapperRef}  className="video-wrapper">
-                <div style={myStylesForVideo}> 
+            <div ref={svgPaddingWrapperRef} className="video-wrapper">
+                <div style={myStylesForVideo}>
                     <video ref={videoRef} id="video"
                         onPlay={onPlay}
                         onLoadedMetadata={onLoadedMetadata}
@@ -324,6 +324,8 @@ function VideoPlayer({ videoSource }) {
                         viewBox={'0 0 ' + svgViewBoxDimensions.w + " " + svgViewBoxDimensions.h}
                     >
                         <defs></defs>
+
+                       
                         {
 
                             videoContext.drawCanvasElements?.filter((element) => element.type == "line")
@@ -373,6 +375,29 @@ function VideoPlayer({ videoSource }) {
                                         </g>
                                     )
                                 })
+                        }
+                        {
+
+                            videoContext.drawCanvasElements?.filter((element) => element.type == "dot")
+                                .map((element, index) => {
+                                    return (
+                                        <g lineId={element.id}>
+                                             <circle lineId={element.id} cx={element.x1} cy={element.y1} r="5" fill={element.color} onClick={handleLineClick}/>
+                                             <circle lineId={element.id} cx={element.x1} cy={element.y1} r="10" fill={element.color} opacity={element.selected ? 0.3 : 0} onClick={handleLineClick}/>
+                                            {
+                                                element.selected ?
+                                                    (
+                                                        <>
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
+                                                            
+
+                                                        </>
+                                                    ) : ("")
+                                            }
+                                        </g>
+                                    )
+                                })
+
                         }
                     </svg>
                 </div>

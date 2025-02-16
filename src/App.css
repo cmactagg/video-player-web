@@ -44,7 +44,7 @@ body {
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
-  margin: 10px;
+  margin: 5px;
   background-color: #2a2a2a;
   /* Ensure nothing overflows */
   flex-grow: 1;
@@ -71,7 +71,7 @@ video {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
   flex-direction: column;
 
 }
@@ -80,7 +80,7 @@ video {
   background-color: #444;
   border: none;
   color: white;
-  padding: 10px;
+  padding: 5px;
   margin: 0 5px;
   cursor: pointer;
   border-radius: 5px;
