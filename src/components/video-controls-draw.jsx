@@ -7,20 +7,28 @@ function VideoControlsDraw({isActive}) {
 
     const displayStyle = { display: isActive ? 'block' : 'none' };
 
+    function getSVGCenterPoint() {
+        return {x: videoContext.svgViewBoxDimensions.width / 2 - videoContext.xPan, y: videoContext.svgViewBoxDimensions.height / 2 - videoContext.yPan};   
+    }
+
     function handleDrawLineClick(event) {
-        videoContext.addDrawCanvasElement({ type: "line", selected: false, x1: 20, y1: 20, x2: 40, y2: 40, color: "red", width: 2 });
+        const centerPoint = getSVGCenterPoint();
+        videoContext.addDrawCanvasElement({ type: "line", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 20, y2: centerPoint.y + 20, color: "red", width: 2 });
     }
 
     function handleDrawAngleClick(event) {
-        videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: 20, y1: 20, x2: 20, y2: 40, x3: 40, y3: 40, color: "red", width: 4, degrees: 90 });
+        const centerPoint = getSVGCenterPoint();
+        videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x, y2: centerPoint.y + 20, x3: centerPoint.x + 20, y3: centerPoint.y + 20, color: "red", width: 4, degrees: 90 });
     }
 
     function handleDrawDotClick(event) {
-        videoContext.addDrawCanvasElement({ type: "dot", selected: false, x1: 20, y1: 20, color: "red" });
+        const centerPoint = getSVGCenterPoint();
+        videoContext.addDrawCanvasElement({ type: "dot", selected: false, x1: centerPoint.x, y1: centerPoint.y, color: "red" });
         
     }
 
     function handleDeleteElementClick(event) {
+        const centerPoint = getSVGCenterPoint();
         videoContext.deleteSelectedDrawCanvasElement();
     }
 

@@ -18,7 +18,7 @@ function VideoPlayer() {
 
     const [dragEndDiff, setDragEndDiff] = useState({ x: 0, y: 0 });
 
-    const [svgViewBoxDimensions, setSVGViewBoxDimensions] = useState({ w: 640, h: 320 });
+    //const [svgViewBoxDimensions, setSVGViewBoxDimensions] = useState({ w: 640, h: 320 });
 
     const [svgPadding, setSvgPadding] = useState({ top: 0, right: 0, bottom: 0, left: 0 });
 
@@ -241,7 +241,7 @@ function VideoPlayer() {
         const idealWidth = 640;//640;
         videoContext.setVideoDimensions(event.currentTarget.videoWidth, event.currentTarget.videoHeight);
         const aspectRatio = event.currentTarget.videoWidth / event.currentTarget.videoHeight;
-        setSVGViewBoxDimensions({ w: idealWidth, h: idealWidth / aspectRatio });
+        videoContext.setSVGViewBoxDimensions({ width: idealWidth, height: idealWidth / aspectRatio });
 
         setAspectRatio(aspectRatio);
 
@@ -336,7 +336,7 @@ function VideoPlayer() {
                     <svg ref={svgRef}
                         onPointerMove={handlePointerMove}
                         style={svgStyle}
-                        viewBox={'0 0 ' + svgViewBoxDimensions.w + " " + svgViewBoxDimensions.h}
+                        viewBox={'0 0 ' + videoContext.svgViewBoxDimensions.width + " " + videoContext.svgViewBoxDimensions.height}
                     >
                         <defs></defs>
 

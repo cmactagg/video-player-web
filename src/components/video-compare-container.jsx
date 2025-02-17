@@ -13,11 +13,8 @@ function VideoCompareContainer() {
 
     const [playerStates, setPlayerStates] = useState([
         {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
-            drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
-            { id: -1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
-            { id: -2, type: "angle", selected: true, x1: 50, y1: 50, x2: 50, y2: 80, x3: 80, y3: 80, color: "black", width: 2, degrees: 90 }
-            ]
+            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: {width: 640, height: 320}, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
+            drawCanvasElements: []
         },
         { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
     ]);
@@ -341,6 +338,14 @@ function VideoCompareContainer() {
     }
 
 
+    function setSVGViewBoxDimensions(playerIndex, svgViewBoxDimensions){
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].svgViewBoxDimensions = svgViewBoxDimensions;
+        setPlayerStates(playerStatesTemp);
+    }
+
+
+
 
 
     return (
@@ -391,6 +396,8 @@ function VideoCompareContainer() {
                     setVideoDimensions: (width, height) => setVideoDimensions(0, width, height),
                     openTab: (evt, tabName) => openTab(0, evt, tabName),
                     closeTabs: () => closeTabs(),
+                    svgViewBoxDimensions: playerStates[0].svgViewBoxDimensions,
+                    setSVGViewBoxDimensions: (svgViewBoxDimensions) => setSVGViewBoxDimensions(0, svgViewBoxDimensions)
                 }}>
 
                     <VideoContainer />
