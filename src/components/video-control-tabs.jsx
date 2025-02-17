@@ -11,35 +11,12 @@ const VideoControlTabs = () => {
         // document.querySelector(".tab-button").click();
     }, []);
 
-    function openTab(evt, tabName) {
-        var i, tabcontent, tabbuttons;
-
-        let activeTabName = "";
-
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            if (tabcontent[i].style.display == "block") {
-                activeTabName = tabcontent[i].id;
-            }
-            tabcontent[i].style.display = "none";
-        }
-
-        tabbuttons = document.getElementsByClassName("tab-button");
-        for (i = 0; i < tabbuttons.length; i++) {
-            tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
-        }
-
-        if (activeTabName != tabName) {
-            document.getElementById(tabName).style.display = "block";
-        }
-        evt.currentTarget.className += " active";
-    }
-
+    
     return (
         <>
             <div className="button-container">
                 <div className="top-buttons">
-                    <button title="Video Control" className="tab-button" onClick={(e) => openTab(e, "overlayButtonsVideoControl")}>
+                    <button title="Video Control" className="tab-button" onClick={(e) => videoContext.openTab(e, "overlayButtonsVideoControl")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path fillRule="evenodd"
@@ -47,7 +24,7 @@ const VideoControlTabs = () => {
                             </path>
                         </svg>
                     </button>
-                    <button title="Drawing Tools" onClick={(e) => openTab(e, "overlayButtonsDraw")}>
+                    <button title="Drawing Tools" onClick={(e) => videoContext.openTab(e, "overlayButtonsDraw")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path
@@ -55,11 +32,16 @@ const VideoControlTabs = () => {
                             </path>
                         </svg>
                     </button>
-                    <button title="Bookmarks" onClick={(e) => openTab(e, "overlayBookmarks")}>
+                    <button title="Bookmarks" onClick={(e) => videoContext.openTab(e, "overlayBookmarks")}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 2H18C19.1 2 20 2.9 20 4V20L12 16L4 20V4C4 2.9 4.9 2 6 2Z" fill="white">
                             </path>
+                        </svg>
+                    </button>
+                    <button title="Open File" onClick={(e) => videoContext.openTab(e, "overlayOpenFile")}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9.828 3a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 14 6.828V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3.172a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 9.828 3zM4 4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6.828a1 1 0 0 0-.293-.707l-.586-.586A1 1 0 0 0 11.172 5H9.828a1 1 0 0 0-.707.293l-.586.586A1 1 0 0 0 8 6.828V7H4V5a1 1 0 0 0-1-1z"/>
                         </svg>
                     </button>
                 </div>

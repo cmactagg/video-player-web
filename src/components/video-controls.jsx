@@ -1,17 +1,14 @@
 import { useContext, useState } from 'react'
 import VideoContext from './video-context';
 
-function VideoControls() {
+function VideoControls({isActive}) {
     const videoContext = useContext(VideoContext);
 
-
-
-    const VideoControlsOverlayMenuClass = "flyout " + (videoContext.videoPlayerOverlayMenuDisplay === "VideoControl" ? "active" : "");
-    const drawControlsOverlayMenutClass = "flyout " + (videoContext.videoPlayerOverlayMenuDisplay === "DrawingTools" ? "active" : "");
+    const displayStyle = { display: isActive ? 'block' : 'none' };
 
     return (
         <>
-            <div className="flyout tab-content" id="overlayButtonsVideoControl">
+            <div className="flyout tab-content" id="overlayButtonsVideoControl" style={displayStyle}>
                 <div className="button-column">
                     <button title="Scale Up" onClick={() => videoContext.onScale(1.1)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -110,7 +107,7 @@ function VideoControls() {
                     </button>
                 
                     <button title="Reset" onClick={() => videoContext.onDoReset()}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
                         </svg>
                     </button>

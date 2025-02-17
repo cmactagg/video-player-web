@@ -13,7 +13,7 @@ function VideoCompareContainer() {
 
     const [playerStates, setPlayerStates] = useState([
         {
-            videoPlayerOverlayMenuDisplay: "none", doPlay: false, videoDimensions: {width: 0, height: 0}, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
             drawCanvasElements: [{ id: 0, type: "line", selected: false, x1: 10, y1: 20, x2: 50, y2: 60, color: "yellow", width: 2 },
             { id: -1, type: "line", selected: false, x1: 40, y1: 30, x2: 150, y2: 160, color: "black", width: 2 },
             { id: -2, type: "angle", selected: true, x1: 50, y1: 50, x2: 50, y2: 80, x3: 80, y3: 80, color: "black", width: 2, degrees: 90 }
@@ -24,6 +24,17 @@ function VideoCompareContainer() {
 
     const [nextDrawElementId, setNextDrawElementId] = useState(1);
 
+
+    function handleVideoSourceChange(playerIndexes, filePath) {
+        playerIndexes.forEach((playerIndex) => {
+            let playerStatesTemp = [...playerStates];
+            playerStatesTemp[playerIndex].videoSource = filePath;
+            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
+            setPlayerStates(playerStatesTemp);
+        });
+    }
+
+
     function getNextDrawElementId() {
         setNextDrawElementId(nextDrawElementId + 1);
         return nextDrawElementId;
@@ -32,21 +43,34 @@ function VideoCompareContainer() {
 
     function handleVideoPlayerOverlayMenuDisplayChange(playerIndex, display) {
         let playerStatesTemp = [...playerStates];
-        if(playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay == display){
+        if (playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay == display) {
             playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
         } else {
             playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = display;
-        } 
+        }
         setPlayerStates(playerStatesTemp);
     }
 
 
+    function handleCanPlay(playerIndexes) {
+        playerIndexes.forEach((playerIndex) => {
+            let playerStatesTemp = [...playerStates];
+            playerStatesTemp[playerIndex].canPlay = true;
+            setPlayerStates(playerStatesTemp);
+        });
+    }
+
+    function isVideoReady(playerIndex) {
+        return playerStates[playerIndex].canPlay;
+    }
 
 
     function handlePlayChange(playerIndexes) {
         playerIndexes.forEach((playerIndex) => {
             let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].doPlay = !playerStatesTemp[playerIndex].doPlay;
+
+            isVideoReady(playerIndex) && (playerStatesTemp[playerIndex].doPlay = !playerStatesTemp[playerIndex].doPlay);
+
             setPlayerStates(playerStatesTemp);
         });
     }
@@ -126,10 +150,10 @@ function VideoCompareContainer() {
             let playerStatesTemp = [...playerStates];
 
             // if(sliderValue > 0){
-                //playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].duration * (sliderValue / 100);
-                playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
+            //playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].duration * (sliderValue / 100);
+            playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
             // } else {
-                // playerStatesTemp[playerIndex].currentTime = 0;
+            // playerStatesTemp[playerIndex].currentTime = 0;
             // }
 
             // console.log(playerStatesTemp.duration * (sliderValue / 100));
@@ -245,10 +269,10 @@ function VideoCompareContainer() {
         element.id = getNextDrawElementId();
         let playerStatesTemp = [...playerStates];
         let elements = playerStatesTemp[playerIndex].drawCanvasElements;
-
         elements.push(element);
-
         setPlayerStates(playerStatesTemp);
+
+        setDrawCanvasElementAsSelected(playerIndex, element.id);
     }
 
     function deleteSelectedDrawCanvasElement(playerIndex) {
@@ -265,8 +289,55 @@ function VideoCompareContainer() {
 
     function setVideoDimensions(playerIndex, width, height) {
         let playerStatesTemp = [...playerStates];
-        playerStatesTemp[playerIndex].videoDimensions = {width: width, height: height};
-        setPlayerStates(playerStatesTemp);  
+        playerStatesTemp[playerIndex].videoDimensions = { width: width, height: height };
+        setPlayerStates(playerStatesTemp);
+    }
+
+
+    function openTab(playerIndex, evt, tabName) {
+        var i, tabcontent, tabbuttons;
+
+        let activeTabName = "";
+
+        
+
+        if (playerStates[playerIndex].videoPlayerOverlayMenuDisplay == tabName) {
+            //tabName = "none";
+            closeTabs(playerIndex);
+        } else {
+
+            closeTabs(playerIndex);
+
+            let playerStatesTemp = [...playerStates];
+            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = tabName;
+            setPlayerStates(playerStatesTemp);
+
+
+
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+
+            if (activeTabName != tabName) {
+                document.getElementById(tabName).style.display = "block";
+            }
+            evt.currentTarget.className += " active";
+        }
+    }
+
+    function closeTabs(playerIndex) {
+        // const tabcontent = document.getElementsByClassName("tab-content");
+        // for (let i = 0; i < tabcontent.length; i++) {
+        //     if (tabcontent[i].style.display == "block") {
+        //         activeTabName = tabcontent[i].id;
+        //     }
+        //     tabcontent[i].style.display = "none";
+        // }
+        
+        let playerStatesTemp = [...playerStates];
+            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
+            setPlayerStates(playerStatesTemp);
     }
 
 
@@ -277,10 +348,14 @@ function VideoCompareContainer() {
             <div className="container">
 
                 <VideoContext.Provider value={{
+                    videoSource: playerStates[0].videoSource,
+                    onVideoSourceChange: (filePath) => handleVideoSourceChange([0], filePath),
                     videoPlayerOverlayMenuDisplay: playerStates[0].videoPlayerOverlayMenuDisplay,
                     onVideoPlayerOverlayMenuDisplayChange: (display) => handleVideoPlayerOverlayMenuDisplayChange(0, display),
                     doPlay: playerStates[0].doPlay,
                     onPlayChange: () => handlePlayChange([0]),
+                    canPlay: playerStates[0].canPlay,
+                    onCanPlay: (canPlay) => handleCanPlay([0], canPlay),
                     doSeek: playerStates[0].doSeek,
                     onSeek: (seekInterval) => handleSeek([0], seekInterval),
                     onPostSeek: () => handlePostSeek([0]),
@@ -313,11 +388,13 @@ function VideoCompareContainer() {
                     addDrawCanvasElement: (element) => addDrawCanvasElement(0, element),
                     deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(0),
                     videoDimensions: playerStates[0].videoDimensions,
-                    setVideoDimensions: (width, height) => setVideoDimensions(0, width, height)
+                    setVideoDimensions: (width, height) => setVideoDimensions(0, width, height),
+                    openTab: (evt, tabName) => openTab(0, evt, tabName),
+                    closeTabs: () => closeTabs(),
                 }}>
-                
+
                     <VideoContainer />
-                
+
                 </VideoContext.Provider>
 
                 {/* <div className="controls global">

@@ -1,23 +1,23 @@
 import { useContext, useState } from 'react'
 import VideoContext from './video-context';
 
-function VideoControlsDraw() {
+function VideoControlsDraw({isActive}) {
 
     const videoContext = useContext(VideoContext);
 
+    const displayStyle = { display: isActive ? 'block' : 'none' };
+
     function handleDrawLineClick(event) {
-        videoContext.addDrawCanvasElement({ id: 7, type: "line", selected: false, x1: 20, y1: 20, x2: 40, y2: 40, color: "red", width: 2 });
-        videoContext.setDrawCanvasElementAsSelected(7);
+        videoContext.addDrawCanvasElement({ type: "line", selected: false, x1: 20, y1: 20, x2: 40, y2: 40, color: "red", width: 2 });
     }
 
     function handleDrawAngleClick(event) {
-        videoContext.addDrawCanvasElement({ id: 8, type: "angle", selected: false, x1: 20, y1: 20, x2: 20, y2: 40, x3: 40, y3: 40, color: "red", width: 4, degrees: 90 });
-        videoContext.setDrawCanvasElementAsSelected(8);
+        videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: 20, y1: 20, x2: 20, y2: 40, x3: 40, y3: 40, color: "red", width: 4, degrees: 90 });
     }
 
     function handleDrawDotClick(event) {
-        videoContext.addDrawCanvasElement({ id: 9, type: "dot", selected: false, x1: 20, y1: 20, color: "red" });
-        videoContext.setDrawCanvasElementAsSelected(8);
+        videoContext.addDrawCanvasElement({ type: "dot", selected: false, x1: 20, y1: 20, color: "red" });
+        
     }
 
     function handleDeleteElementClick(event) {
@@ -27,7 +27,7 @@ function VideoControlsDraw() {
     return (
         <>
 
-            <div className="flyout tab-content" id="overlayButtonsDraw">
+            <div className="flyout tab-content" id="overlayButtonsDraw"  style={displayStyle}>
                 <div className="button-column">
                     <button title="Draw Line" onClick={handleDrawLineClick}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

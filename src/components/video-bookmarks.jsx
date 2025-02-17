@@ -3,11 +3,13 @@ import { useState, useContext } from 'react'
 import VideoContext from './video-context';
 
 
-function VideoBookmarks() {
+function VideoBookmarks({ isActive }) {
 
     const [bookmarkName, setBookmarkName] = useState("");
 
     const videoContext = useContext(VideoContext);
+
+    const displayStyle = { display: isActive ? 'block' : 'none' };
 
     // const videoControlsOverlayMenuClass = "bookmark-overlay " + (videoContext.videoPlayerOverlayMenuDisplay === "Bookmarks" ? "active" : "");
 
@@ -15,7 +17,7 @@ function VideoBookmarks() {
 
         <>
 
-            <div className="bookmark-overlay tab-content" id="overlayBookmarks">
+            <div className="bookmark-overlay tab-content" id="overlayBookmarks" style={displayStyle}>
                 <input type="text" id="bookmarkName" placeholder="Bookmark name" value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
                 <button onClick={() => { videoContext.onBookmarkAdd(bookmarkName); setBookmarkName("") }} >Add Bookmark</button>
                 <ul id="bookmarkList">

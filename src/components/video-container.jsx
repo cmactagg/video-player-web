@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import VideoPlayer from './video-player'
-import videoUrl from '../assets/mov_bbb.mp4'
+// import videoUrl from '../assets/mov_bbb.mp4'
 // import videoUrl from '../assets/nacho-mortality.mp4'
 import VideoClock from './video-clock';
 import VideoControlTabs from './video-control-tabs';
@@ -11,7 +11,7 @@ import VideoBookmarks from './video-bookmarks';
 
 
 function VideoContainer({ }) {
-    const [videoSource, setVideoSource] = useState(videoUrl);
+    const [videoSource, setVideoSource] = useState("");//videoUrl);
     const [clockTime, setClockTime] = useState(0);
 
     function fileChange(event) {

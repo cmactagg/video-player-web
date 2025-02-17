@@ -4,8 +4,10 @@ import VideoContext from './video-context';
 import VideoControlsDraw from './video-controls-draw';
 import VideoControls from './video-controls';
 import VideoBookmarks from './video-bookmarks';
+import VideoOpenFile from './video-open-file';
+import { use } from 'react';
 
-function VideoPlayer({ videoSource }) {
+function VideoPlayer() {
     const videoRef = useRef(null);
     const svgRef = useRef(null);
 
@@ -36,11 +38,11 @@ function VideoPlayer({ videoSource }) {
     }
 
 
-    if (videoRef.current != null) {
+    if (videoContext.canPlay) {
         if (videoContext.doPlay) {
-            videoRef.current.play();
+            videoRef.current?.play();
         } else {
-            videoRef.current.pause();
+            videoRef.current?.pause();
         }
 
         if (videoContext.doSeek) {
@@ -48,6 +50,7 @@ function VideoPlayer({ videoSource }) {
             videoContext.onPostSeek();
         }
     }
+
 
 
 
@@ -248,6 +251,12 @@ function VideoPlayer({ videoSource }) {
         console.log(aspectRatio);
     }
 
+    // function onReadyStateChange(event) {
+
+
+    //     videoContext.onVideoReadyStateChange(event.currentTarget.readyState);
+    // }
+
 
     const svgPaddingWrapperRef = useRef(null);
 
@@ -299,6 +308,9 @@ function VideoPlayer({ videoSource }) {
         };
     }, []);
 
+    // function onCanPlayX() {
+    //     alert("can play");
+    // }
 
 
 
@@ -306,13 +318,16 @@ function VideoPlayer({ videoSource }) {
         <>
             <div ref={svgPaddingWrapperRef} className="video-wrapper">
                 <div style={myStylesForVideo}>
+
                     <video ref={videoRef} id="video"
                         onPlay={onPlay}
                         onLoadedMetadata={onLoadedMetadata}
+                        onCanPlay={videoContext.onCanPlay}
+                        // preload="auto"
 
                         onDurationChange={videoContext.onDurationChange}
                         onTimeUpdate={videoContext.onTimeUpdate}
-                        src={videoSource} muted="{true}"
+                        src={videoContext.videoSource} muted="{true}"
                     >
                         Your browser does not support the video tag.
                     </video>
@@ -325,7 +340,7 @@ function VideoPlayer({ videoSource }) {
                     >
                         <defs></defs>
 
-                       
+
                         {
 
                             videoContext.drawCanvasElements?.filter((element) => element.type == "line")
@@ -382,14 +397,14 @@ function VideoPlayer({ videoSource }) {
                                 .map((element, index) => {
                                     return (
                                         <g lineId={element.id}>
-                                             <circle lineId={element.id} cx={element.x1} cy={element.y1} r="5" fill={element.color} onClick={handleLineClick}/>
-                                             <circle lineId={element.id} cx={element.x1} cy={element.y1} r="10" fill={element.color} opacity={element.selected ? 0.3 : 0} onClick={handleLineClick}/>
+                                            <circle lineId={element.id} cx={element.x1} cy={element.y1} r="5" fill={element.color} onClick={handleLineClick} />
+                                            <circle lineId={element.id} cx={element.x1} cy={element.y1} r="10" fill={element.color} opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
                                             {
                                                 element.selected ?
                                                     (
                                                         <>
                                                             <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
-                                                            
+
 
                                                         </>
                                                     ) : ("")
@@ -402,9 +417,10 @@ function VideoPlayer({ videoSource }) {
                     </svg>
                 </div>
             </div>
-            <VideoControls />
-            <VideoControlsDraw />
-            <VideoBookmarks />
+            <VideoControls isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsVideoControl"}/>
+            <VideoControlsDraw  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsDraw"}/>
+            <VideoBookmarks  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayBookmarks"}/>
+            <VideoOpenFile  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayOpenFile"}/>
 
 
         </>
