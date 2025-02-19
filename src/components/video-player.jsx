@@ -40,7 +40,31 @@ function VideoPlayer() {
 
     if (videoContext.canPlay) {
         if (videoContext.doPlay) {
-            videoRef.current?.play();
+            var playPromise = videoRef.current?.play();
+
+
+
+            //var playPromise = video.play();
+
+            if (playPromise !== undefined) {
+              playPromise.then(_ => {
+                // Automatic playback started!
+                // Show playing UI.
+              })
+              .catch(error => {
+                // Auto-play was prevented
+                // Show paused UI.
+                videoContext.onPlayChange();
+                
+              });
+            }
+
+
+
+
+
+
+
         } else {
             videoRef.current?.pause();
         }
