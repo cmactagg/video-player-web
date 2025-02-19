@@ -13,7 +13,7 @@ function VideoCompareContainer() {
 
     const [playerStates, setPlayerStates] = useState([
         {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: {width: 640, height: 320}, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5, loopMarker: "start" }, { name: "end of flow", time: 7.7, loopMarker: "end" }],
             drawCanvasElements: []
         },
         { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
@@ -170,13 +170,70 @@ function VideoCompareContainer() {
 
     function handleBookmarkAdd(playerIndex, bookmarkName) {
         let playerStatesTemp = [...playerStates];
-        playerStatesTemp[playerIndex].bookmarks = [...(playerStatesTemp[playerIndex].bookmarks), { name: bookmarkName, time: playerStatesTemp[playerIndex].currentTime }];
+        playerStatesTemp[playerIndex].bookmarks = [...(playerStatesTemp[playerIndex].bookmarks), { name: bookmarkName, time: playerStatesTemp[playerIndex].currentTime, loopMarker: "" }];
         setPlayerStates(playerStatesTemp);
     }
 
     function handleBookmarkDelete(playerIndex, bookmarkIndex) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].bookmarks.splice(bookmarkIndex, 1);
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function handleBookmarkSetNewTime(playerIndex, bookmarkName) {
+        let playerStatesTemp = [...playerStates];
+        const bookmarkIndex = playerStatesTemp[playerIndex].bookmarks.findIndex(bookmark => bookmark.name === bookmarkName);
+        if (bookmarkIndex !== -1) {
+            playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time = playerStatesTemp[playerIndex].currentTime;
+        }
+
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function doesLoopMarkerExist(playerIndex, loopMarker) {
+        return playerStates[playerIndex].bookmarks.some(bookmark => bookmark.loopMarker === loopMarker);
+    }
+
+    function handleBookmarkChangeLoopMarker(playerIndex, bookmarkName) {
+        let playerStatesTemp = [...playerStates];
+        const bookmarkIndex = playerStatesTemp[playerIndex].bookmarks.findIndex(bookmark => bookmark.name === bookmarkName);
+        if (bookmarkIndex !== -1) {
+            const bookmark = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex];
+            if (bookmark.loopMarker === "start") {
+                bookmark.loopMarker = "";
+            } else if (bookmark.loopMarker === "") {
+                if (doesLoopMarkerExist(playerIndex, "end")) {
+                    if (doesLoopMarkerExist(playerIndex, "start")) {
+                        bookmark.loopMarker = "";
+                    } else {
+                        bookmark.loopMarker = "start";                        
+                    }
+                } else {
+                    bookmark.loopMarker = "end";                    
+                }
+
+            } else if (bookmark.loopMarker === "end") {
+                if (doesLoopMarkerExist(playerIndex, "start")) {
+                    bookmark.loopMarker = "";
+                } else {
+                    bookmark.loopMarker = "start";
+                }
+            }
+        }
+
+
+        playerStatesTemp[playerIndex].loopStart = 0;
+        playerStatesTemp[playerIndex].loopEnd = playerStatesTemp[playerIndex].duration;
+
+        playerStatesTemp[playerIndex].bookmarks.forEach(bookmark => {
+            if (bookmark.loopMarker === "start") {
+                playerStatesTemp[playerIndex].loopStart = bookmark.time;
+            } else if (bookmark.loopMarker === "end") {
+                playerStatesTemp[playerIndex].loopEnd = bookmark.time;
+            }
+        });
+
+
         setPlayerStates(playerStatesTemp);
     }
 
@@ -296,7 +353,7 @@ function VideoCompareContainer() {
 
         let activeTabName = "";
 
-        
+
 
         if (playerStates[playerIndex].videoPlayerOverlayMenuDisplay == tabName) {
             //tabName = "none";
@@ -331,14 +388,14 @@ function VideoCompareContainer() {
         //     }
         //     tabcontent[i].style.display = "none";
         // }
-        
+
         let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
-            setPlayerStates(playerStatesTemp);
+        playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
+        setPlayerStates(playerStatesTemp);
     }
 
 
-    function setSVGViewBoxDimensions(playerIndex, svgViewBoxDimensions){
+    function setSVGViewBoxDimensions(playerIndex, svgViewBoxDimensions) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].svgViewBoxDimensions = svgViewBoxDimensions;
         setPlayerStates(playerStatesTemp);
@@ -372,6 +429,8 @@ function VideoCompareContainer() {
                     onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([0], bookmarkName),
                     onBookmarkClick: (bookmarkTime) => handleBookmarkClick([0], bookmarkTime),
                     onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex),
+                    onBookmarkSetNewTime: (bookmarkName) => handleBookmarkSetNewTime([0], bookmarkName),
+                    onBookmarkChangeLoopMarker: (bookmarkName) => handleBookmarkChangeLoopMarker([0], bookmarkName),
                     onDoLoopChange: () => handleDoLoopChange([0]),
                     onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
                     onScale: (scaleAmount) => handleScale([0], scaleAmount),

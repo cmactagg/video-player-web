@@ -44,6 +44,13 @@ const VideoControlTabs = () => {
                             <path d="M9.828 3a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 14 6.828V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3.172a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 9.828 3zM4 4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6.828a1 1 0 0 0-.293-.707l-.586-.586A1 1 0 0 0 11.172 5H9.828a1 1 0 0 0-.707.293l-.586.586A1 1 0 0 0 8 6.828V7H4V5a1 1 0 0 0-1-1z"/>
                         </svg>
                     </button>
+                    
+                        <svg width="50" height="200"  xmlns="http://www.w3.org/2000/svg">
+                            <text x="100" y="90" fontSize="40" fill="white" textAnchor="middle" transform="rotate(90 50,50)">
+                                Skill Frame
+                            </text>
+                        </svg>
+                    
                 </div>
                 <div className="bottom-buttons">
                     <button title="TBD Button 1">

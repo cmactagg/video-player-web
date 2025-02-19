@@ -8,6 +8,12 @@ function VideoControlsBasic() {
     const [sliderValue, setSliderValue] = useState(0);
     const videoContext = useContext(VideoContext);
 
+    const sliderMarks = videoContext.bookmarks.reduce((acc, obj) => {
+        acc[obj.time * 100] = obj.name;
+        return acc;
+    
+    }, {});//next.time : bookmark.name}) ;
+
     return (
         <>
             <div className="controls-basic-container">
@@ -103,6 +109,7 @@ function VideoControlsBasic() {
                         value={videoContext.clockTime * 100}
                         onChange={videoContext.onSliderChange}
                         className='progress-bar'
+                        marks={sliderMarks}
                     />
                 </div>
             </div>
