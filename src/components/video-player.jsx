@@ -224,8 +224,6 @@ function VideoPlayer() {
         const ctm = svgRef.current.getScreenCTM().inverse();
         const svgPoint = point.matrixTransform(ctm);
 
-        //console.log(`Mouse Position: (${svgPoint.x.toFixed(2)}, ${svgPoint.y.toFixed(2)})`);
-
         return { x: svgPoint.x, y: svgPoint.y };
     };
 
@@ -244,19 +242,8 @@ function VideoPlayer() {
         videoContext.setSVGViewBoxDimensions({ width: idealWidth, height: idealWidth / aspectRatio });
 
         setAspectRatio(aspectRatio);
-
-
         setCanDrawSVG(true);
-
-        console.log(aspectRatio);
     }
-
-    // function onReadyStateChange(event) {
-
-
-    //     videoContext.onVideoReadyStateChange(event.currentTarget.readyState);
-    // }
-
 
     const svgPaddingWrapperRef = useRef(null);
 
@@ -266,34 +253,15 @@ function VideoPlayer() {
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
-                console.log(`Width: ${width}px, Height: ${height}px`);
 
                 const wrapperAspectRatio = width / height;
 
-                console.log(wrapperAspectRatio + " " + aspectRatio);
-
-
-
                 if (aspectRatio > wrapperAspectRatio) {
-
-
                     const padding = (height - (width / aspectRatio)) / 2;
-
-                    console.log('pad top and bottom ' + padding);
-
-                    //setSvgPadding({ top: padding, right: 0, bottom: padding, left: 0 });
                 }
                 else {
-
-
                     const padding = (width - (height * aspectRatio)) / 2;
-
-                    console.log('pad left and right ' + padding);
-
-                    //setSvgPadding({ top: 0, right: padding, bottom: 0, left: padding });
                 }
-
-
             }
         });
 

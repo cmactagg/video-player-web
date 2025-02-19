@@ -8,12 +8,9 @@ import VideoContext from './video-context';
 
 function VideoCompareContainer() {
 
-
-
-
     const [playerStates, setPlayerStates] = useState([
         {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 1, loopEnd: 3, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [{ name: "start of flow", time: 6.5, loopMarker: "start" }, { name: "end of flow", time: 7.7, loopMarker: "end" }],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
             drawCanvasElements: []
         },
         { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
@@ -114,7 +111,7 @@ function VideoCompareContainer() {
                 newTime = newTime - playerStatesTemp[playerIndex].duration;
             }
 
-            playerStatesTemp[playerIndex].currentTime = newTime;//playerStatesTemp[playerIndex].currentTime + seekInterval;
+            playerStatesTemp[playerIndex].currentTime = newTime;
             playerStatesTemp[playerIndex].doSeek = true;
             setPlayerStates(playerStatesTemp);
         });
@@ -134,27 +131,16 @@ function VideoCompareContainer() {
         playerIndexes.forEach((playerIndex) => {
             let playerStatesTemp = [...playerStates];
             playerStatesTemp[playerIndex].duration = event.target.duration;
+            playerStatesTemp[playerIndex].loopStart = 0;
+            playerStatesTemp[playerIndex].loopEnd = playerStatesTemp[playerIndex].duration;
             setPlayerStates(playerStatesTemp);
         });
     }
 
-    // function handleSliderChange(value) { i think i can delete this
-    //     setClockTime(value / 100);
-    // }
-
     function handleSliderChange(playerIndexes, sliderValue) {
         playerIndexes.forEach((playerIndex) => {
             let playerStatesTemp = [...playerStates];
-
-            // if(sliderValue > 0){
-            //playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].duration * (sliderValue / 100);
             playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
-            // } else {
-            // playerStatesTemp[playerIndex].currentTime = 0;
-            // }
-
-            // console.log(playerStatesTemp.duration * (sliderValue / 100));
-            // playerStatesTemp[playerIndex].currentTime = playerStatesTemp.duration * (sliderValue / 100);
             playerStatesTemp[playerIndex].doSeek = true;
             setPlayerStates(playerStatesTemp);
         });
@@ -432,6 +418,7 @@ function VideoCompareContainer() {
                     onBookmarkSetNewTime: (bookmarkName) => handleBookmarkSetNewTime([0], bookmarkName),
                     onBookmarkChangeLoopMarker: (bookmarkName) => handleBookmarkChangeLoopMarker([0], bookmarkName),
                     onDoLoopChange: () => handleDoLoopChange([0]),
+                    doLoop: playerStates[0].doLoop,
                     onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
                     onScale: (scaleAmount) => handleScale([0], scaleAmount),
                     scale: playerStates[0].scale,
