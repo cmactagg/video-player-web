@@ -269,6 +269,13 @@ function VideoPlayer() {
         setCanDrawSVG(true);
     }
 
+    function onEnded(event) {
+        if(!videoContext.doLoop){
+            videoContext.onPlayChange();
+        }
+
+    }
+
     const svgPaddingWrapperRef = useRef(null);
 
     useEffect(() => {
@@ -320,6 +327,10 @@ function VideoPlayer() {
                         onDurationChange={videoContext.onDurationChange}
                         onTimeUpdate={videoContext.onTimeUpdate}
                         src={videoContext.videoSource} muted="{true}"
+
+onEnded={onEnded}
+
+                        
                     >
                         Your browser does not support the video tag.
                     </video>
