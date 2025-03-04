@@ -3,6 +3,7 @@ import VideoPlayer from './video-player'
 import VideoControls from './video-controls'
 import VideoContainer from './video-container';
 import VideoContext from './video-context';
+import VideoControlsBasic from './video-controls-basic';
 
 
 
@@ -10,11 +11,17 @@ function VideoCompareContainer() {
 
     const [playerStates, setPlayerStates] = useState([
         {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile0", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
             drawCanvasElements: []
         },
-        { doPlay: false, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, scale: 1, playbackRate: 1, bookmarks: [{ name: "start of flow", time: 6.5 }, { name: "end of flow", time: 7.7 }], drawCanvasElements: [] }
+        // {
+        //     videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+        //     drawCanvasElements: []
+        // }
     ]);
+
+    const [doLinkMode, setDoLinkMode] = useState(false);
+    const [linkDifferenceTime, setLinkDifferenceTime] = useState(0);
 
     const [nextDrawElementId, setNextDrawElementId] = useState(1);
 
@@ -60,13 +67,24 @@ function VideoCompareContainer() {
 
 
     function handlePlayChange(playerIndexes) {
-        playerIndexes.forEach((playerIndex) => {
+
+        if (doLinkMode) {
+
             let playerStatesTemp = [...playerStates];
-
-            isVideoReady(playerIndex) && (playerStatesTemp[playerIndex].doPlay = !playerStatesTemp[playerIndex].doPlay);
-
+            let doPlay = !playerStatesTemp[playerIndexes[0]].doPlay;
+            playerStatesTemp.forEach((playerState, playerIndex) => {
+                playerStatesTemp[playerIndex].doPlay = doPlay;
+            });
             setPlayerStates(playerStatesTemp);
-        });
+        } else {
+            playerIndexes.forEach((playerIndex) => {
+                let playerStatesTemp = [...playerStates];
+
+                isVideoReady(playerIndex) && (playerStatesTemp[playerIndex].doPlay = !playerStatesTemp[playerIndex].doPlay);
+
+                setPlayerStates(playerStatesTemp);
+            });
+        }
     }
 
     function handleDoLoopChange(playerIndexes) {
@@ -78,19 +96,35 @@ function VideoCompareContainer() {
     }
 
     function handleTimeUpdate(playerIndexes, event) {
-        playerIndexes.forEach((playerIndex) => {
-            let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].currentTime = event.target.currentTime;
 
-            if (playerStatesTemp[playerIndex].doLoop && playerStatesTemp[playerIndex].doPlay == true) {
-                if (playerStatesTemp[playerIndex].currentTime >= playerStatesTemp[playerIndex].loopEnd) {
-                    playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
-                    playerStatesTemp[playerIndex].doSeek = true;
-                }
-            }
+        if (doLinkMode && playerStates[0] == 0) {
+            
+            let playerStatesTemp = [...playerStates];
+
+            playerStatesTemp[0].currentTime = event.target.currentTime;
+            playerStatesTemp[1].currentTime = event.target.currentTime - linkDifferenceTime;
+            // playerStatesTemp[0].doSeek = true;
+            playerStatesTemp[1].doSeek = true;
 
             setPlayerStates(playerStatesTemp);
-        });
+
+
+        } else {
+
+            playerIndexes.forEach((playerIndex) => {
+                let playerStatesTemp = [...playerStates];
+                playerStatesTemp[playerIndex].currentTime = event.target.currentTime;
+
+                if (playerStatesTemp[playerIndex].doLoop && playerStatesTemp[playerIndex].doPlay == true) {
+                    if (playerStatesTemp[playerIndex].currentTime >= playerStatesTemp[playerIndex].loopEnd) {
+                        playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
+                        playerStatesTemp[playerIndex].doSeek = true;
+                    }
+                }
+
+                setPlayerStates(playerStatesTemp);
+            });
+        }
     }
 
     function handleControlsUpdatedTime(playerIndexes, newTime) {
@@ -104,17 +138,48 @@ function VideoCompareContainer() {
 
 
     function handleSeek(playerIndexes, seekInterval) {
-        playerIndexes.forEach((playerIndex) => {
-            let playerStatesTemp = [...playerStates];
-            let newTime = playerStatesTemp[playerIndex].currentTime + seekInterval;
-            if (newTime > playerStatesTemp[playerIndex].duration) {
-                newTime = newTime - playerStatesTemp[playerIndex].duration;
-            }
 
-            playerStatesTemp[playerIndex].currentTime = newTime;
-            playerStatesTemp[playerIndex].doSeek = true;
+        if (doLinkMode) {
+
+            let overrideSeekAmount = seekInterval;//override the seek amount if the seek would go past the end or beginning of the video
+
+            playerStates.forEach((playerState, playerIndex) => {
+
+
+                let newTime = playerStates[playerIndex].currentTime + overrideSeekAmount;
+
+                if (newTime < 0) {
+                    overrideSeekAmount = Math.abs(playerStates[playerIndex].currentTime) < Math.abs(overrideSeekAmount) ? playerStates[playerIndex].currentTime * -1 : overrideSeekAmount;
+                } else if (newTime > playerStates[playerIndex].duration) {
+                    overrideSeekAmount = playerStates[playerIndex].duration - playerStates[playerIndex].currentTime < overrideSeekAmount ? playerStates[playerIndex].duration - playerStates[playerIndex].currentTime : overrideSeekAmount;
+                }
+            });
+
+            let playerStatesTemp = [...playerStates];
+            playerStatesTemp.forEach((playerState, playerIndex) => {
+
+                let newTime = playerStatesTemp[playerIndex].currentTime + overrideSeekAmount;
+
+                playerStatesTemp[playerIndex].currentTime = newTime;
+                playerStatesTemp[playerIndex].doSeek = true;
+
+            });
             setPlayerStates(playerStatesTemp);
-        });
+
+
+        } else {
+
+            playerIndexes.forEach((playerIndex) => {
+                let playerStatesTemp = [...playerStates];
+                let newTime = playerStatesTemp[playerIndex].currentTime + seekInterval;
+
+                playerStatesTemp[playerIndex].currentTime = newTime;
+                playerStatesTemp[playerIndex].doSeek = true;
+                setPlayerStates(playerStatesTemp);
+            });
+
+
+        }
     }
 
     function handlePostSeek(playerIndexes, seekInterval) {
@@ -137,13 +202,56 @@ function VideoCompareContainer() {
         });
     }
 
-    function handleSliderChange(playerIndexes, sliderValue) {
-        playerIndexes.forEach((playerIndex) => {
-            let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
-            playerStatesTemp[playerIndex].doSeek = true;
-            setPlayerStates(playerStatesTemp);
-        });
+    function handleSliderChange(playerIndex, sliderValue) {
+
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
+        playerStatesTemp[playerIndex].doSeek = true;
+
+
+        if (doLinkMode) {
+            if (playerIndex == 0) {
+                playerStatesTemp[1].currentTime = playerStatesTemp[0].currentTime - linkDifferenceTime;
+
+
+            } else if (playerIndex == 1) {
+                playerStatesTemp[0].currentTime = playerStatesTemp[1].currentTime + linkDifferenceTime;
+
+            }
+
+
+
+            if ((playerStatesTemp[0].currentTime < 0
+                || playerStatesTemp[1].currentTime < 0)) {
+
+                if (linkDifferenceTime > 0) {
+                    playerStatesTemp[0].currentTime = linkDifferenceTime;
+                    playerStatesTemp[1].currentTime = 0;
+                } else {
+                    playerStatesTemp[0].currentTime = 0;
+                    playerStatesTemp[1].currentTime = Math.abs(linkDifferenceTime);
+                }
+
+
+            } else if ((playerStatesTemp[0].currentTime > playerStatesTemp[0].duration
+                || playerStatesTemp[1].currentTime > playerStatesTemp[1].duration)) {
+
+                if (linkDifferenceTime > 0) {
+                    playerStatesTemp[0].currentTime = playerStatesTemp[0].duration;
+                    playerStatesTemp[1].currentTime = playerStatesTemp[0].duration - linkDifferenceTime;
+                } else {
+                    playerStatesTemp[0].currentTime = playerStatesTemp[1].duration + Math.abs(linkDifferenceTime);
+                    playerStatesTemp[1].currentTime = playerStatesTemp[0].duration + Math.abs(linkDifferenceTime);
+                }
+
+            }
+
+            playerStatesTemp[0].doSeek = true;
+            playerStatesTemp[1].doSeek = true;
+        }
+
+
+        setPlayerStates(playerStatesTemp);
     }
 
     function handleBookmarkClick(playerIndex, bookmarkIndex) {
@@ -192,10 +300,10 @@ function VideoCompareContainer() {
                     if (doesLoopMarkerExist(playerIndex, "start")) {
                         bookmark.loopMarker = "";
                     } else {
-                        bookmark.loopMarker = "start";                        
+                        bookmark.loopMarker = "start";
                     }
                 } else {
-                    bookmark.loopMarker = "end";                    
+                    bookmark.loopMarker = "end";
                 }
 
             } else if (bookmark.loopMarker === "end") {
@@ -333,6 +441,35 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
+    function addPlayer() {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp.push({
+            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile1", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+            drawCanvasElements: []
+        });
+        setPlayerStates(playerStatesTemp);
+
+        const videoPlayerContainers = document.querySelectorAll('.video-player-container');
+        videoPlayerContainers.forEach(container => {
+            container.style.maxWidth = '47vw';
+        });
+    }
+
+    function closePlayer(playerIndex) {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp.splice(playerIndex, 1);
+        setPlayerStates(playerStatesTemp);
+
+        const videoPlayerContainers = document.querySelectorAll('.video-player-container');
+        videoPlayerContainers.forEach(container => {
+            container.style.maxWidth = '97vw';
+        });
+
+        setDoLinkMode(false);
+
+    }
+
+
 
     function openTab(playerIndex, evt, tabName) {
         var i, tabcontent, tabbuttons;
@@ -388,95 +525,110 @@ function VideoCompareContainer() {
     }
 
 
+    function linkPlayers(doLink) {
+
+
+        if (doLink) {
+            setLinkDifferenceTime(playerStates[0].currentTime - playerStates[1].currentTime);
+        }
+
+        setDoLinkMode(doLink);
+
+    }
+
+
 
 
 
     return (
         <>
             <div className="container">
+                {
+                    playerStates.map((playerState, playerIndex) => {
 
-                <VideoContext.Provider value={{
-                    videoSource: playerStates[0].videoSource,
-                    onVideoSourceChange: (filePath) => handleVideoSourceChange([0], filePath),
-                    videoPlayerOverlayMenuDisplay: playerStates[0].videoPlayerOverlayMenuDisplay,
-                    onVideoPlayerOverlayMenuDisplayChange: (display) => handleVideoPlayerOverlayMenuDisplayChange(0, display),
-                    doPlay: playerStates[0].doPlay,
-                    onPlayChange: () => handlePlayChange([0]),
-                    canPlay: playerStates[0].canPlay,
-                    onCanPlay: (canPlay) => handleCanPlay([0], canPlay),
-                    doSeek: playerStates[0].doSeek,
-                    onSeek: (seekInterval) => handleSeek([0], seekInterval),
-                    onPostSeek: () => handlePostSeek([0]),
-                    onTimeUpdate: (currentTime) => handleTimeUpdate([0], currentTime),
-                    clockTime: playerStates[0].currentTime,
-                    onDurationChange: (duration) => handleDurationChange([0], duration),
-                    duration: playerStates[0].duration,
-                    bookmarks: playerStates[0].bookmarks,
-                    onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([0], bookmarkName),
-                    onBookmarkClick: (bookmarkTime) => handleBookmarkClick([0], bookmarkTime),
-                    onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([0], bookmarkIndex),
-                    onBookmarkSetNewTime: (bookmarkName) => handleBookmarkSetNewTime([0], bookmarkName),
-                    onBookmarkChangeLoopMarker: (bookmarkName) => handleBookmarkChangeLoopMarker([0], bookmarkName),
-                    onDoLoopChange: () => handleDoLoopChange([0]),
-                    doLoop: playerStates[0].doLoop,
-                    onSliderChange: (sliderValue) => handleSliderChange([0], sliderValue),
-                    onScale: (scaleAmount) => handleScale([0], scaleAmount),
-                    scale: playerStates[0].scale,
-                    onPan: (xAmount, yAmount) => handlePan([0], xAmount, yAmount),
-                    xPan: playerStates[0].xPan,
-                    yPan: playerStates[0].yPan,
-                    onRotate: (rotateAmount) => handleRotate([0], rotateAmount),
-                    rotate: playerStates[0].rotate,
-                    onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([0], rateAmount),
-                    playbackRate: playerStates[0].playbackRate,
-                    onDoMirror: (rateAmount) => handleDoMirror([0]),
-                    doMirror: playerStates[0].doMirror,
-                    onDoReset: () => handleDoReset([0]),
-                    drawCanvasElements: playerStates[0].drawCanvasElements,
-                    setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(0, elementId),
-                    getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(0),
-                    setDrawCanvasSelectedElement: (selectedElement) => setDrawCanvasSelectedElement(0, selectedElement),
-                    addDrawCanvasElement: (element) => addDrawCanvasElement(0, element),
-                    deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(0),
-                    videoDimensions: playerStates[0].videoDimensions,
-                    setVideoDimensions: (width, height) => setVideoDimensions(0, width, height),
-                    openTab: (evt, tabName) => openTab(0, evt, tabName),
-                    closeTabs: () => closeTabs(),
-                    svgViewBoxDimensions: playerStates[0].svgViewBoxDimensions,
-                    setSVGViewBoxDimensions: (svgViewBoxDimensions) => setSVGViewBoxDimensions(0, svgViewBoxDimensions)
-                }}>
-
-                    <VideoContainer />
-
-                </VideoContext.Provider>
-
-                {/* <div className="controls global">
-                    <button onClick={() => handlePlayChange([0, 1])}>
-                        play/pause
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], -15)}>
-                        Prev 15 Sec
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], -1)}>
-                        Prev 1 Sec
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], -0.033)}>
-                        Prev 1 Frame
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], 0.033)}>
-                        Next 1 Frame
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], 1)}>
-                        Next 1 Sec
-                    </button>
-                    <button onClick={() => handleSeek([0, 1], 15)}>
-                        Next 15 Sec
-                    </button>
-
-                </div> */}
+                        return (
 
 
-            </div>
+                            <VideoContext.Provider value={{
+                                index: playerIndex,
+                                videoSource: playerStates[playerIndex]?.videoSource,
+                                onVideoSourceChange: (filePath) => handleVideoSourceChange([playerIndex], filePath),
+                                videoPlayerOverlayMenuDisplay: playerStates[playerIndex].videoPlayerOverlayMenuDisplay,
+                                onVideoPlayerOverlayMenuDisplayChange: (display) => handleVideoPlayerOverlayMenuDisplayChange(playerIndex, display),
+                                doPlay: playerStates[playerIndex].doPlay,
+                                onPlayChange: () => handlePlayChange([playerIndex]),
+                                canPlay: playerStates[playerIndex].canPlay,
+                                onCanPlay: (canPlay) => handleCanPlay([playerIndex], canPlay),
+                                doSeek: playerStates[playerIndex].doSeek,
+                                onSeek: (seekInterval) => handleSeek([playerIndex], seekInterval),
+                                onPostSeek: () => handlePostSeek([playerIndex]),
+                                onTimeUpdate: (currentTime) => handleTimeUpdate([playerIndex], currentTime),
+                                clockTime: playerStates[playerIndex].currentTime,
+                                onDurationChange: (duration) => handleDurationChange([playerIndex], duration),
+                                duration: playerStates[playerIndex].duration,
+                                bookmarks: playerStates[playerIndex].bookmarks,
+                                onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([playerIndex], bookmarkName),
+                                onBookmarkClick: (bookmarkTime) => handleBookmarkClick([playerIndex], bookmarkTime),
+                                onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([playerIndex], bookmarkIndex),
+                                onBookmarkSetNewTime: (bookmarkName) => handleBookmarkSetNewTime([playerIndex], bookmarkName),
+                                onBookmarkChangeLoopMarker: (bookmarkName) => handleBookmarkChangeLoopMarker([playerIndex], bookmarkName),
+                                onDoLoopChange: () => handleDoLoopChange([playerIndex]),
+                                doLoop: playerStates[playerIndex].doLoop,
+                                onSliderChange: (sliderValue) => handleSliderChange(playerIndex, sliderValue),
+                                onScale: (scaleAmount) => handleScale([playerIndex], scaleAmount),
+                                scale: playerStates[playerIndex].scale,
+                                onPan: (xAmount, yAmount) => handlePan([playerIndex], xAmount, yAmount),
+                                xPan: playerStates[playerIndex].xPan,
+                                yPan: playerStates[playerIndex].yPan,
+                                onRotate: (rotateAmount) => handleRotate([playerIndex], rotateAmount),
+                                rotate: playerStates[playerIndex].rotate,
+                                onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([playerIndex], rateAmount),
+                                playbackRate: playerStates[playerIndex].playbackRate,
+                                onDoMirror: (rateAmount) => handleDoMirror([playerIndex]),
+                                doMirror: playerStates[playerIndex].doMirror,
+                                onDoReset: () => handleDoReset([playerIndex]),
+                                drawCanvasElements: playerStates[playerIndex].drawCanvasElements,
+                                setDrawCanvasElementAsSelected: (elementId) => setDrawCanvasElementAsSelected(playerIndex, elementId),
+                                getDrawCanvasSelectedElement: () => getDrawCanvasSelectedElement(playerIndex),
+                                setDrawCanvasSelectedElement: (selectedElement) => setDrawCanvasSelectedElement(playerIndex, selectedElement),
+                                addDrawCanvasElement: (element) => addDrawCanvasElement(playerIndex, element),
+                                deleteSelectedDrawCanvasElement: () => deleteSelectedDrawCanvasElement(playerIndex),
+                                videoDimensions: playerStates[playerIndex].videoDimensions,
+                                setVideoDimensions: (width, height) => setVideoDimensions(playerIndex, width, height),
+                                openTab: (evt, tabName) => openTab(playerIndex, evt, tabName),
+                                closeTabs: () => closeTabs(),
+                                svgViewBoxDimensions: playerStates[playerIndex].svgViewBoxDimensions,
+                                setSVGViewBoxDimensions: (svgViewBoxDimensions) => setSVGViewBoxDimensions(playerIndex, svgViewBoxDimensions),
+                                closePlayer: (playerIndex) => closePlayer(playerIndex),
+                                playerCount: playerStates.length,
+                                linkPlayers: (doLink) => linkPlayers(doLink),
+                                doLinkMode: doLinkMode,
+                            }}
+                            >
+
+                                <VideoContainer />
+
+                            </VideoContext.Provider>
+                        )
+                    })
+
+                }
+
+                {playerStates.length <= 1 && (
+                    <div className="video-player-add-button-container">
+
+                        <button title="Compare" onClick={addPlayer}>
+                            <svg width="30" height="200" xmlns="http://www.w3.org/2000/svg">
+                                <text x="100" y="90" fontSize="20" fill="white" textAnchor="middle" transform="rotate(90 50,50)">
+                                    Compare
+                                </text>
+                            </svg>
+                        </button>
+                    </div>
+
+                )}
+
+            </div >
 
 
         </>

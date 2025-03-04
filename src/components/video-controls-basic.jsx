@@ -124,6 +124,7 @@ function VideoControlsBasic() {
                         onChange={videoContext.onSliderChange}
                         className='progress-bar'
                         marks={sliderMarks}
+                        
                     />
                 </div>
             </div>

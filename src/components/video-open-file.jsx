@@ -18,7 +18,7 @@ function VideoOpenFile({isActive}) {
 
     return (
         <>
-            <div className="open-file-overlay tab-content" id="overlayOpenFile" style={displayStyle}>
+            <div className="open-file-overlay tab-content" id={"overlayOpenFile" + videoContext.index} style={displayStyle}>
                 <div className="open-file-container">
                     <input type="file" id="file" name="file" accept="video/*" onChange={onFileChange} />
                 </div>

@@ -17,7 +17,7 @@ function VideoBookmarks({ isActive }) {
 
         <>
 
-            <div className="bookmark-overlay tab-content" id="overlayBookmarks" style={displayStyle}>
+            <div className="bookmark-overlay tab-content" id={"overlayBookmarks" + videoContext.index} style={displayStyle}>
                 <input type="text" id="bookmarkName" placeholder="Bookmark name" value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
                 <button onClick={() => { videoContext.onBookmarkAdd(bookmarkName); setBookmarkName("") }} >Add Bookmark</button>
                 <ul id="bookmarkList">

@@ -8,7 +8,7 @@ function VideoControls({isActive}) {
 
     return (
         <>
-            <div className="flyout tab-content" id="overlayButtonsVideoControl" style={displayStyle}>
+            <div className="flyout tab-content" id={"overlayButtonsVideoControl" + videoContext.index} style={displayStyle}>
                 <div className="button-column">
                     <button title="Scale Up" onClick={() => videoContext.onScale(1.1)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

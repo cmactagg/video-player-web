@@ -420,10 +420,10 @@ onEnded={onEnded}
                     </svg>
                 </div>
             </div>
-            <VideoControls isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsVideoControl"}/>
-            <VideoControlsDraw  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsDraw"}/>
-            <VideoBookmarks  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayBookmarks"}/>
-            <VideoOpenFile  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayOpenFile"}/>
+            <VideoControls isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsVideoControl" + videoContext.index}/>
+            <VideoControlsDraw  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsDraw" + videoContext.index}/>
+            <VideoBookmarks  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayBookmarks" + videoContext.index}/>
+            <VideoOpenFile  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayOpenFile" + videoContext.index}/>
 
 
         </>

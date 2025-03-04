@@ -35,7 +35,7 @@ function VideoControlsDraw({isActive}) {
     return (
         <>
 
-            <div className="flyout tab-content" id="overlayButtonsDraw"  style={displayStyle}>
+            <div className="flyout tab-content" id={"overlayButtonsDraw" + videoContext.index}  style={displayStyle}>
                 <div className="button-column">
                     <button title="Draw Line" onClick={handleDrawLineClick}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
