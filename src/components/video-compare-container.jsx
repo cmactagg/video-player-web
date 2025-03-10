@@ -243,8 +243,11 @@ function VideoCompareContainer() {
         } else {
             playerStatesTemp[0].linkStart = 0;
             playerStatesTemp[0].linkEnd = playerStatesTemp[0].duration;
-            playerStatesTemp[1].linkStart = 0;
-            playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
+
+            if (playerStatesTemp.length > 1) {
+                playerStatesTemp[1].linkStart = 0;
+                playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
+            }
 
         }
 
