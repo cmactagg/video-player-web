@@ -11,7 +11,7 @@ function VideoCompareContainer() {
 
     const [playerStates, setPlayerStates] = useState([
         {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile0", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile0", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
             drawCanvasElements: []
         },
         // {
@@ -87,12 +87,19 @@ function VideoCompareContainer() {
         }
     }
 
-    function handleDoLoopChange(playerIndexes) {
-        playerIndexes.forEach((playerIndex) => {
-            let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].doLoop = !playerStatesTemp[playerIndex].doLoop;
-            setPlayerStates(playerStatesTemp);
-        });
+    function handleDoLoopChange(playerIndex) {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].doLoop = !playerStatesTemp[playerIndex].doLoop;
+
+        if (doLinkMode) {
+            const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+            playerStatesTemp[otherPlayerIndex].doLoop = false;
+        }
+
+        setLoopStartEnd(playerStatesTemp, playerIndex);
+
+
+        setPlayerStates(playerStatesTemp);
     }
 
     const [syncCurrentTimeCounter, setSyncCurrentTimeCounter] = useState(0);
@@ -102,26 +109,37 @@ function VideoCompareContainer() {
         setSyncCurrentTimeCounter(syncCurrentTimeCounter + 1);
 
         if (doLinkMode && syncCurrentTimeCounter > 4 && playerIndex == 0) {
-             setSyncCurrentTimeCounter(0);
+            setSyncCurrentTimeCounter(0);
 
             let playerStatesTemp = [...playerStates];
 
-            // help to keep the clocks in sync
+            //todo: this is a hack to help keep the clocks in sync
+
+            // // help to keep the clocks in sync
             playerStatesTemp[0].currentTime = event.target.currentTime;
-            playerStatesTemp[1].currentTime = event.target.currentTime - linkDifferenceTime;
+            // playerStatesTemp[1].currentTime = event.target.currentTime - linkDifferenceTime;
             playerStatesTemp[0].doSeek = true;
-            playerStatesTemp[1].doSeek = true;
+            // playerStatesTemp[1].doSeek = true;
 
             setPlayerStates(playerStatesTemp);
+
         } else {
 
             let playerStatesTemp = [...playerStates];
             playerStatesTemp[playerIndex].currentTime = event.target.currentTime;
 
-            if (playerStatesTemp[playerIndex].doLoop && playerStatesTemp[playerIndex].doPlay == true) {
-                if (playerStatesTemp[playerIndex].currentTime >= playerStatesTemp[playerIndex].loopEnd) {
-                    playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
-                    playerStatesTemp[playerIndex].doSeek = true;
+            if ((playerStatesTemp[0].doLoop ||
+                playerStatesTemp[1].doLoop)
+                && playerStatesTemp[playerIndex].doPlay == true) {
+
+                if (playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd
+                    || playerStatesTemp[playerIndex].currentTime < playerStatesTemp[playerIndex].loopStart) {
+
+                    playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
+                    playerStatesTemp[0].doSeek = true;
+
+                    playerStatesTemp[1].currentTime = playerStatesTemp[1].loopStart;
+                    playerStatesTemp[1].doSeek = true;
                 }
             }
 
@@ -192,17 +210,60 @@ function VideoCompareContainer() {
         });
     }
 
+    function setLinkStartAndEndDefaults(doLink, linkDiff) {
 
-    function handleDurationChange(playerIndexes, event) {
-        playerIndexes.forEach((playerIndex) => {
-            let playerStatesTemp = [...playerStates];
-            playerStatesTemp[playerIndex].duration = event.target.duration;
-            playerStatesTemp[playerIndex].loopStart = 0;
-            playerStatesTemp[playerIndex].loopEnd = playerStatesTemp[playerIndex].duration;
+        let playerStatesTemp = [...playerStates];
+
+        playerStatesTemp[0].linkStart = 0;
+        playerStatesTemp[0].linkEnd = playerStatesTemp[0].duration;
+
+        if (playerStatesTemp.length > 1) {
+            playerStatesTemp[1].linkStart = 0;
+            playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
+        }
+
+        if (doLink) {
 
 
-            setPlayerStates(playerStatesTemp);
-        });
+            playerStatesTemp[0].linkStart = Math.max(0, linkDiff);
+            playerStatesTemp[0].linkEnd = Math.min(playerStatesTemp[0].duration, playerStatesTemp[1].duration + linkDiff);
+
+
+            playerStatesTemp[1].linkStart = Math.max(0, linkDiff * -1);
+            playerStatesTemp[1].linkEnd = Math.min(playerStatesTemp[1].duration, playerStatesTemp[0].duration - linkDiff);
+
+
+            //decide if linkStart should override loopStart
+            playerStatesTemp[0].loopStart = playerStatesTemp[0].linkStart;
+            playerStatesTemp[0].loopEnd = playerStatesTemp[0].linkEnd;
+            playerStatesTemp[1].loopStart = playerStatesTemp[1].linkStart;
+            playerStatesTemp[1].loopEnd = playerStatesTemp[1].linkEnd;
+
+
+        } else {
+            playerStatesTemp[0].linkStart = 0;
+            playerStatesTemp[0].linkEnd = playerStatesTemp[0].duration;
+            playerStatesTemp[1].linkStart = 0;
+            playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
+
+        }
+
+        setPlayerStates(playerStatesTemp);
+
+
+    }
+
+
+
+    function handleDurationChange(playerIndex, event) {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].duration = event.target.duration;
+
+        setPlayerStates(playerStatesTemp);
+
+        setLinkStartAndEndDefaults();
+
+
     }
 
     function handleSliderChange(playerIndex, sliderValue) {
@@ -304,19 +365,29 @@ function VideoCompareContainer() {
         }
 
 
-        playerStatesTemp[playerIndex].loopStart = 0;
-        playerStatesTemp[playerIndex].loopEnd = playerStatesTemp[playerIndex].duration;
-
-        playerStatesTemp[playerIndex].bookmarks.forEach(bookmark => {
-            if (bookmark.loopMarker === "start") {
-                playerStatesTemp[playerIndex].loopStart = bookmark.time;
-            } else if (bookmark.loopMarker === "end") {
-                playerStatesTemp[playerIndex].loopEnd = bookmark.time;
-            }
-        });
+        setLoopStartEnd(playerStatesTemp, playerIndex);
 
 
         setPlayerStates(playerStatesTemp);
+    }
+
+    function setLoopStartEnd(playerStatesTemp, playerIndex) {
+        playerStatesTemp[playerIndex].loopStart = playerStatesTemp[playerIndex].linkStart;
+        playerStatesTemp[playerIndex].loopEnd = playerStatesTemp[playerIndex].linkEnd;
+
+        if (playerStatesTemp[playerIndex].doLoop) {
+
+
+            playerStatesTemp[playerIndex].bookmarks.forEach(bookmark => {
+                if (bookmark.loopMarker === "start") {
+                    playerStatesTemp[playerIndex].loopStart = Math.max(bookmark.time, playerStatesTemp[playerIndex].linkStart);
+                } else if (bookmark.loopMarker === "end") {
+                    playerStatesTemp[playerIndex].loopEnd = Math.min(bookmark.time, playerStatesTemp[playerIndex].linkEnd);
+                } else if (bookmark.loopMarker === "") {
+                    //do nothing
+                }
+            });
+        }
     }
 
     function handleScale(playerIndex, scaleAmount) {
@@ -432,7 +503,7 @@ function VideoCompareContainer() {
     function addPlayer() {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp.push({
-            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile1", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile1", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
             drawCanvasElements: []
         });
         setPlayerStates(playerStatesTemp);
@@ -515,22 +586,61 @@ function VideoCompareContainer() {
 
     function linkPlayers(doLink) {
 
+        setDoLinkMode(doLink);
+
+        let linkDiff = 0;
+
         let playerStatesTemp = [...playerStates];
         if (doLink) {
 
-            let linkDiff = playerStatesTemp[0].currentTime - playerStatesTemp[1].currentTime;
+            linkDiff = playerStatesTemp[0].currentTime - playerStatesTemp[1].currentTime;
+
+            if (playerStatesTemp[0].doLoop && playerStatesTemp[1].doLoop) {
+                playerStatesTemp[1].doLoop = false;
+            }
 
             setLinkDifferenceTime(linkDiff);
+
+
+
         }
+
+        setLinkStartAndEndDefaults(doLink, linkDiff);
+
+        setLoopStartEnd(playerStatesTemp, 0);
+        setLoopStartEnd(playerStatesTemp, 1);
 
         setPlayerStates(playerStatesTemp);
 
-        setDoLinkMode(doLink);
+
 
     }
 
 
+    function handleEnded(playerIndex) {
+        if (doLinkMode) {
+            if (playerStates[0].doLoop || playerStates[1].doLoop) {
+                let playerStatesTemp = [...playerStates];
+                playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
+                playerStatesTemp[0].doSeek = true;
+                playerStatesTemp[1].currentTime = playerStatesTemp[1].loopStart;
+                playerStatesTemp[1].doSeek = true;
+                setPlayerStates(playerStatesTemp);
+            } else {
+                handlePlayChange([playerIndex]);
+            }
+        } else {
+            if (playerStates[playerIndex].doLoop) {
+                let playerStatesTemp = [...playerStates];
+                playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
+                playerStatesTemp[playerIndex].doSeek = true;
+                setPlayerStates(playerStatesTemp);
+            } else {
+                handlePlayChange([playerIndex]);
+            }
+        }
 
+    }
 
 
     return (
@@ -557,7 +667,7 @@ function VideoCompareContainer() {
                                 onPostSeek: () => handlePostSeek([playerIndex]),
                                 onTimeUpdate: (currentTime) => handleTimeUpdate(playerIndex, currentTime),
                                 clockTime: playerStates[playerIndex].currentTime,
-                                onDurationChange: (duration) => handleDurationChange([playerIndex], duration),
+                                onDurationChange: (duration) => handleDurationChange(playerIndex, duration),
                                 duration: playerStates[playerIndex].duration,
                                 bookmarks: playerStates[playerIndex].bookmarks,
                                 onBookmarkAdd: (bookmarkName) => handleBookmarkAdd([playerIndex], bookmarkName),
@@ -565,8 +675,12 @@ function VideoCompareContainer() {
                                 onBookmarkDelete: (bookmarkIndex) => handleBookmarkDelete([playerIndex], bookmarkIndex),
                                 onBookmarkSetNewTime: (bookmarkName) => handleBookmarkSetNewTime([playerIndex], bookmarkName),
                                 onBookmarkChangeLoopMarker: (bookmarkName) => handleBookmarkChangeLoopMarker([playerIndex], bookmarkName),
-                                onDoLoopChange: () => handleDoLoopChange([playerIndex]),
+                                onDoLoopChange: () => handleDoLoopChange(playerIndex),
                                 doLoop: playerStates[playerIndex].doLoop,
+                                loopStart: playerStates[playerIndex].loopStart,
+                                loopEnd: playerStates[playerIndex].loopEnd,
+                                linkStart: playerStates[playerIndex].linkStart,
+                                linkEnd: playerStates[playerIndex].linkEnd,
                                 onSliderChange: (sliderValue) => handleSliderChange(playerIndex, sliderValue),
                                 onScale: (scaleAmount) => handleScale([playerIndex], scaleAmount),
                                 scale: playerStates[playerIndex].scale,
@@ -596,6 +710,8 @@ function VideoCompareContainer() {
                                 playerCount: playerStates.length,
                                 linkPlayers: (doLink) => linkPlayers(doLink),
                                 doLinkMode: doLinkMode,
+                                linkDifferenceTime: linkDifferenceTime,
+                                onEnded: () => handleEnded(playerIndex)
                             }}
                             >
 

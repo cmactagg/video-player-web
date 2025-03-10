@@ -48,3 +48,15 @@ other loop = loop restarts + link interval ACTUALLY THIS SHOULD BE TAKENN CARE O
 other player = actual time of other player + link interval
 
 
+
+
+
+## LOOPING IN LINK MODE
+
+What only one player could have looping on at a time.
+That player would use the bookmarks to loop, and the other player would disregard its bookmarks
+The start and end of both players would need to be factored into the start and end of the loop (perhaps display these on the slider)
+
+
+
+

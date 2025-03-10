@@ -47,16 +47,16 @@ function VideoPlayer() {
             //var playPromise = video.play();
 
             if (playPromise !== undefined) {
-              playPromise.then(_ => {
-                // Automatic playback started!
-                // Show playing UI.
-              })
-              .catch(error => {
-                // Auto-play was prevented
-                // Show paused UI.
-                videoContext.onPlayChange();
-                
-              });
+                playPromise.then(_ => {
+                    // Automatic playback started!
+                    // Show playing UI.
+                })
+                    .catch(error => {
+                        // Auto-play was prevented
+                        // Show paused UI.
+                        videoContext.onPlayChange();
+
+                    });
             }
 
 
@@ -270,9 +270,11 @@ function VideoPlayer() {
     }
 
     function onEnded(event) {
-        if(!videoContext.doLoop){
-            videoContext.onPlayChange();
-        }
+        // if (!videoContext.doLoop) {
+        //     videoContext.onPlayChange();
+        // }
+
+        videoContext.onEnded();
 
     }
 
@@ -328,9 +330,9 @@ function VideoPlayer() {
                         onTimeUpdate={videoContext.onTimeUpdate}
                         src={videoContext.videoSource} muted="{true}"
 
-onEnded={onEnded}
+                        onEnded={onEnded}
 
-                        
+
                     >
                         Your browser does not support the video tag.
                     </video>
@@ -420,10 +422,10 @@ onEnded={onEnded}
                     </svg>
                 </div>
             </div>
-            <VideoControls isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsVideoControl" + videoContext.index}/>
-            <VideoControlsDraw  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsDraw" + videoContext.index}/>
-            <VideoBookmarks  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayBookmarks" + videoContext.index}/>
-            <VideoOpenFile  isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayOpenFile" + videoContext.index}/>
+            <VideoControls isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsVideoControl" + videoContext.index} />
+            <VideoControlsDraw isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsDraw" + videoContext.index} />
+            <VideoBookmarks isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayBookmarks" + videoContext.index} />
+            <VideoOpenFile isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayOpenFile" + videoContext.index} />
 
 
         </>

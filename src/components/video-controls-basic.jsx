@@ -8,11 +8,33 @@ function VideoControlsBasic() {
     const [sliderValue, setSliderValue] = useState(0);
     const videoContext = useContext(VideoContext);
 
-    const sliderMarks = videoContext.bookmarks.reduce((acc, obj) => {
-        acc[obj.time * 100] = obj.name;
-        return acc;
+    // const sliderMarks = videoContext.bookmarks.reduce((acc, obj) => {
+    //     acc[obj.time * 100] = obj.name;
+    //     return acc;
 
-    }, {});//next.time : bookmark.name}) ;
+    // }, {});
+
+    function getSliderMarks() {
+
+        let sliderMarks = {};
+
+        sliderMarks = videoContext.bookmarks.reduce((acc, obj) => {
+            acc[obj.time * 100] = obj.name;
+            return acc;
+
+        }, {});
+
+        if(videoContext.doLinkMode){
+            sliderMarks[videoContext.linkStart * 100] = "Link Start";
+            sliderMarks[videoContext.linkEnd * 100] = "Link End";
+        }
+
+
+        return sliderMarks;
+
+    }
+
+
 
     return (
         <>
@@ -98,7 +120,7 @@ function VideoControlsBasic() {
                                     <path fillRule="evenodd"
                                         d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z">
                                     </path>
-                                    
+
                                 </svg>
                             ) : (
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -123,8 +145,8 @@ function VideoControlsBasic() {
                         value={videoContext.clockTime * 100}
                         onChange={videoContext.onSliderChange}
                         className='progress-bar'
-                        marks={sliderMarks}
-                        
+                        marks={getSliderMarks()}
+
                     />
                 </div>
             </div>
