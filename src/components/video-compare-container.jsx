@@ -415,7 +415,14 @@ function VideoCompareContainer() {
 
     function handlePlaybackRateUpdate(playerIndex, rateAmount) {
         let playerStatesTemp = [...playerStates];
-        playerStatesTemp[playerIndex].playbackRate = playerStatesTemp[playerIndex].playbackRate + rateAmount;
+
+        if(doLinkMode){
+            playerStatesTemp[0].playbackRate = playerStatesTemp[0].playbackRate + rateAmount;
+            playerStatesTemp[1].playbackRate = playerStatesTemp[0].playbackRate;
+        } else {
+            playerStatesTemp[playerIndex].playbackRate = playerStatesTemp[playerIndex].playbackRate + rateAmount;
+        }
+
         setPlayerStates(playerStatesTemp);
     }
 
@@ -603,10 +610,9 @@ function VideoCompareContainer() {
                 playerStatesTemp[1].doLoop = false;
             }
 
+            playerStatesTemp[1].playbackRate = playerStatesTemp[0].playbackRate;
+
             setLinkDifferenceTime(linkDiff);
-
-
-
         }
 
         setLinkStartAndEndDefaults(doLink, linkDiff);
