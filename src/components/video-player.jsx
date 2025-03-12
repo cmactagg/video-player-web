@@ -125,7 +125,17 @@ function VideoPlayer() {
                 } else if (selectedLine.type == "angle") {
                     selectedLine.x3 = pointerCoordiantes.x;
                     selectedLine.y3 = pointerCoordiantes.y;
+                } else if(selectedLine.type == "90Angle") {
+                    selectedLine.x2 = pointerCoordiantes.x;
+                    selectedLine.y2 = pointerCoordiantes.y;
+
+                    let degreesLine1 = calculateAngle(selectedLine.x1, selectedLine.y1, selectedLine.x2, selectedLine.y2);
+
+                    let totalDegrees = (360 - degreesLine1 - videoContext.rotate % 360 + 360) % 360;
+                    selectedLine.degrees = totalDegrees.toFixed(1);
+
                 }
+
             } else if (dragHandleType == "middle") {
 
                 if (selectedLine.type == "line") {
@@ -184,19 +194,18 @@ function VideoPlayer() {
         return positiveAngleDegrees;
     }
 
-    function onPlay(event) {
-        const aspectRatio = videoRef.current.videoWidth / videoRef.current.videoHeight;
-
-        // videoRef.width = videoRef.current.videoWidth * 2;
-
+    function calculateEndPosition(x1, y1, angle, distance) {
+        const angleRadians = angle * (Math.PI / 180);
+        const x2 = x1 + distance * Math.cos(angleRadians);
+        const y2 = y1 + distance * Math.sin(angleRadians);
+        return { x: x2, y: y2 };
     }
 
-    // const myStyles = {
-    //     //paddingTop: aspectRatioPadding,
-    //     border: '1px solid rgba(0, 0, 0, 1)',
-    //     transform: 'scaleX(' + (videoContext.doMirror ? -1 : 1) + ') scaleY(1) rotate(' + videoContext.rotate + 'deg) scale(' + videoContext.scale + ', ' + videoContext.scale + ') translate(' + videoContext.xPan + 'px, ' + videoContext.yPan + 'px )'
 
-    // };
+    function onPlay(event) {
+        const aspectRatio = videoRef.current.videoWidth / videoRef.current.videoHeight;
+    }
+
 
     const myStylesForVideo = {
         width: '100%',
@@ -313,6 +322,9 @@ function VideoPlayer() {
     //     alert("can play");
     // }
 
+    const ninetyHorizontalEndPosition = calculateEndPosition(0, 0, videoContext.rotate * -1, 60);
+    const ninetyVerticalEndPosition = calculateEndPosition(0, 0, (videoContext.rotate + 90) * -1, 60);
+
 
 
     return (
@@ -380,7 +392,8 @@ function VideoPlayer() {
 
                                             <line lineId={element.id} x1={element.x2} y1={element.y2} x2={element.x3} y2={element.y3} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick} />
                                             <line lineId={element.id} x1={element.x2} y1={element.y2} x2={element.x3} y2={element.y3} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
-                                            <text x={element.x2 + 20} y={element.y2 - 20} fill={element.color}>{element.degrees}</text>
+                                            <rect lineId={element.id} x={element.x2 + 20} y={element.y2 - 42} width="80" height="24" fill="white" opacity={0.7}></rect>
+                                            <text x={element.x2 + 20} y={element.y2 - 20} fill={element.color} fontSize="30">{element.degrees}</text>
                                             {
                                                 element.selected ?
                                                     (
@@ -419,6 +432,39 @@ function VideoPlayer() {
                                 })
 
                         }
+
+                        {
+                            videoContext.drawCanvasElements?.filter((element) => element.type == "90Angle")
+                                .map((element, index) => {
+                                    return (
+                                        <g lineId={element.id}>
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x1 + ninetyHorizontalEndPosition.x} y2={element.y1 + ninetyHorizontalEndPosition.y} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick} />
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x1 + ninetyHorizontalEndPosition.x} y2={element.y1 + ninetyHorizontalEndPosition.y} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x1 + ninetyVerticalEndPosition.x} y2={element.y1 + ninetyVerticalEndPosition.y} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick} />
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x1 + ninetyVerticalEndPosition.x} y2={element.y1 + ninetyVerticalEndPosition.y} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+
+
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth={element.width} onClick={handleLineClick} />
+                                            <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
+                                            <rect lineId={element.id} x={element.x1 + 20} y={element.y1 - 42} width="80" height="24" fill="white" opacity={0.7}></rect>
+                                            <text x={element.x1 + 20} y={element.y1 - 20} fill={element.color} fontSize="30">{element.degrees}</text>
+                                            
+                                            {
+                                                element.selected ?
+                                                    (
+                                                        <>
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="end" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                        </>
+                                                    ) : ("")
+                                            }
+                                        </g>
+                                    )
+                                })
+                        }
+
+                        
                     </svg>
                 </div>
             </div>

@@ -21,6 +21,11 @@ function VideoControlsDraw({isActive}) {
         videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x, y2: centerPoint.y + 20, x3: centerPoint.x + 20, y3: centerPoint.y + 20, color: "red", width: 4, degrees: 90 });
     }
 
+    function handleDrawNinetyAngleClick(event) {
+        const centerPoint = getSVGCenterPoint();
+        videoContext.addDrawCanvasElement({ type: "90Angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 30, y2: centerPoint.y - 30, color: "red", width: 4, degrees: 90 });
+    }
+
     function handleDrawDotClick(event) {
         const centerPoint = getSVGCenterPoint();
         videoContext.addDrawCanvasElement({ type: "dot", selected: false, x1: centerPoint.x, y1: centerPoint.y, color: "red" });
@@ -50,6 +55,18 @@ function VideoControlsDraw({isActive}) {
                             xmlns="http://www.w3.org/2000/svg">
                             <line x1="4" y1="20" x2="20" y2="4" stroke="white" strokeWidth="2"></line>
                             <line x1="4" y1="20" x2="30" y2="20" stroke="white" strokeWidth="2"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div className="button-column">
+                    <button title="Draw 90d Angle" onClick={handleDrawNinetyAngleClick}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="4" y1="20" x2="4" y2="4" stroke="white" strokeWidth="2"></line>
+                            <line x1="4" y1="20" x2="20" y2="20" stroke="white" strokeWidth="2"></line>
+                            <line x1="8" y1="16" x2="4" y2="16" stroke="white" strokeWidth="2"></line>
+                            <line x1="8" y1="16" x2="8" y2="20" stroke="white" strokeWidth="2"></line>
                         </svg>
                     </button>
                 </div>

@@ -409,6 +409,7 @@ function VideoCompareContainer() {
     function handleRotate(playerIndex, rotateAmount) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp[playerIndex].rotate = playerStatesTemp[playerIndex].rotate + rotateAmount;
+        console.log(playerStatesTemp[playerIndex].rotate);
         setPlayerStates(playerStatesTemp);
     }
 
