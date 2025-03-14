@@ -129,7 +129,7 @@ function VideoCompareContainer() {
             playerStatesTemp[playerIndex].currentTime = event.target.currentTime;
 
             if ((playerStatesTemp[0].doLoop ||
-                playerStatesTemp[1].doLoop)
+                playerStatesTemp[1]?.doLoop)
                 && playerStatesTemp[playerIndex].doPlay == true) {
 
                 if (playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd
@@ -138,7 +138,7 @@ function VideoCompareContainer() {
                     playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
                     playerStatesTemp[0].doSeek = true;
 
-                    playerStatesTemp[1].currentTime = playerStatesTemp[1].loopStart;
+                    playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopStart;
                     playerStatesTemp[1].doSeek = true;
                 }
             }
@@ -525,7 +525,7 @@ function VideoCompareContainer() {
         });
     }
 
-    function closePlayer(playerIndex) {
+    function closePlayer(playerIndex, evt) {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp.splice(playerIndex, 1);
         setPlayerStates(playerStatesTemp);
@@ -716,7 +716,7 @@ function VideoCompareContainer() {
                                 closeTabs: () => closeTabs(),
                                 svgViewBoxDimensions: playerStates[playerIndex].svgViewBoxDimensions,
                                 setSVGViewBoxDimensions: (svgViewBoxDimensions) => setSVGViewBoxDimensions(playerIndex, svgViewBoxDimensions),
-                                closePlayer: (playerIndex) => closePlayer(playerIndex),
+                                closePlayer: (evt) => closePlayer(playerIndex, evt),
                                 playerCount: playerStates.length,
                                 linkPlayers: (doLink) => linkPlayers(doLink),
                                 doLinkMode: doLinkMode,
