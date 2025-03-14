@@ -1,10 +1,5 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import videoUrl from './assets/mov_bbb.mp4'
-import acroVideoUrl from './assets/acro.mp4'
-import VideoContainer from './components/video-container'
 import VideoCompareContainer from './components/video-compare-container'
 
 function App() {
