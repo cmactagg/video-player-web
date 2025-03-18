@@ -94,7 +94,7 @@ function VideoControlsBasic() {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Playback Rate Slower" onClick={() => { videoContext.onPlaybackRateUpdate(-0.25) }}>
+                        <button title="Playback Rate Slower" onClick={() => { videoContext.onPlaybackRateUpdate(-0.1) }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 viewBox="0 0 16 16">
                                 <path
@@ -102,7 +102,7 @@ function VideoControlsBasic() {
                                 </path>
                             </svg>
                         </button>
-                        <button title="Playback Rate Faster" onClick={() => { videoContext.onPlaybackRateUpdate(0.25) }}>
+                        <button title="Playback Rate Faster" onClick={() => { videoContext.onPlaybackRateUpdate(0.1) }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 className="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
                                 <path
