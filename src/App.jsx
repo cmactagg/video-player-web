@@ -32,6 +32,17 @@ function App() {
   //   videoNode.src = fileURL
   // }
 
+  document.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+  }, { passive: false });
+
+  // window.onload = function () {
+  //   setTimeout(() => {
+  //     window.scrollTo(0, 1);
+  //   }, 0);
+  // };
+  
+
 
   return (
     <>

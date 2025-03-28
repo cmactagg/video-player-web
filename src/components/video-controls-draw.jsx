@@ -13,17 +13,17 @@ function VideoControlsDraw({isActive}) {
 
     function handleDrawLineClick(event) {
         const centerPoint = getSVGCenterPoint();
-        videoContext.addDrawCanvasElement({ type: "line", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 20, y2: centerPoint.y + 20, color: "red", width: 2 });
+        videoContext.addDrawCanvasElement({ type: "line", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 40, y2: centerPoint.y + 40, color: "red", width: 2 });
     }
 
     function handleDrawAngleClick(event) {
         const centerPoint = getSVGCenterPoint();
-        videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x, y2: centerPoint.y + 20, x3: centerPoint.x + 20, y3: centerPoint.y + 20, color: "red", width: 4, degrees: 90 });
+        videoContext.addDrawCanvasElement({ type: "angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x, y2: centerPoint.y + 40, x3: centerPoint.x + 40, y3: centerPoint.y + 40, color: "red", width: 4, degrees: 90 });
     }
 
     function handleDrawNinetyAngleClick(event) {
         const centerPoint = getSVGCenterPoint();
-        videoContext.addDrawCanvasElement({ type: "90Angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 30, y2: centerPoint.y - 30, color: "red", width: 4, degrees: 90 });
+        videoContext.addDrawCanvasElement({ type: "90Angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 40, y2: centerPoint.y - 40, color: "red", width: 4, degrees: 90 });
     }
 
     function handleDrawDotClick(event) {

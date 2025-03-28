@@ -44,8 +44,8 @@ body {
 
 .video-player-container {
   box-sizing: border-box;
-  width: 99vw;
-  height: 99vh;
+  width: 99svw;
+  height: 99svh;
   position: relative;
   overflow: hidden;
   /* Ensure nothing overflows */

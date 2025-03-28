@@ -26,8 +26,12 @@ function VideoPlayer() {
 
     const [canDrawSVG, setCanDrawSVG] = useState(false);
 
+    let  dragRectSize = 10;
+    if(window.innerWidth <= 1000){
+        dragRectSize = dragRectSize * 4;
+    }
 
-
+    
     useEffect(() => {
         videoRef.current.playbackRate = videoContext.playbackRate ?? 1;
     }, [videoContext.playbackRate]);
@@ -83,6 +87,8 @@ function VideoPlayer() {
         let dragHandleType = e.currentTarget.getAttribute("dragHandleType");
         setDragHandleType(dragHandleType);
 
+        console.log(dragHandleType);
+
         const selectedLine = videoContext.getDrawCanvasSelectedElement();
 
         let middleXBox = 0;
@@ -107,7 +113,11 @@ function VideoPlayer() {
 
     const handlePointerMove = (e) => {
 
-        const pointerCoordiantes = getPointerCoordinates(e);
+        let pointerCoordiantes = { x: 0, y: 0 }
+
+
+        pointerCoordiantes = getPointerCoordinates(e);
+
 
         if (dragHandleType != "") {
             //const mousePosition = getMousePosition(e);
@@ -125,7 +135,7 @@ function VideoPlayer() {
                 } else if (selectedLine.type == "angle") {
                     selectedLine.x3 = pointerCoordiantes.x;
                     selectedLine.y3 = pointerCoordiantes.y;
-                } else if(selectedLine.type == "90Angle") {
+                } else if (selectedLine.type == "90Angle") {
                     selectedLine.x2 = pointerCoordiantes.x;
                     selectedLine.y2 = pointerCoordiantes.y;
 
@@ -149,7 +159,7 @@ function VideoPlayer() {
                 }
             }
 
-            if (selectedLine.type == "angle") {
+            if (selectedLine.type == "angle" && dragHandleType == "end") {
                 let degreesLine1 = calculateAngle(selectedLine.x1, selectedLine.y1, selectedLine.x2, selectedLine.y2);
                 let degreesLine2 = calculateAngle(selectedLine.x3, selectedLine.y3, selectedLine.x2, selectedLine.y2);
 
@@ -167,6 +177,17 @@ function VideoPlayer() {
 
     const handlePointerUp = () => {
         setDragHandleType("");
+    };
+
+
+    const handleCanvasPointerDown = () => {
+        // setDragHandleType("");
+    };
+
+
+    const handleCanvasPointerUp = () => {
+        // setDragHandleType("");
+        // videoContext.setDrawCanvasElementAsSelected(-1);//unselect all
     };
 
     // function getMousePosition(evt) {
@@ -251,8 +272,8 @@ function VideoPlayer() {
 
     function getPointerCoordinates(event) {
         const point = svgRef.current.createSVGPoint();
-        point.x = event.clientX;
-        point.y = event.clientY;
+        point.x = event.clientX || event.touches[0].clientX;
+        point.y = event.clientY || event.touches[0].clientY;
 
         const ctm = svgRef.current.getScreenCTM().inverse();
         const svgPoint = point.matrixTransform(ctm);
@@ -351,7 +372,8 @@ function VideoPlayer() {
                 </div>
                 <div style={myStylesForSVG}>
                     <svg ref={svgRef}
-                        onPointerMove={handlePointerMove}
+                        onMouseMove={handlePointerMove} onTouchMove={handlePointerMove}
+                        onMouseDown={handleCanvasPointerDown} onMouseUp={handleCanvasPointerUp} onTouchStart={handleCanvasPointerDown} onTouchEnd={handleCanvasPointerUp}
                         style={svgStyle}
                         viewBox={'0 0 ' + videoContext.svgViewBoxDimensions.width + " " + videoContext.svgViewBoxDimensions.height}
                     >
@@ -370,9 +392,9 @@ function VideoPlayer() {
                                                 element.selected ?
                                                     (
                                                         <>
-                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
-                                                            <rect lineId={element.id} dragHandleType="end" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
-                                                            <rect lineId={element.id} dragHandleType="middle" x={(element.x1 + ((element.x2 - element.x1) / 2)) - 5} y={(element.y1 + ((element.y2 - element.y1) / 2)) - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - (dragRectSize / 2)} y={element.y1 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp} ></rect>
+                                                            <rect lineId={element.id} dragHandleType="end" x={element.x2 - (dragRectSize / 2)} y={element.y2 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="middle" x={(element.x1 + ((element.x2 - element.x1) / 2)) - (dragRectSize / 2)} y={(element.y1 + ((element.y2 - element.y1) / 2)) - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp}></rect>
 
                                                         </>
                                                     ) : ("")
@@ -398,9 +420,9 @@ function VideoPlayer() {
                                                 element.selected ?
                                                     (
                                                         <>
-                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
-                                                            <rect lineId={element.id} dragHandleType="end" x={element.x3 - 5} y={element.y3 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
-                                                            <rect lineId={element.id} dragHandleType="middle" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - (dragRectSize / 2)} y={element.y1 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp} />
+                                                            <rect lineId={element.id} dragHandleType="end" x={element.x3 - (dragRectSize / 2)} y={element.y3 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="middle" x={element.x2 - (dragRectSize / 2)} y={element.y2 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onMouseDown={handlePointerDown} onMouseUp={handlePointerUp} onTouchStart={handlePointerDown} onTouchEnd={handlePointerUp}></rect>
 
                                                         </>
                                                     ) : ("")
@@ -421,7 +443,7 @@ function VideoPlayer() {
                                                 element.selected ?
                                                     (
                                                         <>
-                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - (dragRectSize / 2)} y={element.y1 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} />
 
 
                                                         </>
@@ -449,13 +471,13 @@ function VideoPlayer() {
                                             <line lineId={element.id} x1={element.x1} y1={element.y1} x2={element.x2} y2={element.y2} stroke={element.color} strokeWidth="15" opacity={element.selected ? 0.3 : 0} onClick={handleLineClick} />
                                             <rect lineId={element.id} x={element.x1 + 20} y={element.y1 - 42} width="80" height="24" fill="white" opacity={0.7}></rect>
                                             <text x={element.x1 + 20} y={element.y1 - 20} fill={element.color} fontSize="30">{element.degrees}</text>
-                                            
+
                                             {
                                                 element.selected ?
                                                     (
                                                         <>
-                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - 5} y={element.y1 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
-                                                            <rect lineId={element.id} dragHandleType="end" x={element.x2 - 5} y={element.y2 - 5} width="10" height="10" fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="start" x={element.x1 - (dragRectSize / 2)} y={element.y1 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
+                                                            <rect lineId={element.id} dragHandleType="end" x={element.x2 - (dragRectSize / 2)} y={element.y2 - (dragRectSize / 2)} width={dragRectSize} height={dragRectSize} fill={element.color} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}></rect>
                                                         </>
                                                     ) : ("")
                                             }
@@ -464,7 +486,7 @@ function VideoPlayer() {
                                 })
                         }
 
-                        
+
                     </svg>
                 </div>
             </div>
