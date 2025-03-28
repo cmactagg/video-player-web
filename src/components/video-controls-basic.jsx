@@ -3,6 +3,8 @@ import VideoContext from './video-context';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 // import VideoClock from './video-clock';
+import VideoControlTabs from './video-control-tabs';
+import VideoStatus from './video-status';
 
 function VideoControlsBasic() {
     const [sliderValue, setSliderValue] = useState(0);
@@ -24,7 +26,7 @@ function VideoControlsBasic() {
 
         }, {});
 
-        if(videoContext.doLinkMode){
+        if (videoContext.doLinkMode) {
             sliderMarks[videoContext.linkStart * 100] = "Link Start";
             sliderMarks[videoContext.linkEnd * 100] = "Link End";
         }
@@ -35,13 +37,19 @@ function VideoControlsBasic() {
     }
 
 
+    function toggleMenu(menuId) {
+        const menu = document.getElementById(menuId);
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      }
+
+
 
     return (
         <>
             <div className="controls-basic-container">
-                <div className="button-row">
-                    <span className="playback-rate">{videoContext.playbackRate.toFixed(2)}</span>
+                <div className="button-row-basic">
                     <div className="button-group">
+                    <VideoStatus />
                         <button onClick={() => { videoContext.onSeek(-1) }}>
                             <svg xmlns="http://www.w3.org/2000/svg" title="Prev 1 Sec" width="16" height="16"
                                 fill="currentColor" viewBox="0 0 16 16">
@@ -135,10 +143,16 @@ function VideoControlsBasic() {
                                 </svg>
                             )}
                         </button>
+                        <button title="Menu" onClick={() => {toggleMenu("menu" + videoContext.index)}}>
+                            {/* onClick={(e) => videoContext.openTab(e, "overlayButtonsTabs" + videoContext.index)} */}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg>
+                        </button>
+                        <VideoControlTabs isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsTabs" + videoContext.index} />
                     </div>
-                    <span className="clock-time">{videoContext.clockTime.toFixed(3)}</span>
                 </div>
-                <div className="button-row">
+                <div className="button-row-slider">
                     <Slider
                         max={videoContext.duration * 100}
                         min={0}

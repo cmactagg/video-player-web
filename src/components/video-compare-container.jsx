@@ -655,6 +655,19 @@ function VideoCompareContainer() {
 
     return (
         <>
+         {playerStates.length <= 1 && (
+                    <div className="video-player-add-button-container">
+
+                        <button title="Compare" onClick={addPlayer}>
+                            <svg width="200" height="25" xmlns="http://www.w3.org/2000/svg">
+                                <text x="100" y="20" fontSize="20" fill="white" textAnchor="middle">
+                                    Compare
+                                </text>
+                            </svg>
+                        </button>
+                    </div>
+
+                )}
             <div className="container">
                 {
                     playerStates.map((playerState, playerIndex) => {
@@ -733,19 +746,7 @@ function VideoCompareContainer() {
 
                 }
 
-                {playerStates.length <= 1 && (
-                    <div className="video-player-add-button-container">
-
-                        <button title="Compare" onClick={addPlayer}>
-                            <svg width="30" height="200" xmlns="http://www.w3.org/2000/svg">
-                                <text x="100" y="90" fontSize="20" fill="white" textAnchor="middle" transform="rotate(90 50,50)">
-                                    Compare
-                                </text>
-                            </svg>
-                        </button>
-                    </div>
-
-                )}
+               
 
             </div >
 

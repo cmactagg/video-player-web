@@ -2,6 +2,8 @@ import { useState, useContext } from 'react'
 
 import VideoContext from './video-context';
 
+import logo from '../assets/skill-frame-icon.png';
+
 
 function VideoOpenFile({isActive}) {
 
@@ -19,6 +21,10 @@ function VideoOpenFile({isActive}) {
     return (
         <>
             <div className="open-file-overlay tab-content" id={"overlayOpenFile" + videoContext.index} style={displayStyle}>
+                <div className="logo-name-container">
+                    <img src={logo}/><h1>SkillFrame</h1>
+                    
+                </div>
                 <div className="open-file-container">
                     <input type="file" id="file" name="file" accept="video/*" onChange={onFileChange} />
                 </div>

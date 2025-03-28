@@ -9,6 +9,7 @@ import VideoControls from './video-controls';
 //import VideoControlsDraw from './video-controls-draw';
 import VideoBookmarks from './video-bookmarks';
 import VideoContext from './video-context';
+import VideoStatus from './video-status';
 
 
 function VideoContainer({ }) {
@@ -22,14 +23,17 @@ function VideoContainer({ }) {
             <div id="vpc01" className="video-player-container">
                 <div className="video-player-container-row">
                     <div className="video-container">
+                        
 
                         <VideoPlayer videoSource={videoSource} />
 
+                        {/* <VideoControlTabs isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsTabs" + videoContext.index} /> */}
 
+                        <VideoControlsBasic />
                     </div>
-                    <VideoControlTabs />
+                    
                 </div>
-                <VideoControlsBasic />
+                
                 
             </div>
         </>
