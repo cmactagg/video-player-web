@@ -23,7 +23,7 @@ function VideoControlsDraw({isActive}) {
 
     function handleDrawNinetyAngleClick(event) {
         const centerPoint = getSVGCenterPoint();
-        videoContext.addDrawCanvasElement({ type: "90Angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 40, y2: centerPoint.y - 40, color: "red", width: 4, degrees: 90 });
+        videoContext.addDrawCanvasElement({ type: "90Angle", selected: false, x1: centerPoint.x, y1: centerPoint.y, x2: centerPoint.x + 40, y2: centerPoint.y - 40, color: "red", width: 4, degrees: 45 });
     }
 
     function handleDrawDotClick(event) {

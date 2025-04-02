@@ -127,6 +127,13 @@ function VideoPlayer() {
             if (dragHandleType == "start") {
                 selectedLine.x1 = pointerCoordiantes.x;
                 selectedLine.y1 = pointerCoordiantes.y;
+
+                if (selectedLine.type == "90Angle") {
+                    let degreesLine1 = calculateAngle(selectedLine.x1, selectedLine.y1, selectedLine.x2, selectedLine.y2);
+
+                    let totalDegrees = (360 - degreesLine1 - videoContext.rotate % 360 + 360) % 360;
+                    selectedLine.degrees = totalDegrees.toFixed(1);
+                }
             } else if (dragHandleType == "end") {
 
                 if (selectedLine.type == "line") {
@@ -343,8 +350,8 @@ function VideoPlayer() {
     //     alert("can play");
     // }
 
-    const ninetyHorizontalEndPosition = calculateEndPosition(0, 0, videoContext.rotate * -1, 60);
-    const ninetyVerticalEndPosition = calculateEndPosition(0, 0, (videoContext.rotate + 90) * -1, 60);
+    const ninetyHorizontalEndPosition = calculateEndPosition(0, 0, videoContext.rotate * -1, 100);
+    const ninetyVerticalEndPosition = calculateEndPosition(0, 0, (videoContext.rotate + 90) * -1, 100);
 
 
 

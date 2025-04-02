@@ -25,7 +25,7 @@ function VideoBookmarks({ isActive }) {
                     {
                         videoContext.bookmarks?.sort((a, b) => a.time - b.time).map((element, index) => {
                             return (
-                                <li key={index} ><span onClick={() => videoContext.onBookmarkClick(index)}>{element.name} ({element.time})</span>
+                                <li key={index} ><span onClick={() => videoContext.onBookmarkClick(index)}>{element.name} ({element.time.toFixed(2)})</span>
                                     <div>
                                         <button title="Set Time" onClick={() => videoContext.onBookmarkSetNewTime(element.name)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
