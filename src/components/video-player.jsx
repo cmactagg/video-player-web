@@ -87,8 +87,6 @@ function VideoPlayer() {
         let dragHandleType = e.currentTarget.getAttribute("dragHandleType");
         setDragHandleType(dragHandleType);
 
-        console.log(dragHandleType);
-
         const selectedLine = videoContext.getDrawCanvasSelectedElement();
 
         let middleXBox = 0;
@@ -166,7 +164,7 @@ function VideoPlayer() {
                 }
             }
 
-            if (selectedLine.type == "angle" && dragHandleType == "end") {
+            if (selectedLine.type == "angle") {
                 let degreesLine1 = calculateAngle(selectedLine.x1, selectedLine.y1, selectedLine.x2, selectedLine.y2);
                 let degreesLine2 = calculateAngle(selectedLine.x3, selectedLine.y3, selectedLine.x2, selectedLine.y2);
 

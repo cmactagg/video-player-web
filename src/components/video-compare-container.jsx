@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react'
+import { useState, createContext, useEffect } from 'react'
 import VideoPlayer from './video-player'
 import VideoControls from './video-controls'
 import VideoContainer from './video-container';
@@ -10,16 +10,27 @@ import screenfull from 'screenfull';
 
 function VideoCompareContainer() {
 
-    const [playerStates, setPlayerStates] = useState([
-        {
-            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile0", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
-            drawCanvasElements: []
-        },
-        // {
-        //     videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
-        //     drawCanvasElements: []
-        // }
-    ]);
+    const defaultPlayerState = {
+        videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+        drawCanvasElements: []
+    };
+
+    const [playerStates, setPlayerStates] = useState([{ ...defaultPlayerState, videoPlayerOverlayMenuDisplay: "overlayOpenFile0" }]);
+
+    // const [isFirstRender, setIsFirstRender] = useState(true);
+
+    // useEffect(() => {
+    //     if (isFirstRender) {
+    //         {
+    //             let initPlayerStates = [{ ...defaultPlayerState }];
+    //             initPlayerStates[0].videoPlayerOverlayMenuDisplay = "overlayOpenFile0";
+    //             setPlayerStates(initPlayerStates);
+    //         }
+    //         setIsFirstRender(false);
+
+    //     }
+    // });
+
 
     const [doLinkMode, setDoLinkMode] = useState(false);
     const [linkDifferenceTime, setLinkDifferenceTime] = useState(0);
@@ -35,7 +46,7 @@ function VideoCompareContainer() {
     function handleToggleFullscreen() {
         if (screenfull.isEnabled) {
             screenfull.toggle();
-        } 
+        }
     }
 
     screenfull.on('change', () => {
@@ -48,8 +59,8 @@ function VideoCompareContainer() {
     function handleVideoSourceChange(playerIndexes, filePath) {
         playerIndexes.forEach((playerIndex) => {
             let playerStatesTemp = [...playerStates];
+            playerStatesTemp[playerIndex] = { ...defaultPlayerState };
             playerStatesTemp[playerIndex].videoSource = filePath;
-            playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
             setPlayerStates(playerStatesTemp);
         });
     }
@@ -533,9 +544,9 @@ function VideoCompareContainer() {
     function addPlayer() {
         let playerStatesTemp = [...playerStates];
         playerStatesTemp.push({
-            videoSource: null, videoPlayerOverlayMenuDisplay: "overlayOpenFile1", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
-            drawCanvasElements: []
+            ...defaultPlayerState
         });
+        playerStatesTemp[playerStatesTemp.length - 1].videoPlayerOverlayMenuDisplay = "overlayOpenFile" + (playerStatesTemp.length - 1);
         setPlayerStates(playerStatesTemp);
 
         const videoPlayerContainers = document.querySelectorAll('.video-player-container');
@@ -692,11 +703,11 @@ function VideoCompareContainer() {
                 <div className="video-player-fullscreen-button-container">
                     <button title="Fullscreen" onClick={handleToggleFullscreen}>
                         {isFullScreen ? (
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen-exit" viewBox="0 0 16 16">
-                           <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z"/>
-                         </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z" />
+                            </svg>
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5" />
                             </svg>
                         )
