@@ -31,6 +31,16 @@ body {
 
 }
 
+.video-player-fullscreen-button-container{
+  box-sizing: border-box;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  z-index: 100;
+  opacity: 0.7;
+}
+
 .video-player-add-button-container button {
   box-sizing: border-box;
   background-color: #444;
@@ -45,8 +55,8 @@ body {
 
 .video-player-container {
   box-sizing: border-box;
-  width: 99svw;
-  height: 99svh;
+  width: 99dvw;
+  height: 99dvh;
   position: relative;
   overflow: hidden;
   /* Ensure nothing overflows */
