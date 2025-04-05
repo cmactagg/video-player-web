@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useRef } from 'react'
 import VideoContext from './video-context';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -40,6 +40,22 @@ function VideoControlsBasic() {
     function toggleMenu(menuId) {
         const menu = document.getElementById(menuId);
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      }
+
+    //   const scrubberRef = useRef(null);
+
+      function onScrubberRelease(value) {
+
+        // console.log(scrubberRef.current.value);
+
+
+        // scrubberRef.current.value = 0;
+
+        videoContext.onScrubberChange(0);
+        videoContext.onSetPlaybackRate(1);
+
+
+        //videoContext.onPlayChange();
       }
 
 
@@ -152,6 +168,20 @@ function VideoControlsBasic() {
                         <VideoControlTabs isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsTabs" + videoContext.index} />
                     </div>
                 </div>
+                <div className="button-row-basic">
+                    
+                    <Slider 
+                        max={100}
+                        min={-100}
+                        value={videoContext.scrubberValue}
+                        onChange={videoContext.onScrubberChange}
+                        onChangeComplete={onScrubberRelease}
+                        className='progress-bar'
+                        
+
+                    />
+
+                    </div>
                 <div className="button-row-slider">
                     <Slider
                         max={videoContext.duration * 100}

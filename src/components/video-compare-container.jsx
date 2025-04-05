@@ -11,7 +11,7 @@ import screenfull from 'screenfull';
 function VideoCompareContainer() {
 
     const defaultPlayerState = {
-        videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, doMirror: false, bookmarks: [],
+        videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, playDirection: 1, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, scrubberValue: 0, doMirror: false, bookmarks: [],
         drawCanvasElements: []
     };
 
@@ -162,13 +162,21 @@ function VideoCompareContainer() {
                 playerStatesTemp[1]?.doLoop)
                 && playerStatesTemp[playerIndex].doPlay == true) {
 
-                if (playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd
-                    || playerStatesTemp[playerIndex].currentTime < playerStatesTemp[playerIndex].loopStart) {
+                if (playerStatesTemp[playerIndex].playbackDirection == 1 && (playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd
+                    || playerStatesTemp[playerIndex].currentTime < playerStatesTemp[playerIndex].loopStart)) {
 
                     playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
                     playerStatesTemp[0].doSeek = true;
 
                     playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopStart;
+                    playerStatesTemp[1].doSeek = true;
+                } else if (playerStatesTemp[playerIndex].playDirection == -1 && (playerStatesTemp[playerIndex].currentTime <= playerStatesTemp[playerIndex].loopStart
+                    || playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd)) {
+
+                    playerStatesTemp[0].currentTime = playerStatesTemp[0].loopEnd;
+                    playerStatesTemp[0].doSeek = true;
+
+                    playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopEnd;
                     playerStatesTemp[1].doSeek = true;
                 }
             }
@@ -222,7 +230,14 @@ function VideoCompareContainer() {
             let playerStatesTemp = [...playerStates];
             let newTime = playerStatesTemp[playerIndex].currentTime + seekInterval;
 
-            playerStatesTemp[playerIndex].currentTime = newTime;
+            if (newTime < 0) {
+                playerStatesTemp[playerIndex].currentTime = 0;
+                if(playerStatesTemp[playerIndex].doLoop == false) {
+                    playerStatesTemp[playerIndex].doPlay = false;
+                }
+            } else {
+                playerStatesTemp[playerIndex].currentTime = newTime;
+            }
             playerStatesTemp[playerIndex].doSeek = true;
             setPlayerStates(playerStatesTemp);
 
@@ -336,6 +351,35 @@ function VideoCompareContainer() {
         setPlayerStates(playerStatesTemp);
     }
 
+
+function  handleScrubberChange(playerIndex, value) {  
+    let playerStatesTemp = [...playerStates];
+    playerStatesTemp[playerIndex].doPlay = false;
+
+    let playbackRate = Math.pow(Math.abs(value), 3) / 100000;
+    playbackRate  = Math.round(playbackRate * 10) / 10;
+
+    playerStatesTemp[playerIndex].scrubberValue = value;
+    playerStatesTemp[playerIndex].playDirection = 1;
+
+
+    if (value > 0) {
+        playerStatesTemp[playerIndex].doPlay = true;
+        playerStatesTemp[playerIndex].playDirection = 1;
+        playerStatesTemp[playerIndex].playbackRate = playbackRate;
+        
+    } else if (value < 0) {
+        
+        playerStatesTemp[playerIndex].doPlay = true;
+        playerStatesTemp[playerIndex].playDirection = -1;
+        playerStatesTemp[playerIndex].playbackRate = playbackRate;
+    }
+
+    setPlayerStates(playerStatesTemp);
+}
+
+
+
     function handleBookmarkClick(playerIndex, bookmarkIndex) {
         let playerStatesTemp = [...playerStates];
         const newTime = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time;
@@ -444,13 +488,17 @@ function VideoCompareContainer() {
     }
 
     function handlePlaybackRateUpdate(playerIndex, rateAmount) {
+        handleSetPlaybackRate(playerIndex, playerStates[playerIndex].playbackRate + rateAmount);
+    }
+
+    function handleSetPlaybackRate(playerIndex, rateAmount) {
         let playerStatesTemp = [...playerStates];
 
         if (doLinkMode) {
-            playerStatesTemp[0].playbackRate = playerStatesTemp[0].playbackRate + rateAmount;
+            playerStatesTemp[0].playbackRate = rateAmount;
             playerStatesTemp[1].playbackRate = playerStatesTemp[0].playbackRate;
         } else {
-            playerStatesTemp[playerIndex].playbackRate = playerStatesTemp[playerIndex].playbackRate + rateAmount;
+            playerStatesTemp[playerIndex].playbackRate = rateAmount;
         }
 
         setPlayerStates(playerStatesTemp);
@@ -732,6 +780,7 @@ function VideoCompareContainer() {
                                 onPlayChange: () => handlePlayChange([playerIndex]),
                                 canPlay: playerStates[playerIndex].canPlay,
                                 onCanPlay: (canPlay) => handleCanPlay([playerIndex], canPlay),
+                                playDirection: playerStates[playerIndex].playDirection,
                                 doSeek: playerStates[playerIndex].doSeek,
                                 onSeek: (seekInterval) => handleSeek(playerIndex, seekInterval),
                                 onPostSeek: () => handlePostSeek([playerIndex]),
@@ -752,6 +801,8 @@ function VideoCompareContainer() {
                                 linkStart: playerStates[playerIndex].linkStart,
                                 linkEnd: playerStates[playerIndex].linkEnd,
                                 onSliderChange: (sliderValue) => handleSliderChange(playerIndex, sliderValue),
+                                scrubberValue: playerStates[playerIndex].scrubberValue,
+                                onScrubberChange: (value) => handleScrubberChange(playerIndex, value),
                                 onScale: (scaleAmount) => handleScale([playerIndex], scaleAmount),
                                 scale: playerStates[playerIndex].scale,
                                 onPan: (xAmount, yAmount) => handlePan([playerIndex], xAmount, yAmount),
@@ -760,6 +811,7 @@ function VideoCompareContainer() {
                                 onRotate: (rotateAmount) => handleRotate([playerIndex], rotateAmount),
                                 rotate: playerStates[playerIndex].rotate,
                                 onPlaybackRateUpdate: (rateAmount) => handlePlaybackRateUpdate([playerIndex], rateAmount),
+                                onSetPlaybackRate: (rateAmount) => handleSetPlaybackRate([playerIndex], rateAmount),
                                 playbackRate: playerStates[playerIndex].playbackRate,
                                 onDoMirror: (rateAmount) => handleDoMirror([playerIndex]),
                                 doMirror: playerStates[playerIndex].doMirror,

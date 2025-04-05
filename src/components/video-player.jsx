@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext, componentDidUpdate, CSSProperties } from 'react'
+import { useState, useRef, useEffect, useContext, componentDidUpdate, CSSProperties, useMemo } from 'react'
 
 import VideoContext from './video-context';
 import VideoControlsDraw from './video-controls-draw';
@@ -26,12 +26,14 @@ function VideoPlayer() {
 
     const [canDrawSVG, setCanDrawSVG] = useState(false);
 
-    let  dragRectSize = 10;
-    if(window.innerWidth <= 1000){
+    const [backwardPlaybackTimeoutId, setBackwardPlaybackTimeoutId] = useState(null);
+
+    let dragRectSize = 10;
+    if (window.innerWidth <= 1000) {
         dragRectSize = dragRectSize * 4;
     }
 
-    
+
     useEffect(() => {
         videoRef.current.playbackRate = videoContext.playbackRate ?? 1;
     }, [videoContext.playbackRate]);
@@ -41,43 +43,77 @@ function VideoPlayer() {
         videoContext.setDrawCanvasElementAsSelected(event.currentTarget.getAttribute("lineId"));
     }
 
+    useEffect(() => {
+        let localTimeoutId;
+        if (videoContext.canPlay) {
+            if (videoContext.doPlay) {
 
-    if (videoContext.canPlay) {
-        if (videoContext.doPlay) {
-            var playPromise = videoRef.current?.play();
+                if (videoContext.playDirection == 1) {
+                    var playPromise = videoRef.current?.play();
+                    // console.log("playing");
+                    if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                            // Automatic playback started!
+                            // Show playing UI.
+                        })
+                            .catch(error => {
+                                // Auto-play was prevented
+                                // Show paused UI.
+                                videoContext.onPlayChange();
 
+                            });
+                    }
+                } else if (videoContext.playDirection == -1) {
 
+                    // if (backwardPlaybackTimeoutId == null) {
 
-            //var playPromise = video.play();
+                    localTimeoutId = playBackward(videoContext.doPlay);
 
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Automatic playback started!
-                    // Show playing UI.
-                })
-                    .catch(error => {
-                        // Auto-play was prevented
-                        // Show paused UI.
-                        videoContext.onPlayChange();
+                    setBackwardPlaybackTimeoutId(localTimeoutId);
+                    // }
 
-                    });
+                }
+            } else {
+                if (videoContext.playDirection == 1) {
+                    videoRef.current?.pause();
+                }
+                else if (videoContext.playDirection == -1) {
+                    pauseBackward();
+                }
             }
 
-
-
-
-
-
-
-        } else {
-            videoRef.current?.pause();
         }
 
-        if (videoContext.doSeek) {
-            videoRef.current.currentTime = videoContext.clockTime;
-            videoContext.onPostSeek();
-        }
+        return () => clearInterval(localTimeoutId);
+    }, [videoContext.doPlay, videoContext.playbackRate]);
+
+    if (videoContext.doSeek) {
+        videoRef.current.currentTime = videoContext.clockTime;
+        videoContext.onPostSeek();
     }
+
+
+
+    let timeoutId = null;
+
+
+    function playBackward() {
+
+        let frameRate = 0.033 * videoContext.playbackRate;
+
+        const localTimeoutId = setInterval(() => {
+            videoContext.onSeek(frameRate * -1);
+        }, 1000 / 30);
+
+        return localTimeoutId;
+    }
+
+    function pauseBackward() {
+        clearTimeout(backwardPlaybackTimeoutId);
+    }
+
+
+
 
 
 
