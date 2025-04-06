@@ -1,8 +1,7 @@
 import { useContext, useState, useRef } from 'react'
 import VideoContext from './video-context';
 import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-// import VideoClock from './video-clock';
+// import 'rc-slider/assets/index.css';
 import VideoControlTabs from './video-control-tabs';
 import VideoStatus from './video-status';
 
@@ -40,23 +39,8 @@ function VideoControlsBasic() {
     function toggleMenu(menuId) {
         const menu = document.getElementById(menuId);
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-      }
+    }
 
-    //   const scrubberRef = useRef(null);
-
-      function onScrubberRelease(value) {
-
-        // console.log(scrubberRef.current.value);
-
-
-        // scrubberRef.current.value = 0;
-
-        videoContext.onScrubberChange(0);
-        videoContext.onSetPlaybackRate(1);
-
-
-        //videoContext.onPlayChange();
-      }
 
 
 
@@ -65,7 +49,7 @@ function VideoControlsBasic() {
             <div className="controls-basic-container">
                 <div className="button-row-basic">
                     <div className="button-group">
-                    <VideoStatus />
+                        <VideoStatus />
                         <button onClick={() => { videoContext.onSeek(-1) }}>
                             <svg xmlns="http://www.w3.org/2000/svg" title="Prev 1 Sec" width="16" height="16"
                                 fill="currentColor" viewBox="0 0 16 16">
@@ -159,7 +143,7 @@ function VideoControlsBasic() {
                                 </svg>
                             )}
                         </button>
-                        <button title="Menu" onClick={() => {toggleMenu("menu" + videoContext.index)}}>
+                        <button title="Menu" onClick={() => { toggleMenu("menu" + videoContext.index) }}>
                             {/* onClick={(e) => videoContext.openTab(e, "overlayButtonsTabs" + videoContext.index)} */}
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
@@ -168,20 +152,7 @@ function VideoControlsBasic() {
                         <VideoControlTabs isActive={videoContext.videoPlayerOverlayMenuDisplay == "overlayButtonsTabs" + videoContext.index} />
                     </div>
                 </div>
-                <div className="button-row-basic">
-                    
-                    <Slider 
-                        max={100}
-                        min={-100}
-                        value={videoContext.scrubberValue}
-                        onChange={videoContext.onScrubberChange}
-                        onChangeComplete={onScrubberRelease}
-                        className='progress-bar'
-                        
-
-                    />
-
-                    </div>
+                
                 <div className="button-row-slider">
                     <Slider
                         max={videoContext.duration * 100}
