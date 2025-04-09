@@ -78,6 +78,7 @@ function VideoPlayer() {
                     videoRef.current?.pause();
                 }
                 else if (videoContext.playDirection == -1) {
+                    videoRef.current?.pause();
                     pauseBackward();
                 }
             }
@@ -346,6 +347,10 @@ function VideoPlayer() {
         // }
 
         videoContext.onEnded();
+
+        //the video player automatically pauses when the video ends, so we need to set the video to play again
+        videoRef.current?.play();
+
 
     }
 

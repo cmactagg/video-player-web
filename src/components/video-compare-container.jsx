@@ -42,7 +42,6 @@ function VideoCompareContainer() {
     const [isFullScreen, setIsFullScreen] = useState(false);
 
 
-
     function handleToggleFullscreen() {
         if (screenfull.isEnabled) {
             screenfull.toggle();
@@ -167,17 +166,19 @@ function VideoCompareContainer() {
 
                     playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
                     playerStatesTemp[0].doSeek = true;
-
-                    playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopStart;
-                    playerStatesTemp[1].doSeek = true;
+                    if (doLinkMode) {
+                        playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopStart;
+                        playerStatesTemp[1].doSeek = true;
+                    }
                 } else if (playerStatesTemp[playerIndex].playDirection == -1 && (playerStatesTemp[playerIndex].currentTime <= playerStatesTemp[playerIndex].loopStart
                     || playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd)) {
 
                     playerStatesTemp[0].currentTime = playerStatesTemp[0].loopEnd;
                     playerStatesTemp[0].doSeek = true;
-
-                    playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopEnd;
-                    playerStatesTemp[1].doSeek = true;
+                    if (doLinkMode) {
+                        playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopEnd;
+                        playerStatesTemp[1].doSeek = true;
+                    }
                 }
             }
 
@@ -232,7 +233,7 @@ function VideoCompareContainer() {
 
             if (newTime < 0) {
                 playerStatesTemp[playerIndex].currentTime = 0;
-                if(playerStatesTemp[playerIndex].doLoop == false) {
+                if (playerStatesTemp[playerIndex].doLoop == false) {
                     playerStatesTemp[playerIndex].doPlay = false;
                 }
             } else {
@@ -352,31 +353,31 @@ function VideoCompareContainer() {
     }
 
 
-function  handleScrubberChange(playerIndex, value) {  
-    let playerStatesTemp = [...playerStates];
-    playerStatesTemp[playerIndex].doPlay = false;
+    function handleScrubberChange(playerIndex, value) {
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].doPlay = false;
 
-    let playbackRate = Math.pow(Math.abs(value), 3) / 100000;
-    playbackRate  = Math.round(playbackRate * 10) / 10;
+        let playbackRate = Math.pow(Math.abs(value), 3) / 100000;
+        playbackRate = Math.round(playbackRate * 10) / 10;
 
-    playerStatesTemp[playerIndex].scrubberValue = value;
-    playerStatesTemp[playerIndex].playDirection = 1;
-
-
-    if (value > 0) {
-        playerStatesTemp[playerIndex].doPlay = true;
+        playerStatesTemp[playerIndex].scrubberValue = value;
         playerStatesTemp[playerIndex].playDirection = 1;
-        playerStatesTemp[playerIndex].playbackRate = playbackRate;
-        
-    } else if (value < 0) {
-        
-        playerStatesTemp[playerIndex].doPlay = true;
-        playerStatesTemp[playerIndex].playDirection = -1;
-        playerStatesTemp[playerIndex].playbackRate = playbackRate;
-    }
 
-    setPlayerStates(playerStatesTemp);
-}
+
+        if (value > 0) {
+            playerStatesTemp[playerIndex].doPlay = true;
+            playerStatesTemp[playerIndex].playDirection = 1;
+            playerStatesTemp[playerIndex].playbackRate = playbackRate;
+
+        } else if (value < 0) {
+
+            playerStatesTemp[playerIndex].doPlay = true;
+            playerStatesTemp[playerIndex].playDirection = -1;
+            playerStatesTemp[playerIndex].playbackRate = playbackRate;
+        }
+
+        setPlayerStates(playerStatesTemp);
+    }
 
 
 
@@ -722,12 +723,26 @@ function  handleScrubberChange(playerIndex, value) {
                 let playerStatesTemp = [...playerStates];
                 playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
                 playerStatesTemp[playerIndex].doSeek = true;
+                playerStatesTemp[playerIndex].doPlay = true;
+
                 setPlayerStates(playerStatesTemp);
             } else {
-                handlePlayChange([playerIndex]);
+                handleDoPause([playerIndex]);
             }
         }
 
+    }
+
+    function handleDoPlay(playerIndex){
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].doPlay = true;
+        setPlayerStates(playerStatesTemp);
+    }
+
+    function handleDoPause(playerIndex){
+        let playerStatesTemp = [...playerStates];
+        playerStatesTemp[playerIndex].doPlay = false;
+        setPlayerStates(playerStatesTemp);
     }
 
 
