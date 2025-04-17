@@ -269,6 +269,11 @@ function VideoPlayer() {
         const aspectRatio = videoRef.current.videoWidth / videoRef.current.videoHeight;
     }
 
+    function onPlayerTimeUpdate(event) {
+        videoContext.onTimeUpdate(event.currentTarget.currentTime);
+    }
+    
+
 
     const myStylesForVideo = {
         width: '100%',
@@ -402,11 +407,11 @@ function VideoPlayer() {
                     <video ref={videoRef} id="video"
                         onPlay={onPlay}
                         onLoadedMetadata={onLoadedMetadata}
-                        onCanPlay={videoContext.onCanPlay}
+                        onCanPlay={videoContext.onSetCanPlay}
                         // preload="auto"
 
-                        onDurationChange={videoContext.onDurationChange}
-                        onTimeUpdate={videoContext.onTimeUpdate}
+                        onDurationChange={(event) => videoContext.onDurationChange(event.currentTarget.duration)}
+                        onTimeUpdate={onPlayerTimeUpdate}
                         src={videoContext.videoSource} muted="{true}"
 
                         onEnded={onEnded}
