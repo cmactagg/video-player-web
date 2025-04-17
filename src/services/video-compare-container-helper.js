@@ -562,7 +562,7 @@ class VideoCompareContainerHelper {
     addPlayer() {
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp.push({
-            ...this.defaultPlayerState
+            ...VideoCompareContainerHelper.getDefaultPlayerState()
         });
         playerStatesTemp[playerStatesTemp.length - 1].videoPlayerOverlayMenuDisplay = "overlayOpenFile" + (playerStatesTemp.length - 1);
         this.setPlayerStates(playerStatesTemp);

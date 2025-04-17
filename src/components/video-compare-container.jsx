@@ -750,7 +750,7 @@ function VideoCompareContainer() {
             {playerStates.length <= 1 && (
                 <div className="video-player-add-button-container">
 
-                    <button title="Compare" onClick={videoCompareContainerHelper.addPlayer}>
+                    <button title="Compare" onClick={() => videoCompareContainerHelper.addPlayer()}>
                         <svg width="200" height="25" xmlns="http://www.w3.org/2000/svg">
                             <text x="100" y="20" fontSize="20" fill="white" textAnchor="middle">
                                 Compare
