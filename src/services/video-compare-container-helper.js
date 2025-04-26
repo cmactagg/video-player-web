@@ -1,10 +1,3 @@
-
-
-
-// function VideoCompareContainerHelper(setDoLinkMode, getDoLinkMode) {
-
-// import { J } from "vitest/dist/chunks/reporters.d.CfRkRKN2.js";
-
 class VideoCompareContainerHelper {
 
     constructor(setPlayerStates, getPlayerStates,
@@ -36,7 +29,7 @@ class VideoCompareContainerHelper {
     }
 
     static defaultPlayerState = {
-        videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, playDirection: 1, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, doApplyCurrentTime: false, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, scrubberValue: 0, doMirror: false, bookmarks: [],
+        videoSource: null, videoPlayerOverlayMenuDisplay: "none", doPlay: false, canPlay: false, playDirection: 1, videoDimensions: { width: 0, height: 0 }, svgViewBoxDimensions: { width: 640, height: 320 }, currentTime: 0, duration: 0, doSeek: false, doLoop: false, loopStart: 0, loopEnd: 0, linkStart: 0, linkEnd: 0, scale: 1, xPan: 0, yPan: 0, rotate: 0, playbackRate: 1, scrubberValue: 0, doMirror: false, bookmarks: [],
         drawCanvasElements: []
     };
 
@@ -75,7 +68,7 @@ class VideoCompareContainerHelper {
         return this.getPlayerStates()[playerIndex].canPlay;
     }
 
-    handlePlayChange(playerIndex) {
+    handlePlayToggle(playerIndex) {
 
         if (this.getDoLinkMode()) {
 
@@ -137,111 +130,68 @@ class VideoCompareContainerHelper {
     }
 
 
+    calculateCurrentTime(newTime, doLoop, loopStart, loopEnd, playDirection) {
+        let updatedTime = newTime;
+        const isForward = playDirection === 1;
+        const isOutOfBoundsAfter = updatedTime >= loopEnd;
+        const isOutOfBoundsBefore = updatedTime <= loopStart;
+
+        if (isOutOfBoundsBefore) {
+            updatedTime = doLoop
+                ? (isForward ? loopStart : loopEnd)
+                : loopStart;
+        } else if (isOutOfBoundsAfter) {
+            updatedTime = doLoop
+                ? (isForward ? loopStart : loopEnd)
+                : loopEnd;
+        }
+        return updatedTime;
+    }
+
+    setLinkModeCurrentTime(playerIndex, newTime, updatedFromPlayer) {
+        let playerStatesTemp = this.getPlayerStates();
+
+        if (!playerStatesTemp[playerIndex].doSeek) {
+
+            const playbackDirection = () => {
+                return playerStatesTemp[playerIndex].currentTime <= newTime > 0 ? 1 : -1;
+            };
+
+            if (playerStatesTemp[playerIndex].currentTime !== newTime) {
+
+                let primaryTime = this.calculateCurrentTime(newTime, playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
+
+                playerStatesTemp[playerIndex].currentTime = primaryTime;
+                playerStatesTemp[playerIndex].doSeek = !updatedFromPlayer || newTime != primaryTime;
+
+                if (this.getDoLinkMode() && (!updatedFromPlayer || newTime != primaryTime)) {
+                    const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+                    let otherTime = this.calculateCurrentTime(primaryTime + (this.getLinkDifferenceTime() * (otherPlayerIndex == 0 ? -1 : 1)), playerStatesTemp[otherPlayerIndex].doLoop, playerStatesTemp[otherPlayerIndex].loopStart, playerStatesTemp[otherPlayerIndex].loopEnd, playbackDirection()); //playerStatesTemp[otherPlayerIndex].playDirection);
+                    playerStatesTemp[otherPlayerIndex].currentTime = otherTime;
+                    playerStatesTemp[otherPlayerIndex].doSeek = true;
+
+                    //calculate primary time because the otherTime may have changed - not simply time + linkDiff
+                    primaryTime = this.calculateCurrentTime(otherTime + (this.getLinkDifferenceTime() * (playerIndex == 0 ? -1 : 1)), playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
+                    playerStatesTemp[playerIndex].currentTime = primaryTime;
+                    playerStatesTemp[playerIndex].doSeek = true;
+                }
+
+                this.setPlayerStates(playerStatesTemp);
+            }
+        }
+    }
+
+
+
 
 
     handleTimeUpdate(playerIndex, currentTime) {
-
-        this.setSyncCurrentTimeCounter(this.getSyncCurrentTimeCounter() + 1);
-
-        if (this.getDoLinkMode() && this.getSyncCurrentTimeCounter() > 4 && playerIndex == 0) {
-            this.setSyncCurrentTimeCounter(0);
-
-            let playerStatesTemp = this.getPlayerStates();
-
-            //todo: this is a hack to help keep the clocks in sync
-
-            // // help to keep the clocks in sync
-            playerStatesTemp[0].currentTime = currentTime;
-            // playerStatesTemp[1].currentTime = event.target.currentTime - linkDifferenceTime;
-            playerStatesTemp[0].doSeek = true;
-            // playerStatesTemp[1].doSeek = true;
-
-            this.setPlayerStates(playerStatesTemp);
-
-        } else {
-            //todo:  move all the currentTime setting logic to a single place
-            let playerStatesTemp = this.getPlayerStates();
-            playerStatesTemp[playerIndex].currentTime = currentTime;
-
-            if ((playerStatesTemp[0].doLoop ||
-                playerStatesTemp[1]?.doLoop)
-                && playerStatesTemp[playerIndex].doPlay == true) {
-
-                if (playerStatesTemp[playerIndex].playDirection == 1 && (playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd
-                    || playerStatesTemp[playerIndex].currentTime < playerStatesTemp[playerIndex].loopStart)) {
-
-                    playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
-                    playerStatesTemp[0].doSeek = true;
-                    if (this.getDoLinkMode()) {
-                        playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopStart;
-                        playerStatesTemp[1].doSeek = true;
-                    }
-                } else if (playerStatesTemp[playerIndex].playDirection == -1 && (playerStatesTemp[playerIndex].currentTime <= playerStatesTemp[playerIndex].loopStart
-                    || playerStatesTemp[playerIndex].currentTime > playerStatesTemp[playerIndex].loopEnd)) {
-
-                    playerStatesTemp[0].currentTime = playerStatesTemp[0].loopEnd;
-                    playerStatesTemp[0].doSeek = true;
-                    if (this.getDoLinkMode()) {
-                        playerStatesTemp[1].currentTime = playerStatesTemp[1]?.loopEnd;
-                        playerStatesTemp[1].doSeek = true;
-                    }
-                }
-            }
-
-            this.setPlayerStates(playerStatesTemp);
-        }
-
+        this.setLinkModeCurrentTime(playerIndex, currentTime, true);
     }
 
 
     handleSeek(playerIndex, seekInterval) {
-
-        if (this.getDoLinkMode()) {
-
-            let playerStatesTemp = this.getPlayerStates();
-
-            playerStatesTemp[0].currentTime = playerStatesTemp[0].currentTime + seekInterval;
-            playerStatesTemp[1].currentTime = playerStatesTemp[1].currentTime + seekInterval;
-
-            //todo:  move all the currentTime setting logic to a single place
-            if (playerStatesTemp[0].currentTime < 0) {
-                playerStatesTemp[0].currentTime = 0;
-                playerStatesTemp[1].currentTime = 0 - this.getLinkDifferenceTime();
-            } else if (playerStatesTemp[1].currentTime < 0) {
-                playerStatesTemp[1].currentTime = 0;
-                playerStatesTemp[0].currentTime = 0 + this.getLinkDifferenceTime();
-            } else if (playerStatesTemp[0].currentTime > playerStatesTemp[0].duration) {
-                playerStatesTemp[0].currentTime = playerStatesTemp[0].duration;
-                playerStatesTemp[1].currentTime = playerStatesTemp[0].duration - this.getLinkDifferenceTime();
-            } else if (playerStatesTemp[1].currentTime > playerStatesTemp[1].duration) {
-                playerStatesTemp[1].currentTime = playerStatesTemp[1].duration;
-                playerStatesTemp[0].currentTime = playerStatesTemp[1].duration + this.getLinkDifferenceTime();
-            }
-
-            playerStatesTemp[0].doSeek = true;
-            playerStatesTemp[1].doSeek = true;
-            this.setPlayerStates(playerStatesTemp);
-
-
-        } else {
-
-            let playerStatesTemp = this.getPlayerStates();
-            let newTime = playerStatesTemp[playerIndex].currentTime + seekInterval;
-
-            if (newTime < 0) {
-                playerStatesTemp[playerIndex].currentTime = 0;
-                if (playerStatesTemp[playerIndex].doLoop == false) {
-                    playerStatesTemp[playerIndex].doPlay = false;
-                }
-            } else {
-                playerStatesTemp[playerIndex].currentTime = newTime;
-            }
-            playerStatesTemp[playerIndex].doSeek = true;
-            this.setPlayerStates(playerStatesTemp);
-
-
-
-        }
+        this.setLinkModeCurrentTime(playerIndex, this.getPlayerStates()[playerIndex].currentTime + seekInterval, false);
     }
 
 
@@ -251,45 +201,41 @@ class VideoCompareContainerHelper {
         this.setPlayerStates(playerStatesTemp);
     }
 
-    setLinkStartAndEndDefaults(doLink, linkDiff) {
+    setLinkStartAndEndDefaults(doLink = this.getDoLinkMode(), linkDiff = this.getLinkDifferenceTime()) {
 
         let playerStatesTemp = this.getPlayerStates();
 
-        playerStatesTemp[0].linkStart = 0;
-        playerStatesTemp[0].linkEnd = playerStatesTemp[0].duration;
+        // const doLink = this.getDoLinkMode();
 
-        if (playerStatesTemp.length > 1) {
-            playerStatesTemp[1].linkStart = 0;
-            playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
-        }
+        const setLinkDefaults = (playerState, start, end) => {
+            playerState.linkStart = start;
+            playerState.linkEnd = end;
+            playerState.loopStart = start;
+            playerState.loopEnd = end;
+        };
 
-        if (doLink) {
+        const setLinkBounds = (playerState, start, end) => {
+            playerState.linkStart = start;
+            playerState.linkEnd = end;
+        };
 
+        if (doLink && playerStatesTemp.length > 1) {
+            const linkStart0 = Math.max(0, -linkDiff);
+            const linkEnd0 = Math.min(playerStatesTemp[0].duration, playerStatesTemp[1].duration - linkDiff);
+            const linkStart1 = Math.max(0, linkDiff);
+            const linkEnd1 = Math.min(playerStatesTemp[1].duration, playerStatesTemp[0].duration + linkDiff);
 
-            playerStatesTemp[0].linkStart = Math.max(0, linkDiff);
-            playerStatesTemp[0].linkEnd = Math.min(playerStatesTemp[0].duration, playerStatesTemp[1].duration + linkDiff);
+            setLinkBounds(playerStatesTemp[0], linkStart0, linkEnd0);
+            setLinkBounds(playerStatesTemp[1], linkStart1, linkEnd1);
 
-
-            playerStatesTemp[1].linkStart = Math.max(0, linkDiff * -1);
-            playerStatesTemp[1].linkEnd = Math.min(playerStatesTemp[1].duration, playerStatesTemp[0].duration - linkDiff);
-
-
-            //decide if linkStart should override loopStart
-            playerStatesTemp[0].loopStart = playerStatesTemp[0].linkStart;
-            playerStatesTemp[0].loopEnd = playerStatesTemp[0].linkEnd;
-            playerStatesTemp[1].loopStart = playerStatesTemp[1].linkStart;
-            playerStatesTemp[1].loopEnd = playerStatesTemp[1].linkEnd;
-
-
+            setLinkDefaults(playerStatesTemp[0], linkStart0, linkEnd0);
+            setLinkDefaults(playerStatesTemp[1], linkStart1, linkEnd1);
         } else {
-            playerStatesTemp[0].linkStart = 0;
-            playerStatesTemp[0].linkEnd = playerStatesTemp[0].duration;
+            setLinkDefaults(playerStatesTemp[0], 0, playerStatesTemp[0].duration);
 
             if (playerStatesTemp.length > 1) {
-                playerStatesTemp[1].linkStart = 0;
-                playerStatesTemp[1].linkEnd = playerStatesTemp[1].duration;
+                setLinkDefaults(playerStatesTemp[1], 0, playerStatesTemp[1].duration);
             }
-
         }
 
         this.setPlayerStates(playerStatesTemp);
@@ -303,44 +249,13 @@ class VideoCompareContainerHelper {
 
         this.setPlayerStates(playerStatesTemp);
 
-        this.setLinkStartAndEndDefaults(false, 0);
+        this.setLinkStartAndEndDefaults();
     }
 
     handleSliderChange(playerIndex, sliderValue) {
-        //todo:  move all the currentTime setting logic to a single place
-        let playerStatesTemp = this.getPlayerStates();
-        playerStatesTemp[playerIndex].currentTime = sliderValue / 100;
-        playerStatesTemp[playerIndex].doSeek = true;
 
-        const linkDifferenceTime = this.getLinkDifferenceTime();
+        this.setLinkModeCurrentTime(playerIndex, sliderValue / 100, false);
 
-        if (this.getDoLinkMode()) {
-            if (playerIndex == 0) {
-                playerStatesTemp[1].currentTime = playerStatesTemp[0].currentTime - linkDifferenceTime;
-            } else if (playerIndex == 1) {
-                playerStatesTemp[0].currentTime = playerStatesTemp[1].currentTime + linkDifferenceTime;
-            }
-
-            if (playerStatesTemp[0].currentTime < 0) {
-                playerStatesTemp[0].currentTime = 0;
-                playerStatesTemp[1].currentTime = 0 - linkDifferenceTime;
-            } else if (playerStatesTemp[1].currentTime < 0) {
-                playerStatesTemp[1].currentTime = 0;
-                playerStatesTemp[0].currentTime = 0 + linkDifferenceTime;
-            } else if (playerStatesTemp[0].currentTime > playerStatesTemp[0].duration) {
-                playerStatesTemp[0].currentTime = playerStatesTemp[0].duration;
-                playerStatesTemp[1].currentTime = playerStatesTemp[0].duration - linkDifferenceTime;
-            } else if (playerStatesTemp[1].currentTime > playerStatesTemp[1].duration) {
-                playerStatesTemp[1].currentTime = playerStatesTemp[1].duration;
-                playerStatesTemp[0].currentTime = playerStatesTemp[1].duration + linkDifferenceTime;
-            }
-
-            playerStatesTemp[0].doSeek = true;
-            playerStatesTemp[1].doSeek = true;
-        }
-
-
-        this.setPlayerStates(playerStatesTemp);
     }
 
     handleScale(playerIndex, scaleAmount) {
@@ -386,15 +301,22 @@ class VideoCompareContainerHelper {
             playerStatesTemp[playerIndex].playbackRate = playbackRate;
         }
 
+        if (this.getDoLinkMode()) {
+            const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+            playerStatesTemp[otherPlayerIndex].doPlay = playerStatesTemp[playerIndex].doPlay;
+            playerStatesTemp[otherPlayerIndex].playDirection = playerStatesTemp[playerIndex].playDirection;
+            playerStatesTemp[otherPlayerIndex].playbackRate = playerStatesTemp[playerIndex].playbackRate;
+        }
+
         this.setPlayerStates(playerStatesTemp);
     }
 
     handleBookmarkClick(playerIndex, bookmarkIndex) {
         let playerStatesTemp = this.getPlayerStates();
         const newTime = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time;
-        playerStatesTemp[playerIndex].currentTime = newTime;
-        playerStatesTemp[playerIndex].doSeek = true;
-        this.setPlayerStates(playerStatesTemp);
+
+        this.setLinkModeCurrentTime(playerIndex, newTime, false);
+        // this.setPlayerStates(playerStatesTemp);
     }
 
 
@@ -414,6 +336,8 @@ class VideoCompareContainerHelper {
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time = playerStatesTemp[playerIndex].currentTime;
 
+        this.setLoopStartEnd(playerStatesTemp, playerIndex);
+
         this.setPlayerStates(playerStatesTemp);
     }
 
@@ -422,29 +346,31 @@ class VideoCompareContainerHelper {
     }
 
     handleBookmarkChangeLoopMarker(playerIndex, bookmarkIndex) {
-        //todo:  i think I could refactor this to be better.  like put the possible options in a list and loop through them, and flag the ones that are in use.
         let playerStatesTemp = this.getPlayerStates();
-        const bookmark = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex];
-        if (bookmark.loopMarker === "start") {
-            bookmark.loopMarker = "";
-        } else if (bookmark.loopMarker === "") {
-            if (this.doesLoopMarkerExist(playerIndex, "end")) {
-                if (this.doesLoopMarkerExist(playerIndex, "start")) {
-                    bookmark.loopMarker = "";
-                } else {
-                    bookmark.loopMarker = "start";
-                }
-            } else {
-                bookmark.loopMarker = "end";
+        
+        function filterOptions(bookmarkIndex) {
+            let availableOptions = ["start", "", "end"];
+            let bookmarks = playerStatesTemp[playerIndex].bookmarks;
+
+            const indexOfStart = bookmarks.findIndex(bookmark => bookmark.loopMarker === "start");
+            const indexOfEnd = bookmarks.findIndex(bookmark => bookmark.loopMarker === "end");
+
+            if (indexOfStart > -1 || indexOfEnd < bookmarkIndex) {
+                availableOptions = availableOptions.filter(option => option !== "start");
             }
 
-        } else if (bookmark.loopMarker === "end") {
-            if (this.doesLoopMarkerExist(playerIndex, "start")) {
-                bookmark.loopMarker = "";
-            } else {
-                bookmark.loopMarker = "start";
+            if (indexOfEnd > -1 || indexOfStart > bookmarkIndex) {
+                availableOptions = availableOptions.filter(option => option !== "end");
             }
+            return availableOptions;
         }
+
+        const availableOptions = filterOptions(bookmarkIndex);
+        const indexOfCurrentMarker = availableOptions.findIndex(option => option === playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].loopMarker);
+
+        const nextIndex = (indexOfCurrentMarker + 1) % availableOptions.length;
+        playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].loopMarker = availableOptions[nextIndex];
+
 
         this.setLoopStartEnd(playerStatesTemp, playerIndex);
 
@@ -458,6 +384,10 @@ class VideoCompareContainerHelper {
 
     handleSetPlaybackRate(playerIndex, rateAmount) {
         let playerStatesTemp = this.getPlayerStates();
+
+        if (rateAmount < 0.1) {
+            rateAmount = 0.1;
+        }
 
         if (this.getDoLinkMode()) {
             playerStatesTemp[0].playbackRate = rateAmount;
@@ -589,7 +519,7 @@ class VideoCompareContainerHelper {
     }
 
     closeTabs(playerIndex) {
-        
+
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "none";
         this.setPlayerStates(playerStatesTemp);
@@ -598,7 +528,7 @@ class VideoCompareContainerHelper {
     openTab(playerIndex, evt, newTabName) {
         var i, tabcontent, tabbuttons;
 
-        
+
 
         let playerStatesTemp = this.getPlayerStates();
 
@@ -606,7 +536,7 @@ class VideoCompareContainerHelper {
 
         this.closeTabs(playerIndex);
 
-        if (activeTabName != newTabName){
+        if (activeTabName != newTabName) {
 
             playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = newTabName;
             this.setPlayerStates(playerStatesTemp);
@@ -636,7 +566,7 @@ class VideoCompareContainerHelper {
         this.setPlayerStates(playerStatesTemp);
     }
 
-    
+
     linkPlayers(doLink) {
 
         this.setDoLinkMode(doLink);
@@ -646,7 +576,7 @@ class VideoCompareContainerHelper {
         let playerStatesTemp = this.getPlayerStates();
         if (doLink) {
 
-            linkDiff = playerStatesTemp[0].currentTime - playerStatesTemp[1].currentTime;
+            linkDiff = playerStatesTemp[1].currentTime - playerStatesTemp[0].currentTime;
 
             if (playerStatesTemp[0].doLoop && playerStatesTemp[1].doLoop) {
                 playerStatesTemp[1].doLoop = false;
@@ -668,33 +598,39 @@ class VideoCompareContainerHelper {
     handleEnded(playerIndex) {
         let playerStatesTemp = this.getPlayerStates();
 
-        if (this.getDoLinkMode()) {
-            if (playerStatesTemp[0].doLoop || playerStatesTemp[1].doLoop) {
-                playerStatesTemp[0].currentTime = playerStatesTemp[0].loopStart;
-                playerStatesTemp[0].doSeek = true;
-                playerStatesTemp[1].currentTime = playerStatesTemp[1].loopStart;
-                playerStatesTemp[1].doSeek = true;
-                this.setPlayerStates(playerStatesTemp);
-            } else {
-                this.handlePlayChange(playerIndex);
-            }
-        } else {
-            if (playerStatesTemp[playerIndex].doLoop) {
-                playerStatesTemp[playerIndex].currentTime = playerStatesTemp[playerIndex].loopStart;
-                playerStatesTemp[playerIndex].doSeek = true;
-                playerStatesTemp[playerIndex].doPlay = true;
+        this.setLinkModeCurrentTime(playerIndex, playerStatesTemp[playerIndex].duration, true);
+        playerStatesTemp[playerIndex].doSeek = true;
 
-                this.setPlayerStates(playerStatesTemp);
-            } else {
-                this.handleDoPause([playerIndex]);
+        // this.setPlayerStates(playerStatesTemp);
+
+        const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+
+        if (playerStatesTemp[playerIndex].doLoop || (playerStatesTemp.length > 1 && playerStatesTemp[otherPlayerIndex].doLoop)) {
+            this.handleDoPlay(playerIndex);
+            if (this.getDoLinkMode()) {
+                this.handleDoPlay(otherPlayerIndex);
+            }
+
+        } else {
+            this.handleDoPause(playerIndex);
+
+            if (this.getDoLinkMode()) {
+                this.handleDoPause(otherPlayerIndex);
             }
         }
+
 
     }
 
     handleDoPause(playerIndex) {
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp[playerIndex].doPlay = false;
+        this.setPlayerStates(playerStatesTemp);
+    }
+
+    handleDoPlay(playerIndex) {
+        let playerStatesTemp = this.getPlayerStates();
+        playerStatesTemp[playerIndex].doPlay = true;
         this.setPlayerStates(playerStatesTemp);
     }
 

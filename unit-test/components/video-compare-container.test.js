@@ -1,11 +1,9 @@
-
-
 import VideoCompareContainer, { defaultPlayerState, callA } from '../../src/components/video-compare-container';
 
 import VideoCompareContainerHelper from '../../src/services/video-compare-container-helper';
 
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterAll } from 'vitest'
 
 
 function createVideoCompareContainerHelper(initialState = [VideoCompareContainerHelper.defaultPlayerState]) {
@@ -215,7 +213,7 @@ describe("play change should toggle doPlay", () => {
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.handlePlayChange(0);
+    videoCompareContainerHelper.handlePlayToggle(0);
 
     expect(getPlayerStatesMock()[0].doPlay).toBe(true);
   });
@@ -231,7 +229,7 @@ describe("play change should toggle doPlay", () => {
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.handlePlayChange(0);
+    videoCompareContainerHelper.handlePlayToggle(0);
 
     expect(getPlayerStatesMock()[0].doPlay).toBe(false);
   });
@@ -247,7 +245,7 @@ describe("play change should toggle doPlay", () => {
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.handlePlayChange(0);
+    videoCompareContainerHelper.handlePlayToggle(0);
 
     expect(getPlayerStatesMock()[0].doPlay).toBe(false);
   });
@@ -270,7 +268,7 @@ describe("play change should toggle doPlay", () => {
 
     videoCompareContainerHelper.setDoLinkMode(true);
 
-    videoCompareContainerHelper.handlePlayChange(0);
+    videoCompareContainerHelper.handlePlayToggle(0);
 
     expect(getPlayerStatesMock()[0].doPlay && getPlayerStatesMock()[1].doPlay).toBe(true);
   });
@@ -479,12 +477,14 @@ describe("setting currentTime", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
-        currentTime: 0
+        currentTime: 0,
+        duration: 10,
       }
     ];
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     videoCompareContainerHelper.handleTimeUpdate(0, 5);
 
@@ -540,7 +540,7 @@ describe("setting currentTime", () => {
         loopStart: 0,
         loopEnd: 10,
         currentTime: 0,
-        doLoop: true,
+        doLoop: false,
         doPlay: true,
         playDirection: 1
       }
@@ -560,7 +560,7 @@ describe("setting currentTime", () => {
         loopStart: 2,
         loopEnd: 10,
         currentTime: 0,
-        doLoop: true,
+        doLoop: false,
         doPlay: true,
         playDirection: 1
       }
@@ -579,8 +579,11 @@ describe("setting currentTime", () => {
         ...VideoCompareContainerHelper.defaultPlayerState,
         loopStart: 2,
         loopEnd: 10,
+        linkStart: 0,
+        linkEnd: 10,
+        duration: 10,
         currentTime: 0,
-        doLoop: true,
+        doLoop: false,
         doPlay: true,
         playDirection: 1
       },
@@ -588,8 +591,11 @@ describe("setting currentTime", () => {
         ...VideoCompareContainerHelper.defaultPlayerState,
         loopStart: 4,
         loopEnd: 10,
+        linkStart: 0,
+        linkEnd: 10,
+        duration: 10,
         currentTime: 0,
-        doLoop: true,
+        doLoop: false,
         doPlay: true,
         playDirection: 1
       }
@@ -597,10 +603,15 @@ describe("setting currentTime", () => {
 
 
 
-    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock } = createVideoCompareContainerHelper(initialPlayerState);
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
     setDoLinkModeMock(true);
 
+    // videoCompareContainerHelper.setLoopStartEnd(getPlayerStatesMock(), 0);
+
+    setLinkDifferenceTimeMock(2);
+
     videoCompareContainerHelper.handleTimeUpdate(0, 1);
+    // videoCompareContainerHelper.handleTimeUpdate(1, 3);
 
     expect(getPlayerStatesMock()[0].currentTime).toBe(2);
     expect(getPlayerStatesMock()[0].doSeek).toBe(true);
@@ -611,14 +622,14 @@ describe("setting currentTime", () => {
 
   //playback direction is -1
 
-  it("should set the time to the end of the loop if the time is greater than the end of the loop, and playback direction is -1", () => {
+  it("should set the time to the end of the loop if the time is greater than the end of the loop, and updated time is greater than current time, and do loop is false", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
         loopStart: 0,
         loopEnd: 10,
-        currentTime: 0,
-        doLoop: true,
+        currentTime: 10.5,
+        doLoop: false,
         doPlay: true,
         playDirection: -1
       }
@@ -631,13 +642,13 @@ describe("setting currentTime", () => {
     expect(getPlayerStatesMock()[0].currentTime).toBe(10);
   });
 
-  it("should set the time to the end of the loop if the time is less than the start of the loop, when loop start is greater than zero", () => {
+  it("should set the time to the end of the loop if the time is less than the start of the loop, when loop start is greater than zero, do loop is true, time updated is less than current time", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
         loopStart: 2,
         loopEnd: 10,
-        currentTime: 0,
+        currentTime: 1.5,
         doLoop: true,
         doPlay: true,
         playDirection: -1
@@ -676,15 +687,38 @@ describe("setting currentTime", () => {
 
 
 
-    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock } = createVideoCompareContainerHelper(initialPlayerState);
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
     setDoLinkModeMock(true);
 
+    setLinkDifferenceTimeMock(2);
+
     videoCompareContainerHelper.handleTimeUpdate(0, 1);
+    // videoCompareContainerHelper.handleTimeUpdate(1, 3);
 
     expect(getPlayerStatesMock()[0].currentTime).toBe(10);
     expect(getPlayerStatesMock()[0].doSeek).toBe(true);
     expect(getPlayerStatesMock()[1].currentTime).toBe(12);
     expect(getPlayerStatesMock()[1].doSeek).toBe(true);
+  });
+
+  it("should set the leave the current time to what it is and do seek should be false when the time update is the same as the current time", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        currentTime: 5,
+        duration: 10,
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
+
+    videoCompareContainerHelper.handleTimeUpdate(0, 5);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(5);
+    expect(getPlayerStatesMock()[0].doSeek).toBe(false);
+
   });
 
 });
@@ -710,7 +744,49 @@ describe("handle seeking", () => {
 
   });
 
-  it("should set the current time to current time plus seek interval for both players", () => {
+  it("should set the current time to current time to the start of the video when seeking past the end of the video, when looping is enabled", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        currentTime: 9.5,
+        doLoop: true,
+        loopStart: 0,
+        loopEnd: 10,
+        duration: 10
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    videoCompareContainerHelper.handleSeek(0, 1);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(0);
+    expect(getPlayerStatesMock()[0].doSeek).toBe(true);
+
+  });
+
+  it("should set the current time to the end of the video when seeking past the start of the video, when looping is enabled", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        currentTime: 0.5,
+        doLoop: true,
+        loopStart: 0,
+        loopEnd: 10,
+        duration: 10
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    videoCompareContainerHelper.handleSeek(0, -1);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(10);
+    expect(getPlayerStatesMock()[0].doSeek).toBe(true);
+
+  });
+
+  it("should set the current time to current time plus seek interval for both players, when the first player is seeking", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
@@ -747,6 +823,48 @@ describe("handle seeking", () => {
     expect(getPlayerStatesMock()[1].doSeek).toBe(true);
 
   });
+
+
+  
+  it("should set the current time to current time plus seek interval for both players, when the second player is seeking", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        loopStart: 2,
+        loopEnd: 10,
+        currentTime: 5,
+        doLoop: false,
+        doPlay: false,
+        playDirection: 1,
+        duration: 10
+      },
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        loopStart: 4,
+        loopEnd: 12,
+        currentTime: 7,
+        doLoop: false,
+        doPlay: false,
+        playDirection: 1,
+        duration: 12
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    setDoLinkModeMock(true);
+    setLinkDifferenceTimeMock(2);
+
+    videoCompareContainerHelper.handleSeek(1, 1);
+
+    expect(getPlayerStatesMock()[1].currentTime).toBe(8);
+    expect(getPlayerStatesMock()[1].doSeek).toBe(true);
+    expect(getPlayerStatesMock()[0].currentTime).toBe(6);
+    expect(getPlayerStatesMock()[0].doSeek).toBe(true);
+
+  });
+
+
 });
 
 
@@ -791,7 +909,7 @@ describe("handle setting link start and end defaults", () => {
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.setLinkStartAndEndDefaults(false);
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     expect(getPlayerStatesMock()[0].linkStart).toBe(0);
     expect(getPlayerStatesMock()[0].linkEnd).toBe(10);
@@ -816,9 +934,12 @@ describe("handle setting link start and end defaults", () => {
       }
     ];
 
-    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.setLinkStartAndEndDefaults(true, 2);
+
+    setDoLinkModeMock(true);
+    setLinkDifferenceTimeMock(-2);
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     expect(getPlayerStatesMock()[0].linkStart).toBe(2);
     expect(getPlayerStatesMock()[0].linkEnd).toBe(10);
@@ -843,9 +964,12 @@ describe("handle setting link start and end defaults", () => {
       }
     ];
 
-    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
 
-    videoCompareContainerHelper.setLinkStartAndEndDefaults(true, -2);
+    setDoLinkModeMock(true);
+    setLinkDifferenceTimeMock(2);
+
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     expect(getPlayerStatesMock()[0].linkStart).toBe(0);
     expect(getPlayerStatesMock()[0].linkEnd).toBe(9);
@@ -889,6 +1013,8 @@ describe("handle slider changing", () => {
 
     const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
+
     videoCompareContainerHelper.handleSliderChange(0, 500);
 
     expect(getPlayerStatesMock()[0].currentTime).toBe(5);
@@ -912,10 +1038,12 @@ describe("handle slider changing", () => {
     setLinkDifferenceTimeMock(2);
     setDoLinkModeMock(true);
 
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
+
     videoCompareContainerHelper.handleSliderChange(0, 500);
 
     expect(getPlayerStatesMock()[0].currentTime).toBe(5);
-    expect(getPlayerStatesMock()[1].currentTime).toBe(3);
+    expect(getPlayerStatesMock()[1].currentTime).toBe(7);
 
   });
 
@@ -936,10 +1064,12 @@ describe("handle slider changing", () => {
     setLinkDifferenceTimeMock(2);
     setDoLinkModeMock(true);
 
-    videoCompareContainerHelper.handleSliderChange(0, 1);
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
-    expect(getPlayerStatesMock()[0].currentTime).toBe(2);
-    expect(getPlayerStatesMock()[1].currentTime).toBe(0);
+    videoCompareContainerHelper.handleSliderChange(0, 100);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(1);
+    expect(getPlayerStatesMock()[1].currentTime).toBe(3);
 
   });
 
@@ -960,14 +1090,48 @@ describe("handle slider changing", () => {
     setLinkDifferenceTimeMock(-2);
     setDoLinkModeMock(true);
 
-    videoCompareContainerHelper.handleSliderChange(1, 1);
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
-    expect(getPlayerStatesMock()[0].currentTime).toBe(0);
-    expect(getPlayerStatesMock()[1].currentTime).toBe(2);
+    videoCompareContainerHelper.handleSliderChange(1, 100);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(3);
+    expect(getPlayerStatesMock()[1].currentTime).toBe(1);
 
   });
 
-  it("should set the current time of player 1 to be its duration and player 0 to be player 1s duraction minus link diff, when link mode is true, and link diff is negative ", () => {
+  it("should set the current time of player 1 to be its link end and player 0 to be player 1s link end minus link diff, when link mode is true, and link diff is negative ", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        duration: 11
+
+      },
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        duration: 7
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    setLinkDifferenceTimeMock(2);
+    setDoLinkModeMock(true);
+
+
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
+
+    // videoCompareContainerHelper.setLoopStartEnd(playerStatesTemp, 0);
+    // videoCompareContainerHelper.setLoopStartEnd(playerStatesTemp, 1);
+
+    videoCompareContainerHelper.handleSliderChange(0, 1000);
+
+    expect(getPlayerStatesMock()[0].currentTime).toBe(5);
+    expect(getPlayerStatesMock()[1].currentTime).toBe(7);
+
+  });
+
+  //todo:  yes I know this fails
+  it("should set the current time of player 0 to be its duration and player 1 to be player 1s duraction minus link diff, when link mode is true, and link diff is positive ", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
@@ -984,30 +1148,7 @@ describe("handle slider changing", () => {
     setLinkDifferenceTimeMock(-2);
     setDoLinkModeMock(true);
 
-    videoCompareContainerHelper.handleSliderChange(0, 900);
-
-    expect(getPlayerStatesMock()[0].currentTime).toBe(5);
-    expect(getPlayerStatesMock()[1].currentTime).toBe(7);
-
-  });
-
-  //todo:  yes I know this fails
-  it("should set the current time of player 0 to be its duration and player 1 to be player 1s duraction minus link diff, when link mode is true, and link diff is negative ", () => {
-    const initialPlayerState = [
-      {
-        ...VideoCompareContainerHelper.defaultPlayerState,
-        duration: 10
-      },
-      {
-        ...VideoCompareContainerHelper.defaultPlayerState,
-        duration: 7
-      }
-    ];
-
-    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
-
-    setLinkDifferenceTimeMock(2);
-    setDoLinkModeMock(true);
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     videoCompareContainerHelper.handleSliderChange(1, 900);
 
@@ -1098,6 +1239,7 @@ describe("handle scrubber changing", () => {
 
     expect(getPlayerStatesMock()[0].playDirection).toBe(1);
     expect(getPlayerStatesMock()[0].playbackRate).toBe(0.1);
+    expect(getPlayerStatesMock()[0].doPlay).toBe(true);
 
     videoCompareContainerHelper.handleScrubberChange(0, -20);
 
@@ -1122,6 +1264,7 @@ describe("handle bookmark click", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
+        duration: 10,
         bookmarks: [
           { time: 5, loopMarker: "start" },
           { time: 7, loopMarker: "" },
@@ -1131,8 +1274,9 @@ describe("handle bookmark click", () => {
       }
     ];
 
-    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock, setLinkDifferenceTimeMock } = createVideoCompareContainerHelper(initialPlayerState);
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
 
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
 
     videoCompareContainerHelper.handleBookmarkClick(0, 1);
 
@@ -1201,11 +1345,14 @@ describe("handle bookmark delete", () => {
 
 describe("handle bookmark set new time", () => {
 
-  it("should set the time of the specified bookmark to the current time ", () => {
+  it("should set the time of the specified bookmark to the current time, and the loop start or end should change to reflect the new time as appropriate ", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
         currentTime: 8,
+        duration: 20,
+        linkEnd: 20,
+        doLoop: true,
         bookmarks: [
           { name: "abc", time: 5, loopMarker: "" },
           { name: "def", time: 7, loopMarker: "" },
@@ -1221,6 +1368,7 @@ describe("handle bookmark set new time", () => {
     videoCompareContainerHelper.handleBookmarkSetNewTime(0, 2);
 
     expect(getPlayerStatesMock()[0].bookmarks[2].time).toBe(8);
+    expect(getPlayerStatesMock()[0].loopEnd).toBe(8);
 
   });
 });
@@ -1282,6 +1430,40 @@ describe("change the loop marker on the bookmark to be the next available one", 
   });
 });
 
+describe("loop marker change", () => {
+
+  it("should not allow the start marker to be after the end marker ", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        currentTime: 8,
+        bookmarks: [
+          { name: "abc", time: 5, loopMarker: "end" },
+          { name: "def", time: 7, loopMarker: "" },
+          { name: "xyz", time: 15, loopMarker: "" },
+        ]
+
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+
+    videoCompareContainerHelper.handleBookmarkChangeLoopMarker(0, 2);
+    expect(getPlayerStatesMock()[0].bookmarks[2].loopMarker).toBe("");
+
+    videoCompareContainerHelper.handleBookmarkChangeLoopMarker(0, 2);
+    expect(getPlayerStatesMock()[0].bookmarks[2].loopMarker).toBe("");
+
+    videoCompareContainerHelper.handleBookmarkChangeLoopMarker(0, 0);
+    expect(getPlayerStatesMock()[0].bookmarks[0].loopMarker).toBe("start");
+
+    videoCompareContainerHelper.handleBookmarkChangeLoopMarker(0, 2);
+    expect(getPlayerStatesMock()[0].bookmarks[2].loopMarker).toBe("end");
+
+  });
+});
+
 
 describe("increase and decrease playback rate", () => {
 
@@ -1301,6 +1483,22 @@ describe("increase and decrease playback rate", () => {
 
     videoCompareContainerHelper.handlePlaybackRateUpdate(0, -0.25);
     expect(getPlayerStatesMock()[0].playbackRate).toBe(1);
+
+  });
+
+  it("should not allow playback rate below 0.1 ", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        playbackRate: 1,
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+
+    videoCompareContainerHelper.handlePlaybackRateUpdate(0, -2);
+    expect(getPlayerStatesMock()[0].playbackRate).toBe(0.1);
 
   });
 });
@@ -1641,7 +1839,7 @@ describe("link players", () => {
 
     expect(getDoLinkModeMock()).toBe(true);
 
-    expect(getLinkDifferenceTimeMock()).toBe(-2);
+    expect(getLinkDifferenceTimeMock()).toBe(2);
 
     expect(getPlayerStatesMock()[0].linkStart).toBe(0);
     expect(getPlayerStatesMock()[0].linkEnd).toBe(7);
@@ -1666,7 +1864,8 @@ describe("handle ended", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
-        doPlay: true
+        doPlay: true,
+        duration: 10,
       }
     ];
 
@@ -1674,9 +1873,12 @@ describe("handle ended", () => {
 
     setDoLinkModeMock(false);
 
+    videoCompareContainerHelper.setLinkStartAndEndDefaults();
+
     videoCompareContainerHelper.handleEnded(0);
 
     expect(getPlayerStatesMock()[0].doPlay).toBe(false);
+    expect(getPlayerStatesMock()[0].currentTime).toBe(10);
   });
 
   it("should set player to doPlay true, seek to true and current time to start of loop, if not in link moode and do loop is true", () => {
@@ -1685,8 +1887,10 @@ describe("handle ended", () => {
         ...VideoCompareContainerHelper.defaultPlayerState,
         doPlay: true,
         doLoop: true,
-        currentTime: 5,
+        currentTime: 9.5,
         loopStart: 2,
+        loopEnd: 10,
+        duration: 10,
       }
     ];
 
@@ -1702,7 +1906,9 @@ describe("handle ended", () => {
   });
 
 
-  it("should set player to doPlay false if in link moode and not do loop for both players", () => {
+
+
+  it("should set player to doPlay false if in link mode and not do loop for both players", () => {
     const initialPlayerState = [
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
@@ -1736,6 +1942,7 @@ describe("handle ended", () => {
         doLoop: true,
         currentTime: 5,
         loopStart: 2,
+        duration: 10
       }
     ];
 
@@ -1758,7 +1965,8 @@ describe("handle ended", () => {
         doLoop: true,
         currentTime: 5,
         loopStart: 2,
-        canPlay: true
+        canPlay: true,
+        duration: 10
       },
       {
         ...VideoCompareContainerHelper.defaultPlayerState,
@@ -1766,7 +1974,8 @@ describe("handle ended", () => {
         doLoop: true,
         currentTime: 6,
         loopStart: 3,
-        canPlay: true
+        canPlay: true,
+        duration: 10
       }
     ];
 
@@ -1784,6 +1993,63 @@ describe("handle ended", () => {
     expect(getPlayerStatesMock()[1].doSeek).toBe(true);
     expect(getPlayerStatesMock()[1].doPlay).toBe(true);
   });
+
+  
+  it("should set doSeek to false and current time should be the duration do loop is true", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        doPlay: true,
+        doLoop: true,
+        currentTime: 5,
+        loopStart: 2,
+        duration: 10
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    setDoLinkModeMock(false);
+
+    videoCompareContainerHelper.handleEnded(0);
+
+    expect(getPlayerStatesMock()[0].doPlay).toBe(true);
+    expect(getPlayerStatesMock()[0].currentTime).toBe(2);
+    expect(getPlayerStatesMock()[0].doSeek).toBe(true);
+  });
+
+  
+  it("should set do play to true for both players when player 0 has ended but player 1 has do loop as true, when players are linked", () => {
+    const initialPlayerState = [
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        doPlay: true,
+        doLoop: false,
+        currentTime: 10,
+        loopStart: 2,
+        duration: 10
+      },
+      {
+        ...VideoCompareContainerHelper.defaultPlayerState,
+        doPlay: true,
+        doLoop: true,
+        currentTime: 5,
+        loopStart: 3,
+        duration: 11
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock, setDoLinkModeMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    setDoLinkModeMock(true);
+
+    videoCompareContainerHelper.handleEnded(0);
+
+    expect(getPlayerStatesMock()[0].doPlay).toBe(true);
+
+    expect(getPlayerStatesMock()[1].doPlay).toBe(true);
+  });
+
 
 });
 
@@ -1806,6 +2072,124 @@ describe("do pause", () => {
     videoCompareContainerHelper.handleDoPause(0);
 
     expect(getPlayerStatesMock()[0].doPlay).toBe(false);
+  });
+
+});
+
+
+describe("do calculate current time", () => {
+
+ // before true forward
+  it("should set time to start of loop when time is before start of loop, loop is true, direction is forward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(-1, true, 0, 10, 1);
+
+    expect(newTime).toBe(0);
+  });
+
+   // before false forward
+  it("should set time to start of loop when time is before start of loop, loop is false, direction is forward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(-1, false, 0, 10, 1);
+
+    expect(newTime).toBe(0);
+  });
+
+  // before true backward
+  it("should set time to end of loop when time is before start of loop, loop is true, direction is backward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(-1, true, 0, 10, -1);
+
+    expect(newTime).toBe(10);
+  });
+
+  // before false backward
+  it("should set time to start of loop when time is before start of loop, loop is false, direction is backward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(-1, false, 0, 10, -1);
+
+    expect(newTime).toBe(0);
+  });
+
+  // after true forward
+  it("should set time to start of loop when time is after end of loop, loop is true, direction is forward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(11, true, 0, 10, 1);
+
+    expect(newTime).toBe(0);
+  });
+
+
+  // after false forward
+  it("should set time to end of loop when time is after start of loop, loop is false, direction is forward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(11, false, 0, 10, 1);
+
+    expect(newTime).toBe(10);
+  });
+
+    // after true backward
+  it("should set time to end of loop when time is after end of loop, loop is true, direction is backward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(11, true, 0, 10, -1);
+
+    expect(newTime).toBe(10);
+  });
+
+    // after false backward
+  it("should set time to end of loop when time is after end of loop, loop is false, direction is backward", () => {
+    const initialPlayerState = [
+      {
+      }
+    ];
+
+    const { videoCompareContainerHelper, getPlayerStatesMock } = createVideoCompareContainerHelper(initialPlayerState);
+
+    let newTime = videoCompareContainerHelper.calculateCurrentTime(11, false, 0, 10, -1);
+
+    expect(newTime).toBe(10);
   });
 
 });

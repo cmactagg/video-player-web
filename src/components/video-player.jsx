@@ -28,6 +28,8 @@ function VideoPlayer() {
 
     const [backwardPlaybackTimeoutId, setBackwardPlaybackTimeoutId] = useState(null);
 
+    const [isProgramaticSeek, setIsProgramaticSeek] = useState(false);
+
     let dragRectSize = 10;
     if (window.innerWidth <= 1000) {
         dragRectSize = dragRectSize * 4;
@@ -59,7 +61,7 @@ function VideoPlayer() {
                             .catch(error => {
                                 // Auto-play was prevented
                                 // Show paused UI.
-                                videoContext.onPlayChange();
+                                videoContext.onPlayToggle();
 
                             });
                     }
@@ -89,7 +91,9 @@ function VideoPlayer() {
     }, [videoContext.doPlay, videoContext.playbackRate]);
 
     if (videoContext.doSeek) {
+        // setIsProgramaticSeek(true);
         videoRef.current.currentTime = videoContext.clockTime;
+
         videoContext.onPostSeek();
     }
 
@@ -270,7 +274,11 @@ function VideoPlayer() {
     }
 
     function onPlayerTimeUpdate(event) {
-        videoContext.onTimeUpdate(event.currentTarget.currentTime);
+        // if (!videoContext.doSeek) {
+            // videoContext.onPostSeek();
+            videoContext.onTimeUpdate(event.currentTarget.currentTime);
+        // }
+        // setIsProgramaticSeek(false);
     }
     
 
@@ -347,14 +355,12 @@ function VideoPlayer() {
     }
 
     function onEnded(event) {
-        // if (!videoContext.doLoop) {
-        //     videoContext.onPlayChange();
-        // }
+        
+        //the video player automatically pauses when the video ends, so we need to set the video to play again
+        videoRef.current?.play();
 
         videoContext.onEnded();
 
-        //the video player automatically pauses when the video ends, so we need to set the video to play again
-        videoRef.current?.play();
 
 
     }

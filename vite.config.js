@@ -7,6 +7,6 @@ export default defineConfig({
   test: {
     // 👋 add the line below to add jsdom to vite
     environment: 'jsdom',
-    testTimeout: 10000,
+    testTimeout: 5000,
   }
 })
