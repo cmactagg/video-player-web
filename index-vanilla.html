@@ -1,0 +1,1488 @@
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="src/assets/skill-frame-icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Frame</title>
+    <link rel="stylesheet" href="src/App.css">
+
+</head>
+
+<body>
+    <div id="root">
+        <div class="video-player-add-button-container"><button title="Compare"><svg width="200" height="25"
+                    xmlns="http://www.w3.org/2000/svg"><text x="100" y="20" font-size="20" fill="white"
+                        text-anchor="middle">Compare</text></svg></button>
+        </div>
+        <div class="video-player-fullscreen-button-container"><button title="Fullscreen"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5">
+                    </path>
+                </svg></button></div>
+        <div class="container">
+            <div id="vpc01" class="video-player-container">
+                <div class="video-player-container-row">
+                    <div class="video-container">
+                        <div class="video-wrapper">
+                            <div id="videoTransformDiv0"
+                                style="width: 100%; height: 100%; object-fit: contain; transform: scaleX(1) scaleY(1) rotate(0deg) scale(1, 1) translate(0px, 0px);">
+                                <video id="video0" src>Your browser
+                                    does not support the video tag.</video>
+                            </div>
+                            <div id="svgTransformDiv0"
+                                style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px; transform: scaleX(1)  scaleY(1) rotate(0deg) scale(1, 1) translate(0px, 0px);">
+                                <svg id="svgCanvas0" viewBox="0 0 640 360"
+                                    style="position: absolute; top: 0px; left: 0px; box-sizing: border-box; padding: 0px; object-fit: contain; width: 100%; height: 100%;">
+                                    <defs></defs>
+
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flyout tab-content" id="overlayVideoControl0" style="display: none;">
+                            <div class="button-column">
+                                <button id="videoControlScaleUpButton0" title="Scale Up"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0">
+                                        </path>
+                                        <path
+                                            d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z">
+                                        </path>
+                                        <path fill-rule="evenodd"
+                                            d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5">
+                                        </path>
+                                    </svg>
+                                </button>
+                                <button id="videoControlScaleDownButton0" title="Scale Down"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M6.5 12a5 5 0 1 0 0-11 5 5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0">
+                                        </path>
+                                        <path
+                                            d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z">
+                                        </path>
+                                        <path fill-rule="evenodd"
+                                            d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"></path>
+                                    </svg></button>
+                            </div>
+                            <div class="button-column">
+                                <button id="videoControlRotateCWButton0" title="Rotate CW"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"></path>
+                                        <path
+                                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466">
+                                        </path>
+                                    </svg></button>
+                                <button id="videoControlRotateCCWButton0" title="Rotate CCW"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"></path>
+                                        <path
+                                            d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466">
+                                        </path>
+                                    </svg></button>
+                            </div>
+                            <div class="button-column">
+                                <button id="videoControlRotateCW90Button0" title="Rotate CW 90"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"></path>
+                                        <path
+                                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466">
+                                        </path>
+                                        <line x1="8" y1="5" x2="8" y2="11" stroke="white" stroke-width="2"></line>
+                                        <line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="2"></line>
+                                    </svg></button>
+                                <button id="videoControlRotateCCW90Button0" title="Rotate CCW 90"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"></path>
+                                        <path
+                                            d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466">
+                                        </path>
+                                        <line x1="8" y1="5" x2="8" y2="11" stroke="white" stroke-width="2"></line>
+                                        <line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="2"></line>
+                                    </svg></button>
+                            </div>
+                            <div class="button-column">
+                                <button id="videoControlPanLeftButton0" title="Pan left"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8">
+                                        </path>
+                                    </svg></button>
+                                <button id="videoControlPanRightButton0" title="Pan right"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8">
+                                        </path>
+                                    </svg></button>
+                            </div>
+                            <div class="button-column">
+                                <button id="videoControlPanUpButton0" title="Pan up"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5">
+                                        </path>
+                                    </svg></button>
+                                <button id="videoControlPanDownButton0" title="Pan down"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1">
+                                        </path>
+                                    </svg></button>
+                            </div>
+                            <div class="button-column">
+                                <button id="videoControlMirrorButton0" title="Mirror"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M7 2.5a.5.5 0 0 0-.939-.24l-6 11A.5.5 0 0 0 .5 14h6a.5.5 0 0 0 .5-.5zm2.376-.484a.5.5 0 0 1 .563.245l6 11A.5.5 0 0 1 15.5 14h-6a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .376-.484M10 4.46V13h4.658z">
+                                        </path>
+                                    </svg></button>
+                                <button id="videoControlResetButton0" title="Reset"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5">
+                                        </path>
+                                    </svg></button>
+                            </div>
+                        </div>
+                        <div class="flyout tab-content" id="overlayDrawingTools0" style="display: none;">
+                            <div class="button-column"><button id="drawingToolDrawLineButton0" title="Draw Line"><svg
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="4" y1="20" x2="20" y2="4" stroke="white" stroke-width="2"></line>
+                                    </svg></button></div>
+                            <div class="button-column"><button id="drawingToolDrawAngleButton0" title="Draw Angle"><svg
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="4" y1="20" x2="20" y2="4" stroke="white" stroke-width="2"></line>
+                                        <line x1="4" y1="20" x2="30" y2="20" stroke="white" stroke-width="2"></line>
+                                    </svg></button></div>
+                            <div class="button-column"><button id="drawingToolDraw90AngleButton0"
+                                    title="Draw 90d Angle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="4" y1="20" x2="4" y2="4" stroke="white" stroke-width="2"></line>
+                                        <line x1="4" y1="20" x2="20" y2="20" stroke="white" stroke-width="2"></line>
+                                        <line x1="8" y1="16" x2="4" y2="16" stroke="white" stroke-width="2"></line>
+                                        <line x1="8" y1="16" x2="8" y2="20" stroke="white" stroke-width="2"></line>
+                                    </svg></button></div>
+                            <div class="button-column"><button id="drawingToolDrawDotButton0" title="Draw Dot"><svg
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="2" fill="white"></circle>
+                                    </svg></button></div>
+                            <div class="button-column"><button id="drawingToolDeleteButton0" title="Delete"><svg
+                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 6L5 6 21 6" stroke="white" stroke-width="2"></path>
+                                        <path d="M19 6L17.3333 21H6.66667L5 6" stroke="white" stroke-width="2"></path>
+                                        <path d="M10 11V17" stroke="white" stroke-width="2"></path>
+                                        <path d="M14 11V17" stroke="white" stroke-width="2"></path>
+                                    </svg></button></div>
+                        </div>
+                        <div class="bookmark-overlay tab-content" id="overlayBookmarks0" style="display: block;">
+                            <input id="bookmarkNameInput0" placeholder="Bookmark name" type="text" value>
+                            <button id="bookmarkAddButton0">Add Bookmark</button>
+                            <ul id="bookmarkList0">
+
+
+
+                            </ul>
+                        </div>
+                        <div class="open-file-overlay tab-content" id="overlayOpenFile0" style="display: none;">
+                            <div class="logo-name-container"><img src="/src/assets/skill-frame-icon.png">
+                                <h1>SkillFrame</h1>
+                            </div>
+                            <div class="open-file-container"><input id="fileInput0" accept="video/*" type="file"
+                                    name="file">
+                            </div>
+                        </div>
+                        <div class="controls-basic-container">
+                            <div class="button-row-basic">
+                                <div class="button-group">
+                                    <div class="status-container">
+                                        <div id="playbackRateDiv0" class="playback-rate">1.00</div>
+                                        <div class="button-row-scrubber">
+                                            <input type="range" id="scrubberRange0" class="scrubber-range" min="-100"
+                                                max="100" value="0" />
+                                        </div>
+                                        <div id="clockTimeDiv0" class="clock-time">0.00</div>
+                                    </div><button id="previousSecondButton0"><svg xmlns="http://www.w3.org/2000/svg"
+                                            title="Prev 1 Sec" width="16" height="16" fill="currentColor"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M7.21 5.093A.5.5 0 0 1 8 5.5v1.886l3.21-2.293A.5.5 0 0 1 12 5.5v5a.5.5 0 0 1-.79.407L8 8.614V10.5a.5.5 0 0 1-.79.407l-3.5-2.5a.5.5 0 0 1 0-.814z">
+                                            </path>
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z">
+                                            </path>
+                                        </svg></button>
+                                    <button id="previousFrameButton0"><svg xmlns="http://www.w3.org/2000/svg"
+                                            title="Prev 1 Frame" width="16" height="16" fill="currentColor"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M7.729 5.055a.5.5 0 0 0-.52.038l-3.5 2.5a.5.5 0 0 0 0 .814l3.5 2.5A.5.5 0 0 0 8 10.5V8.614l3.21 2.293A.5.5 0 0 0 12 10.5v-5a.5.5 0 0 0-.79-.407L8 7.386V5.5a.5.5 0 0 0-.271-.445">
+                                            </path>
+                                            <path
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8">
+                                            </path>
+                                        </svg></button>
+                                    <button id="playButton0">
+                                        <svg id="playButtonPlaySvg0" xmlns="http://www.w3.org/2000/svg" title="Play"
+                                            width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
+                                            </path>
+                                        </svg>
+                                        <svg id="playButtonPauseSvg0" xmlns="http://www.w3.org/2000/svg" title="Pause"
+                                            width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+                                        </svg>
+                                    </button>
+                                    <button id="nextFrameButton0"><svg xmlns="http://www.w3.org/2000/svg"
+                                            title="Next 1 Frame" width="16" height="16" fill="currentColor"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16">
+                                            </path>
+                                            <path
+                                                d="M4.271 5.055a.5.5 0 0 1 .52.038L8 7.386V5.5a.5.5 0 0 1 .79-.407l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 8 10.5V8.614l-3.21 2.293A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .271-.445">
+                                            </path>
+                                        </svg></button>
+                                    <button id="nextSecondButton0"><svg xmlns="http://www.w3.org/2000/svg"
+                                            title="Next 1 Sec" width="16" height="16" fill="currentColor"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M8.79 5.093A.5.5 0 0 0 8 5.5v1.886L4.79 5.093A.5.5 0 0 0 4 5.5v5a.5.5 0 0 0 .79.407L8 8.614V10.5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z">
+                                            </path>
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button id="playbackRateDecreaseButton0" title="Playback Rate Slower">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m5.904-2.803a.5.5 0 1 0-.707.707L9.293 10H6.525a.5.5 0 0 0 0 1H10.5a.5.5 0 0 0 .5-.5V6.525a.5.5 0 0 0-1 0v2.768z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button id="playbackRateIncreaseButton0" title="Playback Rate Faster"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-arrow-up-right-circle-fill"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904-2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z">
+                                            </path>
+                                        </svg></button>
+                                    <button id="doLoopButton0" title="Do loop">
+                                        <svg id="doLoopButtonEnabledSvg0" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" fill="currentColor" className="bi bi-arrow-repeat"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9">
+                                            </path>
+                                            <path fillRule="evenodd"
+                                                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z">
+                                            </path>
+
+                                        </svg>
+                                        <svg id="doLoopButtonDisabledSvg0" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" fill="currentColor" className="bi bi-arrow-repeat"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9">
+                                            </path>
+                                            <path fillRule="evenodd"
+                                                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z">
+                                            </path>
+                                            <line x1="2" y1="14" x2="14" y2="2" stroke="white" strokeWidth="2"></line>
+                                        </svg>
+                                    </button>
+                                    <button id="enableMenuButton0" title="Menu"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5">
+                                            </path>
+                                        </svg></button>
+                                    <div class="menu" id="menu0">
+                                        <div class="top-buttons">
+
+                                            <button id="enableOverlayVideoControlsButton0" title="Video Control"
+                                                class="tab-button"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                    height="24" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z">
+                                                    </path>
+                                                </svg></button><button id="enableOverlayDrawingToolsButton0"
+                                                title="Drawing Tools"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                    height="24" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325">
+                                                    </path>
+                                                </svg></button>
+                                            <button id="enableOverlayBookmarksButton0" title="Bookmarks"><svg width="24"
+                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M6 2H18C19.1 2 20 2.9 20 4V20L12 16L4 20V4C4 2.9 4.9 2 6 2Z"
+                                                        fill="white"></path>
+                                                </svg></button>
+                                            <button id="enableOverlayOpenFileButton0" title="Open File"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M9.828 3a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 14 6.828V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3.172a3 3 0 0 1 2.121.879l.586.586A3 3 0 0 1 9.828 3zM4 4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6.828a1 1 0 0 0-.293-.707l-.586-.586A1 1 0 0 0 11.172 5H9.828a1 1 0 0 0-.707.293l-.586.586A1 1 0 0 0 8 6.828V7H4V5a1 1 0 0 0-1-1z">
+                                                    </path>
+                                                </svg></button><button title="link Players"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z">
+                                                    </path>
+                                                </svg></button><button title="Close Player"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z">
+                                                    </path>
+                                                </svg></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-row-seek">
+                                <input type="range" id="seekRange0" class="seek-range" min="0" step="0.033" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- <script type="module" src="src/services/video-compare-container-helper.js"></script> -->
+    <script type="module">
+        import VideoCompareContainerHelper from '/src/services/video-compare-container-helper-vanilla.js';
+        import screenfull from 'screenfull';
+
+
+        let playerStates = [{ ...VideoCompareContainerHelper.getDefaultPlayerState(), videoPlayerOverlayMenuDisplay: "overlayOpenFile0" }];
+        function setPlayerStates(newPlayerStates) {
+            playerStates = [...newPlayerStates];
+        }
+        function getPlayerStates() {
+            return [...playerStates];
+        }
+
+        let doLinkMode = false;
+        function setDoLinkMode(newDoLinkMode) {
+            doLinkMode = newDoLinkMode;
+        }
+        function getDoLinkMode() {
+            return doLinkMode;
+        }
+
+        let linkDifferenceTime = 0;
+        function setLinkDifferenceTime(newLinkDifferenceTime) {
+            linkDifferenceTime = newLinkDifferenceTime;
+        }
+        function getLinkDifferenceTime() {
+            return linkDifferenceTime;
+        }
+
+        let nextDrawElementId = 1;
+        function setNextDrawElementId(newNextDrawElementId) {
+            nextDrawElementId = newNextDrawElementId;
+        }
+        function getNextDrawElementId() {
+            setNextDrawElementId(nextDrawElementId + 1);
+            return nextDrawElementId;
+        }
+
+        let isFullScreen = false;
+        function setIsFullScreen(newIsFullScreen) {
+            isFullScreen = newIsFullScreen;
+        }
+        function getIsFullScreen() {
+            return isFullScreen;
+        }
+
+        let syncCurrentTimeCounter = 0;
+        function setSyncCurrentTimeCounter(newSyncCurrentTimeCounter) {
+            syncCurrentTimeCounter = newSyncCurrentTimeCounter;
+        }
+        function getSyncCurrentTimeCounter() {
+            return syncCurrentTimeCounter;
+        }
+
+        class PlayerRenderer {
+
+            constructor() {
+                this.backwardPlaybackTimeoutId = 0;
+            }
+
+            renderVideoCurrentTime(currentTime) {
+                const videoElement = domElementsArray[0].video;
+                videoElement.currentTime = currentTime;
+
+
+            }
+            // getVideoCurrentTime() {
+            //     const videoElement = domElementsArray[0].video;
+            //     return videoElement.currentTime;
+            // }
+
+            renderVideoPlay() {
+                const videoElement = domElementsArray[0].video;
+                videoElement.play();
+            }
+
+
+            renderVideoPause() {
+                const videoElement = domElementsArray[0].video;
+                videoElement.pause();
+            }
+
+            renderVideoPlayBackward() {
+                let frameRate = 0.033 * domElementsArray[0].video.playbackRate;
+
+                if (this.backwardPlaybackTimeoutId) {
+                    clearTimeout(this.backwardPlaybackTimeoutId);
+                }
+
+                this.backwardPlaybackTimeoutId = setInterval(() => {
+                    videoCompareContainerHelper.handleSeek(0, frameRate * -1);
+                }, 1000 / 30);
+            }
+
+            renderVideoPauseBackward() {
+                clearTimeout(this.backwardPlaybackTimeoutId);
+            }
+
+
+            renderVideoPlaybackRate(playbackRate) {
+                const videoElement = domElementsArray[0].video;
+                videoElement.playbackRate = playbackRate;
+            }
+
+            renderVideoSource(videoSource) {
+                const videoElement = domElementsArray[0].video;
+                videoElement.src = videoSource;
+                videoElement.load();
+            }
+
+
+            getVideoDuration() {
+                const videoElement = domElementsArray[0].video;
+                return videoElement.duration;
+            }
+
+
+
+            renderPlayButton(isPlay) {
+                if (isPlay) {
+                    domElementsArray[0].playButtonPauseSvg.style.display = 'block';
+                    domElementsArray[0].playButtonPlaySvg.style.display = 'none';
+                } else {
+                    domElementsArray[0].playButtonPlaySvg.style.display = 'block';
+                    domElementsArray[0].playButtonPauseSvg.style.display = 'none';
+                }
+            }
+
+            renderDoLoopButton(isDoLoop) {
+                if (isDoLoop) {
+                    domElementsArray[0].doLoopButtonEnabledSvg.style.display = 'block';
+                    domElementsArray[0].doLoopButtonDisabledSvg.style.display = 'none';
+                } else {
+                    domElementsArray[0].doLoopButtonEnabledSvg.style.display = 'none';
+                    domElementsArray[0].doLoopButtonDisabledSvg.style.display = 'block';
+                }
+
+            }
+
+            renderClockTime(clockTime) {
+                domElementsArray[0].clockTimeDiv.innerHTML = clockTime.toFixed(2);
+            }
+
+            renderPlaybackRateDiv(playbackRate) {
+                domElementsArray[0].playbackRateDiv.innerHTML = playbackRate.toFixed(2);
+            }
+
+            renderScrubberRange(scrubberRangeValue) {
+                domElementsArray[0].scrubberRange.value = scrubberRangeValue;
+                domElementsArray[0].scrubberRange.style.background = `linear-gradient(to right, #ccc ${scrubberRangeValue / 100}%, #444 ${scrubberRangeValue / 100}%)`;
+            }
+
+            renderSeekRange(seekRangeValue) {
+                domElementsArray[0].seekRange.value = seekRangeValue;
+                domElementsArray[0].seekRange.style.background = `linear-gradient(to right, #ccc ${seekRangeValue / domElementsArray[0].video.duration * 100}%, #444 ${seekRangeValue / domElementsArray[0].video.duration * 100}%)`;
+            }
+
+
+            renderOverlayMenusClose() {
+                domElementsArray[0].overlayOpenFile.style.display = 'none';
+                domElementsArray[0].overlayBookmarks.style.display = 'none';
+                domElementsArray[0].overlayDrawingTools.style.display = 'none';
+                domElementsArray[0].overlayVideoControl0.style.display = 'none';
+            }
+
+            renderOverlayMenusOpenToggle(overlayMenuId) {
+                let menu = domElementsArray[0][overlayMenuId];
+                const originalState = menu.style.display;
+
+                this.renderOverlayMenusClose();
+
+                if (!(originalState == 'block')) {
+                    menu.style.display = 'block';
+                }
+            }
+
+
+            renderVideoControlScale(scaleIncrement) {
+                const videoTransformDiv = domElementsArray[0].videoTransformDiv;
+                const svgTransformDiv = domElementsArray[0].svgTransformDiv;
+                const currentScale = parseFloat(videoTransformDiv.style.transform.match(/scale\(([^)]+)\)/)[1]) || 1;
+                const newScale = currentScale + scaleIncrement;
+                // videoTransformDiv.style.transform = `scale(${newScale})`;
+                // svgTransformDiv.style.transform = `scale(${newScale})`;
+
+                videoTransformDiv.style.transform = videoTransformDiv.style.transform.replace(
+                    /scale\([^)]+\)/,
+                    `scale(${newScale})`
+                );
+
+                svgTransformDiv.style.transform = svgTransformDiv.style.transform.replace(
+                    /scale\([^)]+\)/,
+                    `scale(${newScale})`
+                );
+
+            }
+
+            renderVideoControlRotate(rotateIncrement) {
+                const videoTransformDiv = domElementsArray[0].videoTransformDiv;
+                const svgTransformDiv = domElementsArray[0].svgTransformDiv;
+                const currentRotate = parseFloat(videoTransformDiv.style.transform.match(/rotate\(([^)]+)\)/)[1]) || 0;
+                const newRotate = currentRotate + rotateIncrement;
+
+                videoTransformDiv.style.transform = videoTransformDiv.style.transform.replace(
+                    /rotate\([^)]+\)/,
+                    `rotate(${newRotate}deg)`
+                );
+
+                svgTransformDiv.style.transform = svgTransformDiv.style.transform.replace(
+                    /rotate\([^)]+\)/,
+                    `rotate(${newRotate}deg)`
+                );
+
+            }
+
+            renderVideoControlPan(panIncrementHorizontal, panIncrementVertical) {
+
+                const currentTranslateMatch = domElementsArray[0].videoTransformDiv.style.transform.match(/translate\(([^,]+)px, ([^)]+)px\)/);
+                let currentTranslateX = currentTranslateMatch ? parseFloat(currentTranslateMatch[1]) : 0;
+                let currentTranslateY = currentTranslateMatch ? parseFloat(currentTranslateMatch[2]) : 0;
+
+                currentTranslateX += panIncrementHorizontal;
+                currentTranslateY += panIncrementVertical;
+
+
+                const modifiedTransform = domElementsArray[0].videoTransformDiv.style.transform.replace(
+                    /translate\([^)]+\)/,
+                    `translate(${currentTranslateX}px, ${currentTranslateY}px)`
+                );
+
+                domElementsArray[0].videoTransformDiv.style.transform = modifiedTransform;
+                domElementsArray[0].svgTransformDiv.style.transform = modifiedTransform;
+            }
+
+            renderVideoControlMirror() {
+                let modifiedTransform = "";
+
+                if (domElementsArray[0].videoTransformDiv.style.transform.includes('scaleX(-1)')) {
+                    modifiedTransform = domElementsArray[0].videoTransformDiv.style.transform.replace(/scaleX\(-1\)/, 'scaleX(1)');
+                } else {
+                    modifiedTransform = domElementsArray[0].videoTransformDiv.style.transform.replace(/scaleX\(1\)/, 'scaleX(-1)');
+                }
+
+                domElementsArray[0].videoTransformDiv.style.transform = modifiedTransform;
+                domElementsArray[0].svgTransformDiv.style.transform = modifiedTransform;
+            }
+
+            renderVideoControlReset() {
+                const origTransform = "scaleX(1) scaleY(1) rotate(0deg) scale(1, 1) translate(0px, 0px)";
+                domElementsArray[0].videoTransformDiv.style.transform = origTransform;
+                domElementsArray[0].svgTransformDiv.style.transform = origTransform;
+            }
+
+            renderBookmarkList(bookmarkList) {
+
+                const bookmarkListElement = domElementsArray[0].bookmarkList;
+                let bookmarkRenderList = "";
+
+                bookmarkListElement.innerHTML = ""; // Clear existing bookmarks
+
+                bookmarkList.forEach((bookmark, index) => {
+
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<li key="1" ><span data-index="${index}-label" click="">${bookmark.name} - (${bookmark.time})</span>
+                    <div>
+                        <button data-index="${index}-updateTime" title="Set Time">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z" />
+                                <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3" />
+                            </svg>
+                        </button>
+                        <button data-index="${index}-loop" title="Loop" click="(e) => {'loop'}">
+
+
+                            <svg id="loopStartSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: ${bookmark.loopMarker == "start" ? "block" : "none"};">
+                                <path fillRule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8m-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5" />
+                            </svg>
+
+
+                            <svg id="loopEndSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: ${bookmark.loopMarker == "end" ? "block" : "none"};">
+                                <path fillRule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+                            </svg>
+
+
+
+                            <svg id="loopNoneSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: ${bookmark.loopMarker == "" ? "block" : "none"};">
+                                <line x1="2" y1="8" x2="14" y2="8" stroke="white" strokeWidth="2"></line>
+                            </svg>
+
+                        </button>
+
+
+
+                        <button data-index="${index}-delete" title="Delete">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 6L5 6 21 6" stroke="white" strokeWidth="2"></path>
+                                <path d="M19 6L17.3333 21H6.66667L5 6" stroke="white" strokeWidth="2"></path>
+                                <path d="M10 11V17" stroke="white" strokeWidth="2"></path>
+                                <path d="M14 11V17" stroke="white" strokeWidth="2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </li>`;
+
+
+
+
+
+                    bookmarkListElement.appendChild(listItem);
+                });
+
+            }
+
+            renderBookmarkAddNameInput(bookmarkName) {
+                domElementsArray[0].bookmarkNameInput.value = bookmarkName;
+            }
+        }
+
+        const playerRenderer = new PlayerRenderer();
+
+
+
+
+        const videoCompareContainerHelper = new VideoCompareContainerHelper(
+            playerRenderer,
+            setPlayerStates, getPlayerStates,
+            setDoLinkMode, getDoLinkMode,
+            setLinkDifferenceTime, getLinkDifferenceTime,
+            setNextDrawElementId, getNextDrawElementId,
+            setIsFullScreen, getIsFullScreen,
+            setSyncCurrentTimeCounter, getSyncCurrentTimeCounter,
+        );
+
+
+
+        function handleToggleFullscreen() {
+            if (screenfull.isEnabled) {
+                screenfull.toggle();
+            }
+
+        }
+
+        screenfull.on('change', () => {
+            setIsFullScreen(screenfull.isFullscreen);
+        });
+
+
+        let domElementsArray = [];
+        const defaultDomElements = {
+            playButton: null,
+            video: null,
+            previousSecondButton: null,
+            previousFrameButton: null,
+            nextFrameButton: null,
+            nextSecondButton: null,
+            playbackRateDecreaseButton0: null,
+            playbackRateIncreaseButton0: null,
+            playbackRateDiv: null,
+            clockTimeDiv: null,
+            playButtonPlaySvg: null,
+            playButtonPauseSvg: null,
+            doLoopButton: null,
+            doLoopButtonEnabledSvg: null,
+            doLoopButtonDisabledSvg: null,
+            seekRange: null,
+            scrubberRange: null,
+            menu: null,
+            enableMenuButton: null,
+            overlayOpenFile: null,
+            enableOverlayOpenFileButton: null,
+            fileInput: null,
+            overlayBookmarks: null,
+            enableOverlayBookmarksButton: null,
+            overlayDrawingTools: null,
+            enableOverlayDrawingToolsButton: null,
+            overlayVideoControl0: null,
+            enableOverlayVideoControlsButton: null,
+            videoControlScaleUpButton: null,
+            videoControlScaleDownButton: null,
+            videoTransformDiv: null,
+            svgTransformDiv: null,
+            videoControlRotateCWButton: null,
+            videoControlRotateCCWButton: null,
+            videoControlRotateCW90Button: null,
+            videoControlRotateCCW90Button: null,
+            videoControlPanLeftButton: null,
+            videoControlPanRightButton: null,
+            videoControlPanUpButton: null,
+            videoControlPanDownButton: null,
+            videoControlMirrorButton: null,
+            videoControlResetButton: null,
+            bookmarkAddButton: null,
+            bookmarkNameInput: null,
+            bookmarkList: null,
+            svgCanvas: null,
+            drawingToolDrawLineButton: null,
+            drawingToolDrawAngleButton: null,
+            drawingToolDraw90AngleButton: null,
+            drawingToolDrawDotButton: null,
+            drawingToolDeleteButton: null,
+
+        };
+
+
+
+
+
+
+        const playButtonOnClickEventHandler = (event, playerIndex) => {
+            if (domElementsArray[playerIndex].video.paused) {
+                videoCompareContainerHelper.handleDoPlay(playerIndex);
+            } else {
+                videoCompareContainerHelper.handleDoPause(playerIndex);
+            }
+        };
+
+
+        const handleSeekButtonClick = (event, playerIndex, seekInterval) => {
+            videoCompareContainerHelper.handleSeek(playerIndex, seekInterval);
+        };
+
+        const videoLoadDataEventHandler = (event, playerIndex) => {
+            console.log('Video loaded data event fired');
+            domElementsArray[playerIndex].video.muted = true;
+            // domElementsArray[playerIndex].seekRange.min = 0;
+            domElementsArray[playerIndex].seekRange.max = domElementsArray[playerIndex].video.duration;
+            // domElementsArray[playerIndex].seekRange.step = 0.033;
+
+            //todo:  refactor this function, call handleDurationChange from the helper
+
+            playerStates[playerIndex].duration = domElementsArray[playerIndex].video.duration;
+
+            videoCompareContainerHelper.setLinkStartAndEndDefaults(playerIndex);
+            videoCompareContainerHelper.setLinkModeCurrentTime(playerIndex, 0, true);
+        };
+
+        const videoTimeUpdateEventHandler = (event, playerIndex) => {
+            videoCompareContainerHelper.handlePostSeek(playerIndex);
+
+            videoCompareContainerHelper.setLinkModeCurrentTime(playerIndex, domElementsArray[playerIndex].video.currentTime, true);
+        };
+
+        const videoEndedEventHandler = (event, playerIndex) => {
+            // videoCompareContainerHelper.handlePostSeek(playerIndex);
+
+            // videoCompareContainerHelper.setLinkModeCurrentTime(playerIndex, domElementsArray[playerIndex].video.currentTime, true);
+
+            videoCompareContainerHelper.handleEnded(playerIndex);
+        };
+
+        const handlePlaybackRateChangeButtonClick = (event, playerIndex, playbackRateChange) => {
+            const videoElement = domElementsArray[playerIndex].video;
+            videoElement.playbackRate = Math.min(Math.max(videoElement.playbackRate + playbackRateChange, 0.1), 10);
+            domElementsArray[playerIndex].playbackRateDiv.innerHTML = videoElement.playbackRate.toFixed(2);
+            //todo:  refactor this function
+
+        };
+
+        const handleSeekRangeInput = (event, playerIndex) => {
+            videoCompareContainerHelper.setLinkModeCurrentTime(playerIndex, parseFloat(event.target.value), false);
+            // videoCompareContainerHelper.handleSeek(playerIndex, parseFloat(event.target.value));
+        };
+
+        const handleScrubberRangeInput = (event, playerIndex) => {
+            videoCompareContainerHelper.handleScrubberChange(playerIndex, parseFloat(event.target.value));
+        };
+
+        const handleScrubberRangeInputReleased = (event, playerIndex) => {
+            videoCompareContainerHelper.handleScrubberRangeReleased(playerIndex, parseFloat(event.target.value));
+        };
+
+
+
+        const handleDoLoopButtonClick = (event, playerIndex) => {
+            videoCompareContainerHelper.handleDoLoopChange(playerIndex);
+        };
+
+        const handleEnableMenuButtonClick = (event, playerIndex) => {
+            const menu = domElementsArray[playerIndex].menu;
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+
+
+        };
+
+        const handleEnableOverlayOpenFileButtonClick = (event, playerIndex) => {
+            playerRenderer.renderOverlayMenusOpenToggle('overlayOpenFile');
+        };
+
+        const handleFileInputChange = (event, playerIndex) => {
+            const file = event.target.files[0];
+            if (file) {
+                const videoElement = domElementsArray[playerIndex].video;
+                const url = URL.createObjectURL(file);
+                // videoElement.src = url;
+                // videoElement.load();
+
+                domElementsArray[playerIndex].overlayOpenFile.style.display = 'none';
+
+                videoCompareContainerHelper.handleVideoSourceChange(playerIndex, url);
+
+
+            }
+
+
+        };
+
+        const handleEnableOverlayBookmarksButtonClick = (event, playerIndex) => {
+            playerRenderer.renderOverlayMenusOpenToggle('overlayBookmarks');
+        };
+
+        const handleEnableOverlayDrawingToolsButtonClick = (event, playerIndex) => {
+            playerRenderer.renderOverlayMenusOpenToggle('overlayDrawingTools');
+        };
+
+        const handleEnableOverlayVideoControlsButtonClick = (event, playerIndex) => {
+            playerRenderer.renderOverlayMenusOpenToggle('overlayVideoControl0');
+        };
+
+        const handleVideoControlScaleUpButtonClick = (event, playerIndex) => {
+            playerRenderer.renderVideoControlScale(0.1);
+        };
+
+        const handleVideoControlScaleDownButtonClick = (event, playerIndex) => {
+            playerRenderer.renderVideoControlScale(-0.1);
+        };
+
+        const handleVideoControlRotateButtonClick = (event, playerIndex, rotateIncrement) => {
+            playerRenderer.renderVideoControlRotate(rotateIncrement);
+        };
+
+        const handleVideoControlPanButtonClick = (event, playerIndex, panIncrementHorizontal, panIncrementVertical) => {
+            playerRenderer.renderVideoControlPan(panIncrementHorizontal, panIncrementVertical);
+        };
+
+        const handleVideoControlMirrorButtonClick = (event, playerIndex) => {
+            playerRenderer.renderVideoControlMirror();
+        };
+
+        const handleVideoControlResetButtonClick = (event, playerIndex) => {
+            playerRenderer.renderVideoControlReset();
+        };
+
+        const handleBookmarkAddButtonClick = (event, playerIndex) => {
+
+            videoCompareContainerHelper.handleBookmarkAdd(playerIndex, domElementsArray[playerIndex].bookmarkNameInput.value, domElementsArray[playerIndex].video.currentTime);
+        };
+
+        const handleBookmarkListButtonClick = (event, playerIndex) => {
+            let button = event.target.closest("button");
+
+            if (button != null && button.dataset.index) {
+                const [bookmarkIndex, action] = button.dataset.index.split('-');
+
+                switch (action) {
+                    case 'updateTime':
+                        videoCompareContainerHelper.handleBookmarkUpdateTime(playerIndex, parseInt(bookmarkIndex));
+                        break;
+                    case 'loop':
+                        videoCompareContainerHelper.handleBookmarkChangeLoopMarker(playerIndex, parseInt(bookmarkIndex));
+                        break;
+                    case 'delete':
+                        videoCompareContainerHelper.handleBookmarkDelete(playerIndex, parseInt(bookmarkIndex));
+                        break;
+                    default:
+                        console.warn(`Unhandled bookmark action: ${action}`);
+                }
+            } else if (event.target.tagName === 'SPAN') {
+                const [bookmarkIndex, label] = event.target.dataset.index.split('-');
+
+                if (label === 'label') {
+                    videoCompareContainerHelper.handleBookmarkClick(playerIndex, parseInt(bookmarkIndex));
+                }
+            }
+        };
+
+        const handleDrawingToolDrawLineButtonClick = (event, playerIndex) => {
+            // videoCompareContainerHelper.handleDrawingToolDrawLine(playerIndex);
+            const dragRectSize = 10;
+
+            const shapeObject = {
+                id: 0,//getNextDrawElementId(),
+                shape: 'line',
+                x1: 100,
+                y1: 100,
+                x2: 200,
+                y2: 200,
+                color: 'red',
+                width: 2,
+            };
+
+
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            const drawElement = document.createElementNS(svgNS, "g");
+
+            drawElement.setAttribute("selected", false);
+            drawElement.setAttribute("shape", shapeObject.shape);
+            drawElement.setAttribute("id", shapeObject.id);
+            drawElement.setAttribute("x1", shapeObject.x1);
+            drawElement.setAttribute("y1", shapeObject.y1);
+            drawElement.setAttribute("x2", shapeObject.x2);
+            drawElement.setAttribute("y2", shapeObject.y2);
+            drawElement.setAttribute("color", shapeObject.color);
+            drawElement.setAttribute("width", shapeObject.width);
+
+            const lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            lineElement.setAttribute("x1", shapeObject.x1);
+            lineElement.setAttribute("y1", shapeObject.y1);
+            lineElement.setAttribute("x2", shapeObject.x2);
+            lineElement.setAttribute("y2", shapeObject.y2);
+            lineElement.setAttribute("stroke", shapeObject.color);
+            lineElement.setAttribute("stroke-width", shapeObject.width);
+            lineElement.setAttribute("nonselect-display", "show");
+
+            drawElement.appendChild(lineElement);
+
+            const selectorLineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            selectorLineElement.setAttribute("x1", shapeObject.x1);
+            selectorLineElement.setAttribute("y1", shapeObject.y1);
+            selectorLineElement.setAttribute("x2", shapeObject.x2);
+            selectorLineElement.setAttribute("y2", shapeObject.y2);
+            selectorLineElement.setAttribute("stroke", shapeObject.color);
+            selectorLineElement.setAttribute("stroke-width", 15);
+            selectorLineElement.setAttribute("opacity", 0);
+            selectorLineElement.setAttribute("nonselect-display", "fade");
+            selectorLineElement.style.display = "block";
+            drawElement.appendChild(selectorLineElement);
+
+            const selectorRectStartElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            selectorRectStartElement.setAttribute("dragHandleType", "start");
+            selectorRectStartElement.setAttribute("x", shapeObject.x1 - (dragRectSize / 2));
+            selectorRectStartElement.setAttribute("y", shapeObject.y1 - (dragRectSize / 2));
+            selectorRectStartElement.setAttribute("width", dragRectSize);
+            selectorRectStartElement.setAttribute("height", dragRectSize);
+            selectorRectStartElement.setAttribute("fill", shapeObject.color);
+            selectorRectStartElement.setAttribute("nonselect-display", "hide");
+            selectorRectStartElement.style.display = "none";
+            drawElement.appendChild(selectorRectStartElement);
+
+            const selectorRectEndElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            selectorRectEndElement.setAttribute("dragHandleType", "end");
+            selectorRectEndElement.setAttribute("x", shapeObject.x2 - (dragRectSize / 2));
+            selectorRectEndElement.setAttribute("y", shapeObject.y2 - (dragRectSize / 2));
+            selectorRectEndElement.setAttribute("width", dragRectSize);
+            selectorRectEndElement.setAttribute("height", dragRectSize);
+            selectorRectEndElement.setAttribute("fill", shapeObject.color);
+            selectorRectEndElement.setAttribute("nonselect-display", "hide");
+            selectorRectEndElement.style.display = "none";
+            drawElement.appendChild(selectorRectEndElement);
+
+            const selectorRectMiddleElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            selectorRectMiddleElement.setAttribute("dragHandleType", "middle");
+            selectorRectMiddleElement.setAttribute("x", (shapeObject.x1 + ((shapeObject.x2 - shapeObject.x1) / 2)) - (dragRectSize / 2));
+            selectorRectMiddleElement.setAttribute("y", (shapeObject.y1 + ((shapeObject.y2 - shapeObject.y1) / 2)) - (dragRectSize / 2));
+            selectorRectMiddleElement.setAttribute("width", dragRectSize);
+            selectorRectMiddleElement.setAttribute("height", dragRectSize);
+            selectorRectMiddleElement.setAttribute("fill", shapeObject.color);
+            selectorRectMiddleElement.setAttribute("nonselect-display", "hide");
+            selectorRectMiddleElement.style.display = "none";
+            drawElement.appendChild(selectorRectMiddleElement);
+
+            domElementsArray[playerIndex].svgCanvas.appendChild(drawElement);
+        }
+
+        const setDrawingElementToolSelected = (elementGroup, isSelected) => {
+            elementGroup.setAttribute("selected", isSelected);
+            selectedElementGroup = isSelected ? elementGroup : null;
+
+            Array.from(elementGroup.children).forEach(child => {
+                if (child.getAttribute("nonselect-display") == "hide") {
+                    if (isSelected) {
+                        child.style.display = "block";
+                    } else {
+                        child.style.display = "none";
+                    }
+                } else if (child.getAttribute("nonselect-display") == "fade") {
+                    if (isSelected) {
+                        child.setAttribute("opacity", 0.3);
+                    } else {
+                        child.setAttribute("opacity", 0);
+                    }
+                }
+            });
+        }
+
+
+
+        let dragElement = null;
+        let selectedElementGroup = null;
+        let dragMovementDetected = false;
+
+        const getPointerCoordinates = (event) => {
+            const point = domElementsArray[0].svgCanvas.createSVGPoint();
+            point.x = event.clientX || event.touches[0].clientX;
+            point.y = event.clientY || event.touches[0].clientY;
+
+            const ctm = domElementsArray[0].svgCanvas.getScreenCTM().inverse();
+            const svgPoint = point.matrixTransform(ctm);
+
+            return { x: svgPoint.x, y: svgPoint.y };
+        };
+
+        const handleSvgDrawingElementPointerDown = (event, playerIndex) => {
+
+            if (selectedElementGroup && selectedElementGroup.contains(event.target)) {
+                if (event.target.tagName === 'rect') {
+                    dragElement = event.target;
+                }
+            }
+        }
+
+        const handleSvgDrawingElementDragMove = (event, playerIndex) => {
+
+            // if (dragElement) {
+
+            //     let pointerCoordiantes = getPointerCoordinates(event);
+
+            //     const rect = { width: parseInt(dragElement.getAttribute("width")), height: parseInt(dragElement.getAttribute("height")) };
+            //     const offsetX = pointerCoordiantes.x - rect.width / 2;
+            //     const offsetY = pointerCoordiantes.y - rect.height / 2;
+            //     dragElement.setAttribute('x', offsetX);
+            //     dragElement.setAttribute('y', offsetY);
+
+            //     dragMovementDetected = true;
+            // }
+
+            if (dragElement) {
+
+                const selectedShape = selectedElementGroup.getAttribute("shape");
+                const dragHandleType = dragElement.getAttribute("dragHandleType");
+
+                if (dragHandleType != "") {
+
+                    let pointerCoordiantes = getPointerCoordinates(event);
+                    if (selectedShape == "line") {
+                        let origX1 = parseFloat(selectedElementGroup.getAttribute("x1"));
+                        let origY1 = parseFloat(selectedElementGroup.getAttribute("y1"));
+                        let origX2 = parseFloat(selectedElementGroup.getAttribute("x2"));
+                        let origY2 = parseFloat(selectedElementGroup.getAttribute("y2"));
+
+
+                        let updatedX1 = origX1;
+                        let updatedY1 = origY1;
+                        let updatedX2 = origX2;
+                        let updatedY2 = origY2;
+
+                        
+                        if (dragHandleType === "start") {
+                            updatedX1 = pointerCoordiantes.x
+                            updatedY1 = pointerCoordiantes.y
+                        } else if (dragHandleType === "end") {
+                            updatedX2 = pointerCoordiantes.x
+                            updatedY2 = pointerCoordiantes.y;
+                        } else if (dragHandleType === "middle") {
+                            const diffX = pointerCoordiantes.x - ((origX1 + origX2) / 2);
+                            const diffY = pointerCoordiantes.y - ((origY1 + origY2) / 2);
+                            updatedX1 += diffX;
+                            updatedY1 += diffY;
+                            updatedX2 += diffX;
+                            updatedY2 += diffY;
+                        }
+
+                        console.log("updatedX1", updatedX1, "updatedY1", updatedY1, "updatedX2", updatedX2, "updatedY2", updatedY2);
+
+                        selectedElementGroup.setAttribute("x1", updatedX1);
+                        selectedElementGroup.setAttribute("y1", updatedY1);
+                        selectedElementGroup.setAttribute("x2", updatedX2);
+                        selectedElementGroup.setAttribute("y2", updatedY2);
+
+                        Array.from(selectedElementGroup.children).forEach(child => {
+                            if (child.tagName === 'line') {
+                                child.setAttribute("x1", updatedX1);
+                                child.setAttribute("y1", updatedY1);
+                                child.setAttribute("x2", updatedX2);
+                                child.setAttribute("y2", updatedY2);
+                            } else if (child.tagName === 'rect') {
+
+
+                                const childDragHandleType = child.getAttribute("dragHandleType");
+                                if (childDragHandleType === "start") {
+                                    child.setAttribute("x", updatedX1 - parseFloat(child.getAttribute("width")) / 2);
+                                    child.setAttribute("y", updatedY1 - parseFloat(child.getAttribute("height")) / 2);
+                                } else if (childDragHandleType === "end") {
+                                    // const line = selectedElementGroup.querySelector('line');
+                                    // const x2 = parseFloat(line.getAttribute("x2"));
+                                    // const y2 = parseFloat(line.getAttribute("y2"));
+                                    child.setAttribute("x", updatedX2 - parseFloat(child.getAttribute("width")) / 2);
+                                    child.setAttribute("y", updatedY2 - parseFloat(child.getAttribute("height")) / 2);
+                                } else if (childDragHandleType === "middle") {
+                                    child.setAttribute("x", ((updatedX1 + updatedX2) / 2) - parseFloat(child.getAttribute("width")) / 2);
+                                    child.setAttribute("y", ((updatedY1 + updatedY2) / 2) - parseFloat(child.getAttribute("height")) / 2);
+                                }
+                            }
+
+                        });
+                    }
+                }
+
+                dragMovementDetected = true;
+
+            }
+
+        }
+
+        const handleSvgDrawingElementPointerUp = (event, playerIndex) => {
+
+            if (dragMovementDetected == false) {// Only handle click events if not dragging
+                let elementGroup = event.target.closest("g");
+
+                if (elementGroup) {
+                    const isSelected = elementGroup.getAttribute("selected") == "true" ? false : true;
+
+                    Array.from(domElementsArray[playerIndex].svgCanvas.children).forEach(child => {
+                        setDrawingElementToolSelected(child, false);
+                    });
+
+                    setDrawingElementToolSelected(elementGroup, isSelected);
+                }
+            }
+
+
+            dragElement = null;
+            dragMovementDetected = false;
+        }
+
+
+        const addMarksToSlider = (slider, marks) => {
+            const sliderWidth = slider.offsetWidth;
+            const markWidth = sliderWidth / marks.length;
+            marks.forEach((mark, index) => {
+                const markElement = document.createElement('div');
+                markElement.className = 'slider-mark';
+                markElement.style.left = `${index * markWidth}px`;
+                markElement.innerHTML = mark.label;
+                slider.appendChild(markElement);
+            });
+
+            //             function addMarks ($slider) {
+            // 	var html = '';
+            //     var left = 0;
+            //     var i;
+
+            //     for (i = 0; i < marks.length; i++) {
+            //     	left = convertToPercent(marks[i]);
+            //     	html += '<span class="mark" style="left: ' + left + '%">' + marks[i] + '</span>';
+            //     }
+
+            //     $slider.append(html);
+
+            //     .mark {
+            //     display: block;
+            //     position: absolute;
+            //     top: 45px;
+            //     background: #f00;
+            //     transform: rotate(-45deg);
+            //     padding: 1px 3px;
+            //     border-radius: 3px;
+            //     color: #fff;
+            //     margin-left: -10px;
+            // }
+            // }
+        };
+
+
+
+        const initializeDomElements = () => {
+            domElementsArray = [{ ...defaultDomElements }];
+
+            let domElementsArrayIndex = 0;
+
+            domElementsArray[domElementsArrayIndex].video = document.querySelector('#video' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].video.src = './src/assets/test-videos/mov_bbb.mp4';
+            domElementsArray[domElementsArrayIndex].video.addEventListener('loadeddata', (event) => videoLoadDataEventHandler(event, domElementsArrayIndex));
+            domElementsArray[domElementsArrayIndex].video.addEventListener('timeupdate', (event) => videoTimeUpdateEventHandler(event, domElementsArrayIndex));
+            domElementsArray[domElementsArrayIndex].video.addEventListener('ended', (event) => videoEndedEventHandler(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].playButton = document.querySelector('#playButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].playButton.addEventListener('click', (event) => playButtonOnClickEventHandler(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].previousSecondButton = document.querySelector('#previousSecondButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].previousSecondButton.addEventListener('click', (event) => handleSeekButtonClick(event, domElementsArrayIndex, -1));
+
+            domElementsArray[domElementsArrayIndex].previousFrameButton = document.querySelector('#previousFrameButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].previousFrameButton.addEventListener('click', (event) => handleSeekButtonClick(event, domElementsArrayIndex, -0.033));
+
+            domElementsArray[domElementsArrayIndex].nextFrameButton = document.querySelector('#nextFrameButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].nextFrameButton.addEventListener('click', (event) => handleSeekButtonClick(event, domElementsArrayIndex, 0.033));
+
+            domElementsArray[domElementsArrayIndex].nextSecondButton = document.querySelector('#nextSecondButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].nextSecondButton.addEventListener('click', (event) => handleSeekButtonClick(event, domElementsArrayIndex, 1));
+
+            domElementsArray[domElementsArrayIndex].clockTimeDiv = document.querySelector('#clockTimeDiv' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].playbackRateDecreaseButton0 = document.querySelector('#playbackRateDecreaseButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].playbackRateDecreaseButton0.addEventListener('click', (event) => handlePlaybackRateChangeButtonClick(event, domElementsArrayIndex, -0.1));
+
+            domElementsArray[domElementsArrayIndex].playbackRateIncreaseButton0 = document.querySelector('#playbackRateIncreaseButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].playbackRateIncreaseButton0.addEventListener('click', (event) => handlePlaybackRateChangeButtonClick(event, domElementsArrayIndex, 0.1));
+
+            domElementsArray[domElementsArrayIndex].playbackRateDiv = document.querySelector('#playbackRateDiv' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].playButtonPlaySvg = document.querySelector('#playButtonPlaySvg' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].playButtonPlaySvg.style.display = 'block';
+            domElementsArray[domElementsArrayIndex].playButtonPauseSvg = document.querySelector('#playButtonPauseSvg' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].playButtonPauseSvg.style.display = 'none';
+
+
+            domElementsArray[domElementsArrayIndex].doLoopButton = document.querySelector('#doLoopButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].doLoopButton.addEventListener('click', (event) => handleDoLoopButtonClick(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].doLoopButtonEnabledSvg = document.querySelector('#doLoopButtonEnabledSvg' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].doLoopButtonEnabledSvg.style.display = 'none';
+            domElementsArray[domElementsArrayIndex].doLoopButtonDisabledSvg = document.querySelector('#doLoopButtonDisabledSvg' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].doLoopButtonDisabledSvg.style.display = 'block';
+
+            domElementsArray[domElementsArrayIndex].seekRange = document.querySelector('#seekRange' + domElementsArrayIndex);
+
+
+            domElementsArray[domElementsArrayIndex].seekRange.addEventListener('input', (event) => handleSeekRangeInput(event, domElementsArrayIndex));;
+
+            domElementsArray[domElementsArrayIndex].scrubberRange = document.querySelector('#scrubberRange' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].scrubberRange = document.querySelector('#scrubberRange' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].scrubberRange.addEventListener('input', (event) => handleScrubberRangeInput(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].scrubberRange.addEventListener('change', (event) => handleScrubberRangeInputReleased(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].menu = document.querySelector('#menu' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].enableMenuButton = document.querySelector('#enableMenuButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].enableMenuButton.addEventListener('click', (event) => handleEnableMenuButtonClick(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].overlayOpenFile = document.querySelector('#overlayOpenFile' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].overlayOpenFile.style.display = 'none';
+
+            domElementsArray[domElementsArrayIndex].enableOverlayOpenFileButton = document.querySelector('#enableOverlayOpenFileButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].enableOverlayOpenFileButton.addEventListener('click', (event) => { handleEnableOverlayOpenFileButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].fileInput = document.querySelector('#fileInput' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].fileInput.addEventListener('change', (event) => handleFileInputChange(event, domElementsArrayIndex));
+
+            domElementsArray[domElementsArrayIndex].overlayBookmarks = document.querySelector('#overlayBookmarks' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].overlayBookmarks.style.display = 'none';
+
+            domElementsArray[domElementsArrayIndex].enableOverlayBookmarksButton = document.querySelector('#enableOverlayBookmarksButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].enableOverlayBookmarksButton.addEventListener('click', (event) => { handleEnableOverlayBookmarksButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].overlayDrawingTools = document.querySelector('#overlayDrawingTools' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].overlayDrawingTools.style.display = 'none';
+
+            domElementsArray[domElementsArrayIndex].enableOverlayDrawingToolsButton = document.querySelector('#enableOverlayDrawingToolsButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].enableOverlayDrawingToolsButton.addEventListener('click', (event) => { handleEnableOverlayDrawingToolsButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].overlayVideoControl0 = document.querySelector('#overlayVideoControl' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].overlayVideoControl0.style.display = 'none';
+
+            domElementsArray[domElementsArrayIndex].enableOverlayVideoControlsButton = document.querySelector('#enableOverlayVideoControlsButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].enableOverlayVideoControlsButton.addEventListener('click', (event) => { handleEnableOverlayVideoControlsButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].videoTransformDiv = document.querySelector('#videoTransformDiv' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].svgTransformDiv = document.querySelector('#svgTransformDiv' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].videoControlScaleUpButton = document.querySelector('#videoControlScaleUpButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlScaleUpButton.addEventListener('click', (event) => { handleVideoControlScaleUpButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].videoControlScaleDownButton = document.querySelector('#videoControlScaleDownButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlScaleDownButton.addEventListener('click', (event) => { handleVideoControlScaleDownButtonClick(event, domElementsArrayIndex) });
+
+
+            domElementsArray[domElementsArrayIndex].videoControlRotateCWButton = document.querySelector('#videoControlRotateCWButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlRotateCWButton.addEventListener('click', (event) => { handleVideoControlRotateButtonClick(event, domElementsArrayIndex, 1) });
+
+            domElementsArray[domElementsArrayIndex].videoControlRotateCCWButton = document.querySelector('#videoControlRotateCCWButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlRotateCCWButton.addEventListener('click', (event) => { handleVideoControlRotateButtonClick(event, domElementsArrayIndex, -1) });
+
+            domElementsArray[domElementsArrayIndex].videoControlRotateCW90Button = document.querySelector('#videoControlRotateCW90Button' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlRotateCW90Button.addEventListener('click', (event) => { handleVideoControlRotateButtonClick(event, domElementsArrayIndex, 90) });
+
+            domElementsArray[domElementsArrayIndex].videoControlRotateCCW90Button = document.querySelector('#videoControlRotateCCW90Button' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlRotateCCW90Button.addEventListener('click', (event) => { handleVideoControlRotateButtonClick(event, domElementsArrayIndex, -90) });
+
+            domElementsArray[domElementsArrayIndex].videoControlPanLeftButton = document.querySelector('#videoControlPanLeftButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlPanLeftButton.addEventListener('click', (event) => { handleVideoControlPanButtonClick(event, domElementsArrayIndex, -10, 0) });
+
+            domElementsArray[domElementsArrayIndex].videoControlPanRightButton = document.querySelector('#videoControlPanRightButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlPanRightButton.addEventListener('click', (event) => { handleVideoControlPanButtonClick(event, domElementsArrayIndex, 10, 0) });
+
+            domElementsArray[domElementsArrayIndex].videoControlPanUpButton = document.querySelector('#videoControlPanUpButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlPanUpButton.addEventListener('click', (event) => { handleVideoControlPanButtonClick(event, domElementsArrayIndex, 0, 10) });
+
+            domElementsArray[domElementsArrayIndex].videoControlPanDownButton = document.querySelector('#videoControlPanDownButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlPanDownButton.addEventListener('click', (event) => { handleVideoControlPanButtonClick(event, domElementsArrayIndex, 0, -10) });
+
+
+            domElementsArray[domElementsArrayIndex].videoControlMirrorButton = document.querySelector('#videoControlMirrorButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlMirrorButton.addEventListener('click', (event) => { handleVideoControlMirrorButtonClick(event, domElementsArrayIndex, 0, 0) });
+
+            domElementsArray[domElementsArrayIndex].videoControlResetButton = document.querySelector('#videoControlResetButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].videoControlResetButton.addEventListener('click', (event) => { handleVideoControlResetButtonClick(event, domElementsArrayIndex) });
+
+
+            domElementsArray[domElementsArrayIndex].bookmarkAddButton = document.querySelector('#bookmarkAddButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].bookmarkAddButton.addEventListener('click', (event) => { handleBookmarkAddButtonClick(event, domElementsArrayIndex) });
+
+
+            domElementsArray[domElementsArrayIndex].bookmarkNameInput = document.querySelector('#bookmarkNameInput' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].bookmarkList = document.querySelector('#bookmarkList' + domElementsArrayIndex);
+
+            domElementsArray[domElementsArrayIndex].bookmarkList.addEventListener('click', (event) => { handleBookmarkListButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].svgCanvas = document.querySelector('#svgCanvas' + domElementsArrayIndex);
+            // domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('click', (event) => { handleSvgDrawingElementClick(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('mousedown', (event) => { handleSvgDrawingElementPointerDown(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('mouseup', (event) => { handleSvgDrawingElementPointerUp(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('touchstart', (event) => { handleSvgDrawingElementPointerDown(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('touchend', (event) => { handleSvgDrawingElementPointerUp(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('touchmove', (event) => { handleSvgDrawingElementDragMove(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('mousemove', (event) => { handleSvgDrawingElementDragMove(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('mouseleave', (event) => { handleSvgDrawingElementPointerUp(event, domElementsArrayIndex) });
+            domElementsArray[domElementsArrayIndex].svgCanvas.addEventListener('touchleave', (event) => { handleSvgDrawingElementPointerUp(event, domElementsArrayIndex) });
+
+
+            domElementsArray[domElementsArrayIndex].drawingToolDrawLineButton = document.querySelector('#drawingToolDrawLineButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].drawingToolDrawLineButton.addEventListener('click', (event) => { handleDrawingToolDrawLineButtonClick(event, domElementsArrayIndex) });
+
+            domElementsArray[domElementsArrayIndex].drawingToolDrawAngleButton = document.querySelector('#drawingToolDrawAngleButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].drawingToolDrawAngleButton.addEventListener('click', (event) => { handleDrawingToolButtonClick(event, domElementsArrayIndex, 'angle') });
+
+            domElementsArray[domElementsArrayIndex].drawingToolDraw90AngleButton = document.querySelector('#drawingToolDraw90AngleButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].drawingToolDraw90AngleButton.addEventListener('click', (event) => { handleDrawingToolButtonClick(event, domElementsArrayIndex, 'angle90') });
+
+            domElementsArray[domElementsArrayIndex].drawingToolDrawDotButton = document.querySelector('#drawingToolDrawDotButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].drawingToolDrawDotButton.addEventListener('click', (event) => { handleDrawingToolButtonClick(event, domElementsArrayIndex, 'dot') });
+
+            domElementsArray[domElementsArrayIndex].drawingToolDeleteButton = document.querySelector('#drawingToolDeleteButton' + domElementsArrayIndex);
+            domElementsArray[domElementsArrayIndex].drawingToolDeleteButton.addEventListener('click', (event) => { handleDrawingToolButtonClick(event, domElementsArrayIndex, 'delete') });
+
+
+
+
+            // domElementsArray[domElementsArrayIndex].scrubberRange = rangeSlider(document.querySelector('#scrubberRange' + domElementsArrayIndex));
+            // domElementsArray[domElementsArrayIndex].scrubberRange.style.display = 'block';
+
+
+            // max={videoContext.duration * 100}
+            //                         min={0}
+            //                         value={videoContext.clockTime * 100}
+            //                         onChange={videoContext.onSliderChange}
+            //                         className='progress-bar'
+            //                         marks={getSliderMarks()}
+        };
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // videoCompareContainerHelper.init();
+            // const fullscreenButton = document.querySelector('.fullscreen-button');
+            // fullscreenButton.addEventListener('click', handleToggleFullscreen);
+
+            console.log('DOMContentLoaded event fired');
+
+            // initializeDomElements();
+        });
+
+        window.addEventListener('load', () => {
+            // videoCompareContainerHelper.init();
+            // const fullscreenButton = document.querySelector('.fullscreen-button');
+            // fullscreenButton.addEventListener('click', handleToggleFullscreen);
+
+            console.log('window loaded');
+
+            initializeDomElements();
+        });
+
+
+
+        window.addEventListener('beforeunload', () => {
+            videoCompareContainerHelper.destroy();
+        });
+        // window.addEventListener('resize', () => {
+        //     videoCompareContainerHelper.resize();
+        // });
+        // window.addEventListener('keydown', (event) => {
+        //     if (event.key === 'Escape') {
+        //         videoCompareContainerHelper.closeOverlayMenu();
+        //     }
+        // });
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
