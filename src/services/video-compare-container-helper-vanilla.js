@@ -1,16 +1,20 @@
 class VideoCompareContainerHelper {
 
-    constructor(playerRenderer, setPlayerStates, getPlayerStates,
+    constructor(playerRendererArray, setPlayerStates, getPlayerStates,
+        setIsInCompareMode, getIsInCompareMode,
         setDoLinkMode, getDoLinkMode,
         setLinkDifferenceTime, getLinkDifferenceTime,
         setNextDrawElementId, getNextDrawElementId,
         setIsFullScreen, getIsFullScreen,
         setSyncCurrentTimeCounter, getSyncCurrentTimeCounter) {
 
-        this.playerRenderer = playerRenderer;
+        this.playerRendererArray = playerRendererArray;
 
         this.setPlayerStates = setPlayerStates;
         this.getPlayerStates = getPlayerStates;
+
+        this.setIsInCompareMode = setIsInCompareMode;
+        this.getIsInCompareMode = getIsInCompareMode;
 
         this.setDoLinkMode = setDoLinkMode;
         this.getDoLinkMode = getDoLinkMode;
@@ -27,7 +31,7 @@ class VideoCompareContainerHelper {
         this.setSyncCurrentTimeCounter = setSyncCurrentTimeCounter;
         this.getSyncCurrentTimeCounter = getSyncCurrentTimeCounter;
 
-        this.isWaitingForVideoTimeUpdate = false;
+        // this.isWaitingForVideoTimeUpdate = false;
 
 
     }
@@ -49,7 +53,10 @@ class VideoCompareContainerHelper {
         playerStatesTemp[playerIndex].videoSource = filePath;
         this.setPlayerStates(playerStatesTemp);
 
-        this.playerRenderer.renderVideoSource(filePath);
+        this.playerRendererArray[playerIndex].renderVideoSource(filePath);
+        this.playerRendererArray[playerIndex].renderVideoCurrentTime(0);
+        this.playerRendererArray[playerIndex].renderSeekRange(0);
+        this.playerRendererArray[playerIndex].renderPlayButton(false);
         // this.setLinkModeCurrentTime(playerIndex, 0, false);
     }
 
@@ -100,6 +107,25 @@ class VideoCompareContainerHelper {
         }
     }
 
+    handleCompareModeToggle(newIsInCompareMode) {
+        let playerStatesTemp = this.getPlayerStates();
+        this.setIsInCompareMode(newIsInCompareMode);
+
+        // playerStatesTemp.forEach((playerState, playerIndex) => {
+        //     playerStatesTemp[playerIndex].videoPlayerOverlayMenuDisplay = "overlayOpenFile" + playerIndex;
+        // });
+
+        this.setPlayerStates(playerStatesTemp);
+
+        this.playerRendererArray.forEach((playerRenderer, playerIndex) => {
+            playerRenderer.renderClosePlayerButton();
+            playerRenderer.renderCompareButton();
+            playerRenderer.renderCompareButton();//yes this is intentional, it renders the compare button twice even though it is only needed once
+        });
+
+
+    }
+
 
     setLoopStartEnd(playerStatesTemp, playerIndex) {
         playerStatesTemp[playerIndex].loopStart = playerStatesTemp[playerIndex].linkStart;
@@ -135,7 +161,7 @@ class VideoCompareContainerHelper {
 
         this.setPlayerStates(playerStatesTemp);
 
-        this.playerRenderer.renderDoLoopButton(playerStatesTemp[playerIndex].doLoop);
+        this.playerRendererArray[playerIndex].renderDoLoopButton(playerStatesTemp[playerIndex].doLoop);
     }
 
 
@@ -160,63 +186,65 @@ class VideoCompareContainerHelper {
 
 
     setLinkModeCurrentTime(playerIndex, newTime, updatedFromPlayer) {
-        
+
         newTime = parseFloat(newTime.toFixed(3));
-        
+
         if (updatedFromPlayer) {
-            this.isWaitingForVideoTimeUpdate = false;
+            // this.isWaitingForVideoTimeUpdate = false;
         }
 
 
-        if (!this.isWaitingForVideoTimeUpdate) {
+        // if (!this.isWaitingForVideoTimeUpdate) {
 
 
-            let playerStatesTemp = this.getPlayerStates();
+
+        let playerStatesTemp = this.getPlayerStates();
 
 
-            // if (!playerStatesTemp[playerIndex].doSeek) {
+        // if (!playerStatesTemp[playerIndex].doSeek) {
 
-            const playbackDirection = () => {
-                return playerStatesTemp[playerIndex].currentTime <= newTime > 0 ? 1 : -1;
-            };
+        const playbackDirection = () => {
+            return playerStatesTemp[playerIndex].currentTime.toFixed(2) <= newTime.toFixed(2) > 0 ? 1 : -1;
+        };
 
-            if (playerStatesTemp[playerIndex].currentTime !== newTime) {
+        if (playerStatesTemp[playerIndex].currentTime.toFixed(2) !== newTime.toFixed(2)) {
 
-                let primaryTime = this.calculateCurrentTime(newTime, playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
 
+            let primaryTime = this.calculateCurrentTime(newTime, playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
+
+            playerStatesTemp[playerIndex].currentTime = primaryTime;
+            // playerStatesTemp[playerIndex].doSeek = !updatedFromPlayer || newTime != primaryTime;
+            // this.isWaitingForVideoTimeUpdate = !updatedFromPlayer || newTime != primaryTime;
+
+            if (this.getDoLinkMode() && (!updatedFromPlayer || newTime != primaryTime)) {
+                const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+                let otherTime = this.calculateCurrentTime(primaryTime + (this.getLinkDifferenceTime() * (otherPlayerIndex == 0 ? -1 : 1)), playerStatesTemp[otherPlayerIndex].doLoop, playerStatesTemp[otherPlayerIndex].loopStart, playerStatesTemp[otherPlayerIndex].loopEnd, playbackDirection()); //playerStatesTemp[otherPlayerIndex].playDirection);
+                playerStatesTemp[otherPlayerIndex].currentTime = otherTime;
+                // playerStatesTemp[otherPlayerIndex].doSeek = true;
+
+                //calculate primary time because the otherTime may have changed - not simply time + linkDiff
+                primaryTime = this.calculateCurrentTime(otherTime + (this.getLinkDifferenceTime() * (playerIndex == 0 ? -1 : 1)), playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
                 playerStatesTemp[playerIndex].currentTime = primaryTime;
-                // playerStatesTemp[playerIndex].doSeek = !updatedFromPlayer || newTime != primaryTime;
-                this.isWaitingForVideoTimeUpdate = !updatedFromPlayer || newTime != primaryTime;
-
-                if (this.getDoLinkMode() && (!updatedFromPlayer || newTime != primaryTime)) {
-                    const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
-                    let otherTime = this.calculateCurrentTime(primaryTime + (this.getLinkDifferenceTime() * (otherPlayerIndex == 0 ? -1 : 1)), playerStatesTemp[otherPlayerIndex].doLoop, playerStatesTemp[otherPlayerIndex].loopStart, playerStatesTemp[otherPlayerIndex].loopEnd, playbackDirection()); //playerStatesTemp[otherPlayerIndex].playDirection);
-                    playerStatesTemp[otherPlayerIndex].currentTime = otherTime;
-                    // playerStatesTemp[otherPlayerIndex].doSeek = true;
-
-                    //calculate primary time because the otherTime may have changed - not simply time + linkDiff
-                    primaryTime = this.calculateCurrentTime(otherTime + (this.getLinkDifferenceTime() * (playerIndex == 0 ? -1 : 1)), playerStatesTemp[playerIndex].doLoop, playerStatesTemp[playerIndex].loopStart, playerStatesTemp[playerIndex].loopEnd, playbackDirection()); //playerStatesTemp[playerIndex].playDirection);
-                    playerStatesTemp[playerIndex].currentTime = primaryTime;
-                    // playerStatesTemp[playerIndex].doSeek = true;
-                }
-
-                this.setPlayerStates(playerStatesTemp);
+                // playerStatesTemp[playerIndex].doSeek = true;
             }
-            // }
 
-            // if (playerStatesTemp[playerIndex].doSeek) {
-            if (!updatedFromPlayer) {
-                this.playerRenderer.renderVideoCurrentTime(playerStatesTemp[playerIndex].currentTime);
-                
-            }
-            // }
-            this.playerRenderer.renderSeekRange(playerStatesTemp[playerIndex].currentTime);
-            this.playerRenderer.renderClockTime(playerStatesTemp[playerIndex].currentTime);
+            this.setPlayerStates(playerStatesTemp);
+        }
+        // }
 
+        // if (playerStatesTemp[playerIndex].doSeek) {
+        if (!updatedFromPlayer) {
+            this.playerRendererArray[playerIndex].renderVideoCurrentTime(playerStatesTemp[playerIndex].currentTime);
 
         }
+        // }
+        this.playerRendererArray[playerIndex].renderSeekRange(playerStatesTemp[playerIndex].currentTime);
+        this.playerRendererArray[playerIndex].renderClockTime(playerStatesTemp[playerIndex].currentTime);
 
-       
+
+        // }
+
+
     }
 
 
@@ -232,7 +260,12 @@ class VideoCompareContainerHelper {
     handleSeek(playerIndex, seekInterval) {
 
         this.setLinkModeCurrentTime(playerIndex, this.getPlayerStates()[playerIndex].currentTime + seekInterval, false);
-        // this.playerRenderer.renderVideoCurrentTime(this.getPlayerStates()[playerIndex].currentTime);
+        // this.playerRendererArray[playerIndex].renderVideoCurrentTime(this.getPlayerStates()[playerIndex].currentTime);
+    }
+
+    handleVideoPlayBackwardAdvanceFrame(playerIndex, advanceInterval) {
+        this.setLinkModeCurrentTime(playerIndex, this.getPlayerStates()[playerIndex].currentTime + advanceInterval, true);
+        this.playerRendererArray[playerIndex].renderVideoCurrentTime(this.getPlayerStates()[playerIndex].currentTime);
     }
 
 
@@ -334,10 +367,11 @@ class VideoCompareContainerHelper {
             playerStatesTemp[playerIndex].playDirection = 1;
             playerStatesTemp[playerIndex].playbackRate = playbackRate;
 
-            this.playerRenderer.renderVideoPlay();
-            this.playerRenderer.renderPlayButton(true);
-            this.playerRenderer.renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
-            this.playerRenderer.renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderVideoPlay();
+            this.playerRendererArray[playerIndex].renderVideoPauseBackward();//this needs to be called incase the scrubber hasnt been released and was previously playing backward
+            this.playerRendererArray[playerIndex].renderPlayButton(true);
+            this.playerRendererArray[playerIndex].renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
 
 
         } else if (value < 0) {
@@ -347,23 +381,23 @@ class VideoCompareContainerHelper {
                 playerStatesTemp[playerIndex].playDirection = -1;
                 playerStatesTemp[playerIndex].playbackRate = playbackRate;
 
-                this.playerRenderer.renderVideoPlayBackward();
-                this.playerRenderer.renderPlayButton(true);
+                this.playerRendererArray[playerIndex].renderVideoPlayBackward();
+                this.playerRendererArray[playerIndex].renderPlayButton(true);
             }
-            this.playerRenderer.renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
-            this.playerRenderer.renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
 
         } else {
             playerStatesTemp[playerIndex].doPlay = false;
             playerStatesTemp[playerIndex].playDirection = 1;
             playerStatesTemp[playerIndex].playbackRate = 1;
 
-            this.playerRenderer.renderVideoPause();
-            this.playerRenderer.renderVideoPauseBackward();
-            this.playerRenderer.renderPlayButton(false);
-            this.playerRenderer.renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
-            this.playerRenderer.renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
-            this.playerRenderer.renderScrubberRange(0);
+            this.playerRendererArray[playerIndex].renderVideoPause();
+            this.playerRendererArray[playerIndex].renderVideoPauseBackward();
+            this.playerRendererArray[playerIndex].renderPlayButton(false);
+            this.playerRendererArray[playerIndex].renderVideoPlaybackRate(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderPlaybackRateDiv(playerStatesTemp[playerIndex].playbackRate);
+            this.playerRendererArray[playerIndex].renderScrubberRange(0);
 
         }
 
@@ -390,7 +424,7 @@ class VideoCompareContainerHelper {
         const newTime = playerStatesTemp[playerIndex].bookmarks[bookmarkIndex].time;
 
         this.setLinkModeCurrentTime(playerIndex, newTime, false);
-        
+
     }
 
     sortBookmarks(bookmarks) {
@@ -407,8 +441,9 @@ class VideoCompareContainerHelper {
 
         this.setPlayerStates(playerStatesTemp);
 
-        this.playerRenderer.renderBookmarkAddNameInput("");
-        this.playerRenderer.renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
+        this.playerRendererArray[playerIndex].renderBookmarkAddNameInput("");
+        this.playerRendererArray[playerIndex].renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
+        this.playerRendererArray[playerIndex].renderSeekRangeMarkers(playerStatesTemp[playerIndex].bookmarks);
     }
 
     handleBookmarkDelete(playerIndex, bookmarkIndex) {
@@ -416,7 +451,7 @@ class VideoCompareContainerHelper {
         playerStatesTemp[playerIndex].bookmarks.splice(bookmarkIndex, 1);
         playerStatesTemp[playerIndex].bookmarks = this.sortBookmarks(playerStatesTemp[playerIndex].bookmarks);
         this.setPlayerStates(playerStatesTemp);
-        this.playerRenderer.renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
+        this.playerRendererArray[playerIndex].renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
     }
 
     handleBookmarkUpdateTime(playerIndex, bookmarkIndex, newTime) {
@@ -429,7 +464,7 @@ class VideoCompareContainerHelper {
 
         this.setPlayerStates(playerStatesTemp);
 
-        this.playerRenderer.renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
+        this.playerRendererArray[playerIndex].renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
     }
 
     doesLoopMarkerExist(playerIndex, loopMarker) {
@@ -467,7 +502,7 @@ class VideoCompareContainerHelper {
 
         this.setPlayerStates(playerStatesTemp);
 
-        this.playerRenderer.renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
+        this.playerRendererArray[playerIndex].renderBookmarkList(playerStatesTemp[playerIndex].bookmarks);
     }
 
 
@@ -599,7 +634,9 @@ class VideoCompareContainerHelper {
 
     closePlayer(playerIndex) {
         let playerStatesTemp = this.getPlayerStates();
-        playerStatesTemp.splice(playerIndex, 1);
+        // playerStatesTemp.splice(playerIndex, 1);
+        // playerStatesTemp = [...playerStatesTemp, VideoCompareContainerHelper.getDefaultPlayerState()];
+        this.linkPlayers(false);
         this.setPlayerStates(playerStatesTemp);
 
         //todo:  extract this to a separate function or use state change
@@ -608,7 +645,7 @@ class VideoCompareContainerHelper {
         //     container.style.maxWidth = '97vw';
         // });
 
-        this.setDoLinkMode(false);
+        this.handleCompareModeToggle(false);
     }
 
 
@@ -719,17 +756,18 @@ class VideoCompareContainerHelper {
     handleDoPause(playerIndex) {
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp[playerIndex].doPlay = false;
-        this.playerRenderer.renderVideoPause();
+        // this.isWaitingForVideoTimeUpdate = false;
+        this.playerRendererArray[playerIndex].renderVideoPause();
         // this.playerInterface.setVideoCurrentTime(playerStatesTemp[playerIndex].currentTime);
-        this.playerRenderer.renderPlayButton(false);
+        this.playerRendererArray[playerIndex].renderPlayButton(false);
         this.setPlayerStates(playerStatesTemp);
     }
 
     handleDoPlay(playerIndex) {
         let playerStatesTemp = this.getPlayerStates();
         playerStatesTemp[playerIndex].doPlay = true;
-        this.playerRenderer.renderVideoPlay();
-        this.playerRenderer.renderPlayButton(true);
+        this.playerRendererArray[playerIndex].renderVideoPlay();
+        this.playerRendererArray[playerIndex].renderPlayButton(true);
         this.setPlayerStates(playerStatesTemp);
     }
 

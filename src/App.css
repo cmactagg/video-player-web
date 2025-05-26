@@ -89,6 +89,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 49vw;
 }
 
 .video-wrapper {
@@ -503,4 +504,46 @@ video {
   
   border-radius: 5px;  
   margin-top: -4px; /* Center the thumb on the track */
+}
+ 
+
+.seek-range-container {
+    position: relative;
+    /* width: 400px; /* Increased width to account for spacers */
+    display: flex;
+    align-items: center;
+}
+
+
+.seek-range-marker-container {
+    /* position: relative; */
+    /* padding-left: 50px; */
+    /* top: -20px; */
+    
+}
+
+.seek-range-marker {
+    position: absolute;
+    text-align: center;
+    transform: translateX(-50%);
+    top: 20px;
+}
+
+.seek-range-marker .seek-range-marker-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5px;
+}
+
+.seek-range-marker p {
+    white-space: nowrap;
+    font-size: 14px;
+    color: #ccc;
+    
+    
 }
